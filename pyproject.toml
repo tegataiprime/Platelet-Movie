@@ -1,0 +1,52 @@
+[project]
+name = "platelet-movie"
+version = "0.1.0"
+description = "Discover Movies on Netflix long enough for a Platelet Donation"
+authors = [
+    {name = "Platelet Movie Contributors"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "click>=8.1.8",
+    "requests>=2.32.5",
+]
+
+[project.scripts]
+platelet-movie = "platelet_movie.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.5",
+    "pytest-cov>=6.1.1",
+    "pytest-mock>=3.14.0",
+    "responses>=0.26.0",
+    "poethepoet>=0.32.2",
+    "ruff>=0.9.0",
+]
+
+[tool.poe.tasks]
+test       = "pytest --cov=platelet_movie --cov-report=term-missing --cov-fail-under=80"
+lint       = "ruff check platelet_movie tests"
+format     = "ruff format platelet_movie tests"
+run        = "platelet-movie"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["platelet_movie"]
+
+[tool.coverage.report]
+fail_under = 80
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
