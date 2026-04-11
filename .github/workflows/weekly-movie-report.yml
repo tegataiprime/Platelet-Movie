@@ -1,0 +1,65 @@
+name: Weekly Movie Report
+
+on:
+  #schedule:
+    # Run every Friday at 8:00 PM US Eastern (midnight UTC Saturday)
+    #- cron: '0 0 * * 6'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  send-movie-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: '2.0.1'
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install dependencies
+        run: poetry install --only main
+
+      - name: Run Platelet-Movie
+        id: platelet
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          TMDB_REGION: ${{ vars.TMDB_REGION || 'US' }}
+        run: |
+          echo "Running platelet-movie..."
+          OUTPUT=$(poetry run platelet-movie 2>&1) || true
+          echo "output<<EOF" >> $GITHUB_OUTPUT
+          echo "$OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "$OUTPUT"
+
+      - name: Send email report
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.MAIL_SERVER }}
+          server_port: ${{ secrets.MAIL_PORT || 587 }}
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: "🎬 Weekly Platelet Movie Report"
+          to: ${{ secrets.PLATELET_MOVIE_SUBSCRIBERS }}
+          from: ${{ secrets.MAIL_FROM || secrets.MAIL_USERNAME }}
+          body: |
+            Weekly Netflix Movie Report for Platelet Donations
+            ==================================================
+
+            Here are the movies on Netflix that are long enough for a platelet donation:
+
+            ${{ steps.platelet.outputs.output }}
+
+            ---
+            This report was generated automatically by GitHub Actions.
+            Repository: ${{ github.repository }}
