@@ -1,74 +1,54 @@
 """Configuration module – reads all settings from environment variables (12-Factor App)."""
 
+import logging
 import os
+
+logger = logging.getLogger(__name__)
 
 
 class Config:
-    """Application configuration sourced entirely from the environment."""
+    """Application configuration sourced entirely from the environment.
 
-    #: Netflix account e-mail address
-    netflix_email: str
-    #: Netflix account password
-    netflix_password: str
-    #: Whether to run the Playwright browser in headless mode
-    headless: bool
-    #: Minimum seconds to wait between page loads (rate-limiting safeguard)
-    request_delay_s: float
-    #: Playwright page-load timeout in milliseconds
-    page_timeout_ms: int
-    #: Maximum number of movie detail pages to visit per session
-    max_movies: int
+    This configuration is used for the TMDB API client which provides Netflix
+    movie availability data.
+    """
+
+    #: TMDB API key (v3 auth)
+    tmdb_api_key: str
+    #: Region for Netflix availability (ISO 3166-1 alpha-2, e.g., "US", "GB")
+    tmdb_region: str
+    #: Maximum number of pages to fetch from TMDB API (20 results per page)
+    max_pages: int
 
     def __init__(
         self,
-        netflix_email: str | None = None,
-        netflix_password: str | None = None,
-        headless: bool | None = None,
-        request_delay_s: float | None = None,
-        page_timeout_ms: int | None = None,
-        max_movies: int | None = None,
+        tmdb_api_key: str | None = None,
+        tmdb_region: str | None = None,
+        max_pages: int | None = None,
     ) -> None:
-        self.netflix_email = netflix_email or os.environ.get("NETFLIX_EMAIL", "")
-        self.netflix_password = netflix_password or os.environ.get("NETFLIX_PASSWORD", "")
-        self.headless = (
-            headless if headless is not None else _env_bool("NETFLIX_HEADLESS", default=True)
+        logger.debug("Initializing configuration")
+        self.tmdb_api_key = tmdb_api_key or os.environ.get("TMDB_API_KEY", "")
+        logger.debug(f"TMDB API key configured: {bool(self.tmdb_api_key)}")
+
+        self.tmdb_region = (
+            tmdb_region if tmdb_region is not None else os.environ.get("TMDB_REGION", "US")
         )
-        self.request_delay_s = (
-            request_delay_s
-            if request_delay_s is not None
-            else float(os.environ.get("NETFLIX_REQUEST_DELAY_S", "2.0"))
+        logger.debug(f"TMDB region: {self.tmdb_region}")
+
+        self.max_pages = (
+            max_pages
+            if max_pages is not None
+            else int(os.environ.get("TMDB_MAX_PAGES", "10"))
         )
-        self.page_timeout_ms = (
-            page_timeout_ms
-            if page_timeout_ms is not None
-            else int(os.environ.get("NETFLIX_PAGE_TIMEOUT_MS", "30000"))
-        )
-        self.max_movies = (
-            max_movies
-            if max_movies is not None
-            else int(os.environ.get("NETFLIX_MAX_MOVIES", "100"))
-        )
+        logger.debug(f"Max pages: {self.max_pages}")
 
     def validate(self) -> None:
         """Raise *ValueError* if any required configuration value is missing."""
-        missing = []
-        if not self.netflix_email:
-            missing.append("NETFLIX_EMAIL")
-        if not self.netflix_password:
-            missing.append("NETFLIX_PASSWORD")
-        if missing:
+        logger.debug("Validating configuration")
+        if not self.tmdb_api_key:
+            logger.error("Missing required configuration: TMDB_API_KEY")
             raise ValueError(
-                f"Missing required environment variable(s): {', '.join(missing)}"
+                "Missing required environment variable: TMDB_API_KEY. "
+                "Get a free API key at https://www.themoviedb.org/settings/api"
             )
-
-
-def _env_bool(name: str, default: bool) -> bool:
-    """Read a boolean environment variable.
-
-    Truthy values: ``1``, ``true``, ``yes``, ``on`` (case-insensitive).
-    Returns *default* when the variable is not set.
-    """
-    raw = os.environ.get(name)
-    if raw is None:
-        return default
-    return raw.lower() in {"1", "true", "yes", "on"}
+        logger.debug("Configuration validation passed")

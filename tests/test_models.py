@@ -8,11 +8,45 @@ class TestMovie:
         m = Movie(title="Inception", runtime_minutes=148)
         assert m.title == "Inception"
         assert m.runtime_minutes == 148
+        assert m.genres == []
+        assert m.rating is None
+        assert m.certification is None
+
+    def test_creation_with_all_fields(self):
+        m = Movie(
+            title="Inception",
+            runtime_minutes=148,
+            genres=["Action", "Sci-Fi"],
+            rating=8.8,
+            certification="PG-13",
+        )
+        assert m.title == "Inception"
+        assert m.runtime_minutes == 148
+        assert m.genres == ["Action", "Sci-Fi"]
+        assert m.rating == 8.8
+        assert m.certification == "PG-13"
 
     def test_equality(self):
-        m1 = Movie(title="Inception", runtime_minutes=148)
-        m2 = Movie(title="Inception", runtime_minutes=148)
+        m1 = Movie(
+            title="Inception",
+            runtime_minutes=148,
+            genres=["Action"],
+            rating=8.8,
+            certification="PG-13",
+        )
+        m2 = Movie(
+            title="Inception",
+            runtime_minutes=148,
+            genres=["Action"],
+            rating=8.8,
+            certification="PG-13",
+        )
         assert m1 == m2
+
+    def test_inequality_different_certification(self):
+        m1 = Movie(title="Movie", runtime_minutes=148, certification="R")
+        m2 = Movie(title="Movie", runtime_minutes=148, certification="PG-13")
+        assert m1 != m2
 
     def test_inequality_different_title(self):
         m1 = Movie(title="Inception", runtime_minutes=148)
@@ -22,6 +56,16 @@ class TestMovie:
     def test_inequality_different_runtime(self):
         m1 = Movie(title="Inception", runtime_minutes=148)
         m2 = Movie(title="Inception", runtime_minutes=149)
+        assert m1 != m2
+
+    def test_inequality_different_genres(self):
+        m1 = Movie(title="Inception", runtime_minutes=148, genres=["Action"])
+        m2 = Movie(title="Inception", runtime_minutes=148, genres=["Drama"])
+        assert m1 != m2
+
+    def test_inequality_different_rating(self):
+        m1 = Movie(title="Inception", runtime_minutes=148, rating=8.8)
+        m2 = Movie(title="Inception", runtime_minutes=148, rating=7.5)
         assert m1 != m2
 
     def test_lt_by_runtime(self):

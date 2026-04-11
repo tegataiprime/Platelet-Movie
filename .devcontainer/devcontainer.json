@@ -1,0 +1,38 @@
+{
+	"name": "Platelet-Movie Dev Container",
+	"image": "mcr.microsoft.com/devcontainers/python:3.11",
+	
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/devcontainers/features/node:1": {
+			"version": "lts"
+		}
+	},
+
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"doppler.doppler-vscode",
+				"github.copilot-chat",
+				"github.github-vscode-theme",
+				"github.vscode-pull-request-github",
+				"ms-python.debugpy",
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"ms-python.vscode-python-envs",
+				"postman.postman-for-vscode",
+				"sonarsource.sonarlint-vscode"
+			],
+			"settings": {
+				"python.defaultInterpreterPath": "/usr/local/bin/python",
+				"python.testing.pytestEnabled": true,
+				"python.testing.unittestEnabled": false
+			}
+		}
+	},
+
+	"postCreateCommand": "bash .devcontainer/post-create.sh",
+
+	"remoteUser": "vscode"
+}

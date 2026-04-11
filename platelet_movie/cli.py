@@ -2,14 +2,19 @@
 
 from __future__ import annotations
 
+import logging
 import sys
 
 import click
 
 from platelet_movie.config import Config
-from platelet_movie.scraper import NetflixScraper
+from platelet_movie.tmdb_client import TMDBAPIError, TMDBClient
+
+logger = logging.getLogger(__name__)
 
 _DEFAULT_MIN_MINUTES = 135
+_DEFAULT_MAX_MINUTES = 145
+_DEFAULT_LANGUAGE = "en"
 
 
 @click.command()
@@ -21,94 +26,142 @@ _DEFAULT_MIN_MINUTES = 135
     help="Minimum movie runtime in minutes.",
 )
 @click.option(
-    "--email",
-    envvar="NETFLIX_EMAIL",
-    default=None,
-    help="Netflix account e-mail (overrides NETFLIX_EMAIL env var).",
+    "--max-minutes",
+    default=_DEFAULT_MAX_MINUTES,
+    show_default=True,
+    type=click.IntRange(min=1),
+    help="Maximum movie runtime in minutes.",
 )
 @click.option(
-    "--password",
-    envvar="NETFLIX_PASSWORD",
-    default=None,
-    help="Netflix account password (overrides NETFLIX_PASSWORD env var).",
+    "--language",
+    default=_DEFAULT_LANGUAGE,
+    show_default=True,
+    help="Original language filter (ISO 639-1 code, e.g., 'en' for English).",
 )
 @click.option(
-    "--no-headless",
+    "--max-pages",
+    default=None,
+    type=click.IntRange(min=1, max=500),
+    help="Maximum number of TMDB result pages to fetch (20 movies per page). Default: 10.",
+)
+@click.option(
+    "--api-key",
+    envvar="TMDB_API_KEY",
+    default=None,
+    help="TMDB API key (overrides TMDB_API_KEY env var).",
+)
+@click.option(
+    "--region",
+    envvar="TMDB_REGION",
+    default=None,
+    help="Netflix region code (e.g., US, GB). Default: US.",
+)
+@click.option(
+    "--verbose",
+    "-v",
     is_flag=True,
     default=False,
-    help="Show the browser window (useful for debugging login issues).",
-)
-@click.option(
-    "--request-delay",
-    envvar="NETFLIX_REQUEST_DELAY_S",
-    default=None,
-    type=float,
-    help="Seconds to wait between page loads (default: 2.0).",
-)
-@click.option(
-    "--max-movies",
-    envvar="NETFLIX_MAX_MOVIES",
-    default=None,
-    type=int,
-    help="Maximum number of movies to inspect per session (default: 100).",
+    help="Enable verbose debug logging.",
 )
 @click.version_option(package_name="platelet-movie")
 def main(
     min_minutes: int,
-    email: str | None,
-    password: str | None,
-    no_headless: bool,
-    request_delay: float | None,
-    max_movies: int | None,
+    max_minutes: int,
+    language: str,
+    max_pages: int | None,
+    api_key: str | None,
+    region: str | None,
+    verbose: bool,
 ) -> None:
     """Discover Netflix movies long enough for a Platelet Donation.
 
-    Uses a real Chromium browser (via Playwright) to log in to Netflix and
-    scrape movies whose runtime is >= MIN_MINUTES.  Results are sorted by
-    runtime then title, ascending.
+    Uses the TMDB (The Movie Database) API to find movies available on Netflix
+    whose runtime is >= MIN_MINUTES.  Results are sorted by runtime then title,
+    ascending.
 
     All credentials and tuning parameters can be supplied via environment
     variables or CLI flags:
 
     \b
-        NETFLIX_EMAIL              – your Netflix account e-mail
-        NETFLIX_PASSWORD           – your Netflix account password
-        NETFLIX_HEADLESS           – 1/true/yes to run headless (default: 1)
-        NETFLIX_REQUEST_DELAY_S    – seconds between page loads (default: 2.0)
-        NETFLIX_MAX_MOVIES         – max movies per session (default: 100)
-        NETFLIX_PAGE_TIMEOUT_MS    – page load timeout in ms (default: 30000)
+        TMDB_API_KEY    – your TMDB API key (free at themoviedb.org)
+        TMDB_REGION     – Netflix region code, e.g., US, GB (default: US)
+        TMDB_MAX_PAGES  – max result pages to fetch, 20 movies/page (default: 10)
     """
-    # --no-headless flag overrides env var; otherwise Config reads NETFLIX_HEADLESS
-    headless_override: bool | None = False if no_headless else None
+    # Configure logging
+    logging.basicConfig(
+        level=logging.DEBUG if verbose else logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    )
+
+    logger.debug("Starting Platelet-Movie CLI")
+    logger.debug(
+        f"Arguments: min_minutes={min_minutes}, max_minutes={max_minutes}, "
+        f"language={language}, max_pages={max_pages}, region={region}, verbose={verbose}"
+    )
 
     config = Config(
-        netflix_email=email,
-        netflix_password=password,
-        headless=headless_override,
-        request_delay_s=request_delay,
-        max_movies=max_movies,
+        tmdb_api_key=api_key,
+        tmdb_region=region,
+        max_pages=max_pages,
     )
 
     try:
         config.validate()
+        logger.debug("Configuration validated successfully")
+        logger.debug(f"Config: region={config.tmdb_region}, max_pages={config.max_pages}")
     except ValueError as exc:
+        logger.error(f"Configuration validation failed: {exc}")
         click.echo(f"Configuration error: {exc}", err=True)
         sys.exit(1)
 
-    scraper = NetflixScraper(config)
+    client = TMDBClient(
+        api_key=config.tmdb_api_key, region=config.tmdb_region, max_pages=config.max_pages
+    )
+    logger.debug("TMDBClient initialized")
 
     try:
-        movies = scraper.get_movies(min_minutes=min_minutes)
+        runtime_msg = f"minimum runtime of {min_minutes} minutes"
+        if max_minutes:
+            runtime_msg = f"runtime between {min_minutes} and {max_minutes} minutes"
+        logger.info(f"Discovering movies with {runtime_msg}")
+        movies = client.discover_movies_on_netflix(
+            min_runtime_minutes=min_minutes,
+            max_runtime_minutes=max_minutes,
+            language=language,
+        )
+        logger.info(f"Discovery completed. Found {len(movies)} matching movies")
+    except TMDBAPIError as exc:
+        logger.error(f"TMDB API error: {exc}", exc_info=verbose)
+        click.echo(f"Error querying TMDB API: {exc}", err=True)
+        sys.exit(1)
     except Exception as exc:  # noqa: BLE001
-        click.echo(f"Error scraping Netflix: {exc}", err=True)
+        logger.error(f"Unexpected error: {exc}", exc_info=verbose)
+        click.echo(f"Error: {exc}", err=True)
         sys.exit(1)
 
     if not movies:
-        click.echo(f"No movies found with a runtime of at least {min_minutes} minutes.")
+        logger.info("No movies found matching criteria")
+        runtime_msg = f"at least {min_minutes} minutes"
+        if max_minutes:
+            runtime_msg = f"between {min_minutes} and {max_minutes} minutes"
+        click.echo(f"No movies found with a runtime of {runtime_msg}.")
         return
 
-    click.echo(f"Netflix movies with a runtime >= {min_minutes} minutes:\n")
-    click.echo(f"{'Runtime':>10}  Title")
-    click.echo("-" * 60)
+    logger.debug(f"Displaying {len(movies)} movies")
+    runtime_header = f">= {min_minutes} minutes"
+    if max_minutes:
+        runtime_header = f"{min_minutes}-{max_minutes} minutes"
+    click.echo(f"Netflix movies with a runtime {runtime_header}:\n")
+    click.echo(f"{'Runtime':>10}  {'Score':>6}  {'Rated':<7}  {'Genres':<20}  Title")
+    click.echo("-" * 85)
     for movie in movies:
-        click.echo(f"{movie.runtime_minutes:>8} m  {movie.title}")
+        rating_str = f"{movie.rating:.1f}" if movie.rating is not None else "N/A"
+        cert_str = movie.certification if movie.certification else "NR"
+        genres_str = ", ".join(movie.genres[:2]) if movie.genres else "N/A"
+        # Truncate genres if too long
+        if len(genres_str) > 20:
+            genres_str = genres_str[:17] + "..."
+        click.echo(
+            f"{movie.runtime_minutes:>8} m  {rating_str:>6}  {cert_str:<7}  "
+            f"{genres_str:<20}  {movie.title}"
+        )

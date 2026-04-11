@@ -9,7 +9,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "click>=8.1.8",
-    "playwright>=1.50.0",
+    "requests>=2.31.0",
 ]
 
 [project.scripts]
@@ -29,7 +29,6 @@ test       = "pytest --cov=platelet_movie --cov-report=term-missing --cov-fail-u
 lint       = "ruff check platelet_movie tests"
 format     = "ruff format platelet_movie tests"
 run        = "platelet-movie"
-install-browsers = "playwright install chromium"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
