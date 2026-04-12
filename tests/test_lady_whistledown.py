@@ -1,8 +1,10 @@
 """Tests for scripts/lady_whistledown.py."""
 
-import os
+import json
+import subprocess
 import sys
-from io import StringIO
+import urllib.error
+from io import BytesIO, StringIO
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -13,7 +15,10 @@ import pytest
 PROJECT_ROOT = Path(__file__).parent.parent
 SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS_DIR))
-from lady_whistledown import generate_commentary, generate_fallback_commentary
+from lady_whistledown import (  # noqa: E402
+    generate_commentary,
+    generate_fallback_commentary,
+)
 
 
 class TestGenerateFallbackCommentary:
@@ -103,7 +108,6 @@ class TestGenerateCommentaryWithAPIKey:
         # Extract the request data
         call_args = mock_urlopen.call_args
         request = call_args[0][0]
-        import json
 
         request_data = json.loads(request.data.decode("utf-8"))
 
@@ -132,7 +136,6 @@ class TestGenerateCommentaryWithAPIKey:
 
         call_args = mock_urlopen.call_args
         request = call_args[0][0]
-        import json
 
         request_data = json.loads(request.data.decode("utf-8"))
 
@@ -149,8 +152,6 @@ class TestGenerateCommentaryErrorHandling:
     @patch("sys.stderr", new_callable=StringIO)
     def test_handles_http_error_401(self, mock_stderr, mock_urlopen):
         """Test that HTTP 401 error falls back to default commentary."""
-        import urllib.error
-        from io import BytesIO
 
         error = urllib.error.HTTPError(
             "url", 401, "Unauthorized", {}, BytesIO(b'{"error": "Invalid API key"}')
@@ -171,8 +172,6 @@ class TestGenerateCommentaryErrorHandling:
     @patch("sys.stderr", new_callable=StringIO)
     def test_handles_http_error_429(self, mock_stderr, mock_urlopen):
         """Test that HTTP 429 (rate limit) error falls back to default commentary."""
-        import urllib.error
-        from io import BytesIO
 
         error = urllib.error.HTTPError(
             "url", 429, "Rate limited", {}, BytesIO(b'{"error": "Rate limit exceeded"}')
@@ -190,8 +189,6 @@ class TestGenerateCommentaryErrorHandling:
     @patch("sys.stderr", new_callable=StringIO)
     def test_handles_http_error_500(self, mock_stderr, mock_urlopen):
         """Test that HTTP 500 error falls back to default commentary."""
-        import urllib.error
-        from io import BytesIO
 
         error = urllib.error.HTTPError(
             "url", 500, "Server error", {}, BytesIO(b'{"error": "Internal server error"}')
@@ -251,8 +248,6 @@ class TestMainFunction:
 
     def test_script_execution_with_valid_input(self):
         """Test executing the script as main with valid input."""
-        import subprocess
-
         # Get script path relative to project root
         script_path = SCRIPTS_DIR / "lady_whistledown.py"
         movie_list = "1. The Matrix (136m)\n2. Inception (148m)"
@@ -269,8 +264,6 @@ class TestMainFunction:
 
     def test_script_execution_with_empty_input(self):
         """Test executing the script as main with empty input exits with error."""
-        import subprocess
-
         # Get script path relative to project root
         script_path = SCRIPTS_DIR / "lady_whistledown.py"
 
