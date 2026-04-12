@@ -1,9 +1,9 @@
 name: Weekly Movie Report
 
 on:
-  #schedule:
-    # Run every Friday at 8:00 PM US Eastern (midnight UTC Saturday)
-    #- cron: '0 0 * * 6'
+  schedule:
+     # Run every Friday at 8:00 PM US Eastern (midnight UTC Saturday)
+    - cron: '0 20 * * 5'
   workflow_dispatch: # Allow manual trigger
 
 jobs:
