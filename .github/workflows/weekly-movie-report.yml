@@ -45,8 +45,7 @@ jobs:
       - name: Generate Lady Whistledown commentary
         id: commentary
         env:
-          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           echo "Generating Lady Whistledown commentary..."
           chmod +x scripts/lady_whistledown.py
