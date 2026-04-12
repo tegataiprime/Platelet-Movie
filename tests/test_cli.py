@@ -306,8 +306,9 @@ class TestCLI:
         runner = self._runner()
         result = runner.invoke(main, env=self._base_env())
         assert result.exit_code == 0
-        # Markdown format should have dashes separator
-        assert "-" * 20 in result.output
+        # Markdown format should use GFM pipe table syntax
+        assert "|" in result.output
+        assert "---" in result.output
 
     def test_format_option_html(self, mocker):
         """Test --format html option."""

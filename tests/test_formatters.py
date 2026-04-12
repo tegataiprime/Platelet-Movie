@@ -1,5 +1,7 @@
 """Unit tests for platelet_movie.formatters."""
 
+import re
+
 from platelet_movie.formatters import format_movies
 from platelet_movie.models import Movie
 
@@ -54,6 +56,26 @@ class TestFormatters:
         assert "Crime, Drama" in result
         # Check that it's formatted as a table with separators
         assert "-" in result
+
+    def test_format_markdown_uses_pipe_table_syntax(self):
+        """Test that markdown output uses GFM pipe table syntax."""
+        result = format_movies(self.movies, "markdown")
+        lines = result.splitlines()
+        # Header row must start and end with a pipe character
+        header_line = lines[0]
+        assert header_line.startswith("|"), "Header row must start with '|'"
+        assert header_line.endswith("|"), "Header row must end with '|'"
+        # Second line must be the separator row (dashes between pipes)
+        separator_line = lines[1]
+        assert separator_line.startswith("|"), "Separator row must start with '|'"
+        assert separator_line.endswith("|"), "Separator row must end with '|'"
+        assert "---" in separator_line, "Separator row must contain '---'"
+        # Every pipe in the separator row must be followed by dashes or colons (spaces allowed)
+        assert re.search(r"\|\s*[-:]+\s*\|", separator_line), "Separator must have |---|"
+        # Data rows must also use pipe syntax
+        for line in lines[2:]:
+            assert line.startswith("|"), f"Data row must start with '|': {line!r}"
+            assert line.endswith("|"), f"Data row must end with '|': {line!r}"
 
     def test_format_html(self):
         """Test HTML table formatting."""
