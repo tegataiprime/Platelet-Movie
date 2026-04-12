@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platelet Movie - Netflix Movies for Platelet Donation</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>🎬 Platelet Movie</h1>
+                <p class="subtitle">Netflix Movies Long Enough for Platelet Donation</p>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <span class="icon-light">☀️</span>
+                    <span class="icon-dark">🌙</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Lady Whistledown Commentary Section -->
+            <section class="commentary" id="commentary">
+                <div class="commentary-content">
+                    <p class="loading">Loading Lady Whistledown's commentary...</p>
+                </div>
+            </section>
+
+            <!-- Movie List Section -->
+            <section class="movie-list">
+                <div class="section-header">
+                    <h2>This Week's Selections</h2>
+                    <p class="last-updated" id="last-updated"></p>
+                </div>
+                
+                <div class="table-container">
+                    <table id="movie-table" class="movie-table">
+                        <thead>
+                            <tr>
+                                <th data-sort="runtime" class="sortable">
+                                    Runtime <span class="sort-indicator"></span>
+                                </th>
+                                <th data-sort="year" class="sortable">
+                                    Year <span class="sort-indicator"></span>
+                                </th>
+                                <th data-sort="score" class="sortable">
+                                    Score <span class="sort-indicator"></span>
+                                </th>
+                                <th data-sort="rated" class="sortable">
+                                    Rated <span class="sort-indicator"></span>
+                                </th>
+                                <th data-sort="genres" class="sortable">
+                                    Genres <span class="sort-indicator"></span>
+                                </th>
+                                <th data-sort="title" class="sortable">
+                                    Title <span class="sort-indicator"></span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="movie-tbody">
+                            <tr>
+                                <td colspan="6" class="loading">Loading movies...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Acknowledgements Section -->
+            <section class="acknowledgements">
+                <div class="acknowledgement-box">
+                    <h3>Data Source</h3>
+                    <p>
+                        This product uses the TMDB API but is not endorsed or certified by TMDB.
+                        <br>
+                        <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg" 
+                             alt="TMDB Logo" 
+                             class="tmdb-logo">
+                    </p>
+                </div>
+
+                <div class="acknowledgement-box">
+                    <h3>Accuracy Disclaimer</h3>
+                    <p>
+                        Movie availability and information are provided by TMDB and may not be 100% accurate. 
+                        TMDB data typically lags behind Netflix by up to 48 hours. 
+                        Please verify movie availability on Netflix before your donation appointment.
+                    </p>
+                </div>
+
+                <div class="acknowledgement-box">
+                    <h3>Lady Whistledown</h3>
+                    <p>
+                        All credit for the delightful Lady Whistledown commentary style goes to the creators of 
+                        <em>Bridgerton</em>. This Author merely borrows her charming voice to introduce these 
+                        cinematic selections.
+                    </p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>
+                Generated automatically by 
+                <a href="https://github.com/tegataiprime/Platelet-Movie" target="_blank" rel="noopener noreferrer">
+                    Platelet-Movie
+                </a>
+                • Updated weekly on Fridays
+            </p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

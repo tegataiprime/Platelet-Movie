@@ -4,6 +4,8 @@ Discover Movies on Netflix that are long enough for a **Platelet Donation** (≥
 
 Platelet donation typically takes 2–3 hours, so this CLI tool helps you find Netflix films that will keep you entertained throughout the entire process.
 
+**🌐 [View the live GitHub Pages site](https://tegataiprime.github.io/Platelet-Movie/)** – Updated weekly with Lady Whistledown's commentary!
+
 ---
 
 ## How it works
@@ -24,10 +26,11 @@ TMDB provides reliable watch provider data (including Netflix availability) that
 - 🔐 Only requires a free TMDB API key (no Netflix credentials needed)
 - ⏱️ Filters movies by runtime range (min/max configurable, default: **135-145 minutes**)
 - 🌐 Filter by original language (ISO 639-1 codes, default: **English**)
-- ⭐ Shows **release year**, **TMDB score**, **MPAA rating** (R, PG-13, etc.), and **genres** for each movie
+- ⭐ Shows **TMDB score**, **MPAA rating** (R, PG-13, etc.), and **genres** for each movie
 - 📋 Returns results **sorted ascending** by runtime, then by title
 - 📄 **Multiple output formats**: Markdown (default), HTML, CSV, and JSON
 - 🌍 Supports different Netflix regions (US, GB, CA, etc.)
+- 🌙 **GitHub Pages site** with light/dark mode, sortable columns, and Lady Whistledown commentary
 - 🐍 Written in Python 3.11+, managed with [Poetry](https://python-poetry.org/) and task-automated with [Poe the Poet](https://poethepoet.natn.io/)
 
 ---
@@ -224,6 +227,46 @@ Double-check that your API key is correct and is a v3 auth key (not v4).
 
 ---
 
+## GitHub Pages Site
+
+The project includes a static website hosted on GitHub Pages that displays the weekly movie selections with Lady Whistledown's commentary.
+
+**🌐 [Visit the live site](https://tegataiprime.github.io/Platelet-Movie/)**
+
+### Features
+
+- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
+- **Light/Dark Mode**: Toggle between themes with persistent preference storage
+- **Sortable Columns**: Click any column header to sort the movie list
+- **Lady Whistledown Commentary**: AI-generated introduction in the style of Bridgerton
+- **Acknowledgements**: Proper attribution for TMDB data, accuracy disclaimers, and Bridgerton credits
+
+### Deployment
+
+The site is automatically updated every **Friday at 8:00 PM UTC** (same schedule as the weekly email report) via GitHub Actions.
+
+The workflow:
+1. Generates fresh movie data using the `platelet-movie` CLI
+2. Creates Lady Whistledown commentary using OpenAI
+3. Builds a `data.json` file with all content
+4. Deploys the static site to GitHub Pages
+
+### Manual Deployment
+
+You can manually trigger a deployment from the Actions tab:
+1. Go to **Actions** → **Deploy GitHub Pages**
+2. Click **Run workflow**
+
+### Enabling GitHub Pages
+
+**Note:** GitHub Pages is automatically configured when the repository becomes public. For private repositories, you may need to enable it manually:
+
+1. Go to **Settings** → **Pages**
+2. Under **Source**, select **GitHub Actions**
+3. The site will be available at `https://tegataiprime.github.io/Platelet-Movie/`
+
+---
+
 ## Automated Weekly Email Report
 
 A GitHub Actions workflow automatically runs `platelet-movie` weekly and emails the results to subscribers with a witty Lady Whistledown-style introduction.
@@ -330,6 +373,13 @@ The project uses GitHub Actions to ensure code quality:
 - Validates that the entire movie discovery and reporting pipeline works correctly
 - Triggers on: PR opened, synchronized, reopened
 
+**GitHub Pages Deployment** (`deploy-github-pages.yml`):
+- Automatically generates and deploys the static website
+- Runs every Friday at 8:00 PM UTC (same schedule as the weekly email)
+- Generates movie data, Lady Whistledown commentary, and builds `data.json`
+- Deploys to GitHub Pages for public viewing
+- Can be triggered manually from the Actions tab
+
 **Note:** To block PRs from being merged when tests fail, configure branch protection rules in repository settings to require the "Test Pull Request" workflow to pass before merging.
 
 ### Project Structure
@@ -339,15 +389,22 @@ Platelet-Movie/
 ├── .github/
 │   └── workflows/
 │       ├── weekly-movie-report.yml       # Weekly email report automation
+│       ├── deploy-github-pages.yml       # GitHub Pages deployment
 │       ├── pr-movie-report-test.yml      # E2E functional test for PRs
 │       ├── test-pr.yml                   # PR testing (lint + coverage)
 │       └── test-main.yml                 # Main branch testing
+├── docs/                                 # GitHub Pages static site
+│   ├── index.html                        # Main HTML page
+│   ├── styles.css                        # Styles with light/dark mode
+│   ├── app.js                            # JavaScript for sorting & theme
+│   └── data.json                         # Generated movie data
 ├── platelet_movie/
 │   ├── __init__.py       # Package metadata
 │   ├── cli.py            # Click-based CLI entry point
 │   ├── tmdb_client.py    # TMDB API client
 │   ├── config.py         # 12-Factor configuration (env vars)
-│   └── models.py         # Movie data model
+│   ├── models.py         # Movie data model
+│   └── formatters.py     # Output formatters (markdown, HTML, CSV, JSON)
 ├── tests/
 │   ├── __init__.py
 │   ├── test_cli.py
