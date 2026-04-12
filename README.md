@@ -310,6 +310,8 @@ Platelet-Movie/
 │   ├── test_tmdb_client.py
 │   ├── test_config.py
 │   └── test_models.py
+├── scripts/
+│   └── lady_whistledown.py  # OpenAI-powered commentary generator
 ├── pyproject.toml        # Poetry + Poe tasks + Ruff config
 ├── poetry.lock
 └── README.md
