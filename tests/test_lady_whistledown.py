@@ -242,6 +242,39 @@ class TestMainFunction:
         commentary = generate_commentary(movie_list)
         assert "Dear Reader" in commentary
 
+    def test_script_execution_with_valid_input(self):
+        """Test executing the script as main with valid input."""
+        import subprocess
+        
+        script_path = "/home/runner/work/Platelet-Movie/Platelet-Movie/scripts/lady_whistledown.py"
+        movie_list = "1. The Matrix (136m)\n2. Inception (148m)"
+        
+        result = subprocess.run(
+            ["python", script_path],
+            input=movie_list,
+            capture_output=True,
+            text=True,
+        )
+        
+        assert result.returncode == 0
+        assert "Dear Reader" in result.stdout
+
+    def test_script_execution_with_empty_input(self):
+        """Test executing the script as main with empty input exits with error."""
+        import subprocess
+        
+        script_path = "/home/runner/work/Platelet-Movie/Platelet-Movie/scripts/lady_whistledown.py"
+        
+        result = subprocess.run(
+            ["python", script_path],
+            input="",
+            capture_output=True,
+            text=True,
+        )
+        
+        assert result.returncode == 1
+        assert "Error: No movie list provided on stdin" in result.stderr
+
     @patch("sys.stdin", StringIO(""))
     @patch("sys.stderr", new_callable=StringIO)
     def test_exits_with_error_on_empty_stdin(self, mock_stderr):

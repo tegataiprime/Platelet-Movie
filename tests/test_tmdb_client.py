@@ -717,3 +717,154 @@ class TestTMDBClientRegion:
 
         # Movie should be excluded because it's not on Netflix in GB
         assert movies == []
+
+
+class TestExceptionHandling:
+    """Tests for exception handling in TMDBClient."""
+
+    def test_discover_continues_on_movie_processing_error(self, mocker):
+        """Test that discover_movies_on_netflix continues when one movie raises an exception."""
+        from platelet_movie.tmdb_client import TMDBClient
+
+        client = TMDBClient(api_key="test_key")
+
+        # Two movies in discover results
+        discover_data = _make_discover_response(
+            [
+                {"id": 1, "title": "Movie 1", "overview": "desc1"},
+                {"id": 2, "title": "Movie 2", "overview": "desc2"},
+            ]
+        )
+        
+        # First movie details will raise an exception
+        # Second movie will succeed
+        movie2_details = _make_tmdb_movie_response(2, "Movie 2", 140)
+        providers2 = _make_watch_providers_response(2, has_netflix=True)
+        release_dates2 = _make_release_dates_response(2, certification="PG-13")
+
+        mock_get = mocker.patch("platelet_movie.tmdb_client.requests.get")
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.raise_for_status = MagicMock()
+        
+        # First call: discover API
+        # Second call: movie 1 details - will raise exception
+        # Third call: movie 2 details - will succeed
+        # Fourth call: movie 2 providers
+        # Fifth call: movie 2 release dates
+        responses = [
+            discover_data,
+            Exception("Failed to get movie 1 details"),  # This will be raised
+            movie2_details,
+            providers2,
+            release_dates2,
+        ]
+        
+        def side_effect_func(*args, **kwargs):
+            response = responses.pop(0)
+            if isinstance(response, Exception):
+                raise response
+            return response
+        
+        mock_get.return_value.json.side_effect = side_effect_func
+
+        # Should continue processing and return movie 2 despite error on movie 1
+        movies = client.discover_movies_on_netflix(min_runtime_minutes=135)
+
+        assert len(movies) == 1
+        assert movies[0].title == "Movie 2"
+
+    def test_certification_api_error_returns_none(self, mocker):
+        """Test that _get_certification returns None when API call fails."""
+        from platelet_movie.tmdb_client import TMDBClient, TMDBAPIError
+
+        client = TMDBClient(api_key="test_key")
+
+        discover_data = _make_discover_response(
+            [{"id": 1, "title": "Movie", "overview": "desc"}]
+        )
+        movie_details = _make_tmdb_movie_response(1, "Movie", 140)
+        providers = _make_watch_providers_response(1, has_netflix=True)
+
+        mock_get = mocker.patch("platelet_movie.tmdb_client.requests.get")
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.raise_for_status = MagicMock()
+        
+        # Mock responses: discover, movie details, providers, then fail on release_dates
+        call_count = [0]
+        
+        def side_effect_func(*args, **kwargs):
+            call_count[0] += 1
+            if call_count[0] == 1:
+                mock_get.return_value.json.return_value = discover_data
+                return mock_get.return_value
+            elif call_count[0] == 2:
+                mock_get.return_value.json.return_value = movie_details
+                return mock_get.return_value
+            elif call_count[0] == 3:
+                mock_get.return_value.json.return_value = providers
+                return mock_get.return_value
+            else:  # release_dates call - raise error
+                error = requests.HTTPError()
+                error.response = MagicMock()
+                error.response.status_code = 404
+                error.response.json.return_value = {"status_message": "Not found"}
+                raise error
+        
+        mock_get.side_effect = side_effect_func
+
+        movies = client.discover_movies_on_netflix(min_runtime_minutes=135)
+
+        # Should succeed with None certification
+        assert len(movies) == 1
+        assert movies[0].certification is None
+
+    def test_make_request_handles_json_decode_error(self, mocker):
+        """Test that _make_request handles JSON decode errors in error responses."""
+        from platelet_movie.tmdb_client import TMDBClient, TMDBAPIError
+
+        client = TMDBClient(api_key="test_key")
+
+        mock_response = MagicMock()
+        mock_response.status_code = 400
+        mock_response.json.side_effect = ValueError("Invalid JSON")
+        
+        error = requests.HTTPError()
+        error.response = mock_response
+        
+        mock_get = mocker.patch("platelet_movie.tmdb_client.requests.get")
+        mock_get.return_value.raise_for_status.side_effect = error
+
+        with pytest.raises(TMDBAPIError, match="TMDB API error \\(400\\)"):
+            client._make_request("http://test.com", {})
+
+    def test_make_request_handles_non_standard_status_codes(self, mocker):
+        """Test that _make_request handles status codes other than 401, 429, 500+."""
+        from platelet_movie.tmdb_client import TMDBClient, TMDBAPIError
+
+        client = TMDBClient(api_key="test_key")
+
+        mock_response = MagicMock()
+        mock_response.status_code = 404
+        mock_response.json.return_value = {"status_message": "Resource not found"}
+        
+        error = requests.HTTPError()
+        error.response = mock_response
+        
+        mock_get = mocker.patch("platelet_movie.tmdb_client.requests.get")
+        mock_get.return_value.raise_for_status.side_effect = error
+
+        with pytest.raises(TMDBAPIError, match="TMDB API error \\(404\\): Resource not found"):
+            client._make_request("http://test.com", {})
+
+    def test_make_request_handles_generic_request_exception(self, mocker):
+        """Test that _make_request handles RequestException."""
+        from platelet_movie.tmdb_client import TMDBClient, TMDBAPIError
+
+        client = TMDBClient(api_key="test_key")
+
+        # RequestException that's not HTTPError, ConnectionError, or Timeout
+        mock_get = mocker.patch("platelet_movie.tmdb_client.requests.get")
+        mock_get.side_effect = requests.RequestException("Generic request error")
+
+        with pytest.raises(TMDBAPIError, match="Request failed: Generic request error"):
+            client._make_request("http://test.com", {})
