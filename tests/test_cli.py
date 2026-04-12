@@ -270,3 +270,29 @@ class TestCLI:
         ), f"Expected logging output with --verbose flag. Got: {result.output[:500]}"
         # The actual movie data should still be present
         assert "Test Movie" in result.output
+
+    def test_genre_truncation_with_long_genre_names(self, mocker):
+        """Test that genre names are truncated when they exceed 20 characters."""
+        # Create a movie with very long genre names that will exceed the 20-char limit
+        movies = [
+            Movie(
+                title="Epic Movie",
+                runtime_minutes=150,
+                genres=[
+                    "Science Fiction",
+                    "Adventure",
+                ],  # Combined: "Science Fiction, Adventure" = 28 chars
+                rating=8.5,
+                certification="PG-13",
+            )
+        ]
+        mocker.patch(
+            "platelet_movie.cli.TMDBClient.discover_movies_on_netflix", return_value=movies
+        )
+        runner = self._runner()
+        result = runner.invoke(main, env=self._base_env())
+        assert result.exit_code == 0
+
+        # The genres should be truncated with "..."
+        # Original: "Science Fiction, Adventure" (28 chars) -> truncated to 17 chars + "..."
+        assert "Science Fiction..." in result.output or "..." in result.output
