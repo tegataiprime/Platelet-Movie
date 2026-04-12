@@ -38,10 +38,8 @@ jobs:
           TMDB_REGION: ${{ vars.TMDB_REGION || 'US' }}
         run: |
           echo "Running platelet-movie..."
-          set +e  # Don't exit on error
-          OUTPUT=$(poetry run platelet-movie 2>&1)
-          EXIT_CODE=$?
-          set -e  # Re-enable exit on error
+          OUTPUT=$(poetry run platelet-movie 2>&1) || EXIT_CODE=$?
+          EXIT_CODE=${EXIT_CODE:-0}
           
           echo "output<<EOF" >> $GITHUB_OUTPUT
           echo "$OUTPUT" >> $GITHUB_OUTPUT
