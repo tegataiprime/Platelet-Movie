@@ -294,6 +294,19 @@ The project requires **≥ 80% code coverage** (enforced by CI).
 
 All TMDB API interactions are tested by mocking the `requests.get` calls via `pytest-mock`.
 
+### Continuous Integration
+
+All pull requests automatically trigger a GitHub Actions workflow that:
+- Runs linting with Ruff (`poe lint`)
+- Executes the full test suite with coverage (`poe test`)
+- Enforces the 80% coverage threshold
+
+**Pull requests will be blocked** if tests fail or coverage drops below 80%. The workflow runs on:
+- New PR creation
+- New commits pushed to the PR
+- PR reopened
+- Draft PR marked as ready for review
+
 ### Project Structure
 
 ```
