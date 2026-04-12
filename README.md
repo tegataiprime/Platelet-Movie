@@ -238,7 +238,7 @@ A GitHub Actions workflow automatically runs `platelet-movie` weekly and emails 
 
 ### Schedule
 
-The workflow runs every **Friday at 8:00 PM US Eastern Time** (midnight UTC Saturday). You can also trigger it manually from the Actions tab.
+The workflow runs every **Friday at 8:00 PM UTC** (4:00 PM EDT / 3:00 PM EST). You can also trigger it manually from the Actions tab.
 
 ### Lady Whistledown Commentary
 
@@ -290,9 +290,9 @@ pytest tests/ -v --cov=platelet_movie --cov-report=term-missing
 
 ### Code Coverage
 
-The project requires **≥ 80% code coverage** (enforced by CI).
+The project requires **≥ 80% code coverage** (enforced by CI) for both the `platelet_movie` package and the `scripts` directory.
 
-All TMDB API interactions are tested by mocking the `requests.get` calls via `pytest-mock`.
+All TMDB API interactions are tested by mocking the `requests.get` calls via `pytest-mock`. The Lady Whistledown commentary generator (`scripts/lady_whistledown.py`) is also tested with mocked OpenAI API calls and is included in coverage requirements.
 
 ### Continuous Integration
 
@@ -309,12 +309,26 @@ The project uses GitHub Actions to ensure code quality:
 - Validates that merged code maintains quality standards
 - Provides immediate feedback if issues slip through
 
+**PR Movie Report Test** (`pr-movie-report-test.yml`):
+- End-to-end functional test of the weekly movie report workflow
+- Runs the full `platelet-movie` CLI with the same configuration as the weekly report
+- Generates Lady Whistledown commentary using the OpenAI API
+- Posts the complete report as a PR comment (instead of sending email)
+- Validates that the entire movie discovery and reporting pipeline works correctly
+- Triggers on: PR opened, synchronized, reopened
+
 **Note:** To block PRs from being merged when tests fail, configure branch protection rules in repository settings to require the "Test Pull Request" workflow to pass before merging.
 
 ### Project Structure
 
 ```
 Platelet-Movie/
+├── .github/
+│   └── workflows/
+│       ├── weekly-movie-report.yml       # Weekly email report automation
+│       ├── pr-movie-report-test.yml      # E2E functional test for PRs
+│       ├── test-pr.yml                   # PR testing (lint + coverage)
+│       └── test-main.yml                 # Main branch testing
 ├── platelet_movie/
 │   ├── __init__.py       # Package metadata
 │   ├── cli.py            # Click-based CLI entry point
@@ -326,7 +340,8 @@ Platelet-Movie/
 │   ├── test_cli.py
 │   ├── test_tmdb_client.py
 │   ├── test_config.py
-│   └── test_models.py
+│   ├── test_models.py
+│   └── test_lady_whistledown.py
 ├── scripts/
 │   └── lady_whistledown.py  # OpenAI-powered commentary generator
 ├── pyproject.toml        # Poetry + Poe tasks + Ruff config

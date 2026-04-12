@@ -25,7 +25,7 @@ dev = [
 ]
 
 [tool.poe.tasks]
-test       = "pytest --cov=platelet_movie --cov-report=term-missing --cov-fail-under=80"
+test       = "pytest --cov=platelet_movie --cov=scripts --cov-report=term-missing --cov-fail-under=80"
 lint       = "ruff check platelet_movie tests"
 format     = "ruff format platelet_movie tests"
 run        = "platelet-movie"
@@ -34,7 +34,7 @@ run        = "platelet-movie"
 testpaths = ["tests"]
 
 [tool.coverage.run]
-source = ["platelet_movie"]
+source = ["platelet_movie", "scripts"]
 
 [tool.coverage.report]
 fail_under = 80
