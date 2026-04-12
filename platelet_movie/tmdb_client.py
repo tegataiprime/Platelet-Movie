@@ -219,12 +219,23 @@ class TMDBClient:
         # Get MPAA certification (R, PG-13, etc.)
         certification = self._get_certification(movie_id)
 
+        # Extract year from release_date (format: "YYYY-MM-DD")
+        year = None
+        release_date = details.get("release_date")
+        if release_date:
+            try:
+                year = int(release_date.split("-")[0])
+            except (ValueError, IndexError):
+                # Invalid date format - year remains None
+                pass
+
         return Movie(
             title=title,
             runtime_minutes=runtime,
             genres=genres,
             rating=rating,
             certification=certification,
+            year=year,
         )
 
     def _get_movie_details(self, movie_id: int) -> dict:
