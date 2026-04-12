@@ -78,6 +78,7 @@ Platelet-Movie follows the [12-Factor App](https://12factor.net/config) methodol
 |----------|----------|---------|-------------|
 | `TMDB_API_KEY` | ✅ | – | Your TMDB API key (v3 auth) |
 | `TMDB_REGION` | ❌ | `US` | Netflix region code (ISO 3166-1 alpha-2, e.g., US, GB, CA) |
+| `TMDB_MAX_PAGES` | ❌ | `10` | Maximum number of TMDB result pages to fetch (20 movies per page) |
 
 ### Setting environment variables
 
@@ -212,7 +213,7 @@ Double-check that your API key is correct and is a v3 auth key (not v4).
 
 ## Automated Weekly Email Report
 
-A GitHub Actions workflow automatically runs `platelet-movie` weekly and emails the results to subscribers.
+A GitHub Actions workflow automatically runs `platelet-movie` weekly and emails the results to subscribers with a witty Lady Whistledown-style introduction.
 
 ### Setup
 
@@ -227,6 +228,7 @@ A GitHub Actions workflow automatically runs `platelet-movie` weekly and emails 
    | `MAIL_USERNAME` | ✅ | SMTP username/email |
    | `MAIL_PASSWORD` | ✅ | SMTP password or app password |
    | `MAIL_FROM` | ❌ | From address (default: `MAIL_USERNAME`) |
+   | `OPENAI_API_KEY` | ❌ | OpenAI API key for Lady Whistledown commentary (optional) |
 
 2. **Configure repository variables** (optional):
 
@@ -236,7 +238,11 @@ A GitHub Actions workflow automatically runs `platelet-movie` weekly and emails 
 
 ### Schedule
 
-The workflow runs every **Sunday at 9:00 AM UTC**. You can also trigger it manually from the Actions tab.
+The workflow runs every **Friday at 8:00 PM US Eastern Time** (midnight UTC Saturday). You can also trigger it manually from the Actions tab.
+
+### Lady Whistledown Commentary
+
+The weekly email includes an AI-generated introduction written in the style of Lady Whistledown from Bridgerton. This feature requires an OpenAI API key (`OPENAI_API_KEY` secret). If the API key is not configured, the workflow will use a charming fallback message instead.
 
 ### Gmail Setup
 
@@ -304,6 +310,8 @@ Platelet-Movie/
 │   ├── test_tmdb_client.py
 │   ├── test_config.py
 │   └── test_models.py
+├── scripts/
+│   └── lady_whistledown.py  # OpenAI-powered commentary generator
 ├── pyproject.toml        # Poetry + Poe tasks + Ruff config
 ├── poetry.lock
 └── README.md
