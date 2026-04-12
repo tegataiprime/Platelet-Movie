@@ -294,6 +294,23 @@ The project requires **≥ 80% code coverage** (enforced by CI).
 
 All TMDB API interactions are tested by mocking the `requests.get` calls via `pytest-mock`.
 
+### Continuous Integration
+
+The project uses GitHub Actions to ensure code quality:
+
+**Pull Request Testing** (`test-pr.yml`):
+- Runs linting with Ruff (`poe lint`)
+- Executes the full test suite with coverage (`poe test`)
+- Enforces the 80% coverage threshold
+- Triggers on: PR opened, synchronized, reopened, or marked ready for review
+
+**Main Branch Testing** (`test-main.yml`):
+- Runs linting and full test suite on every push to `main`
+- Validates that merged code maintains quality standards
+- Provides immediate feedback if issues slip through
+
+**Note:** To block PRs from being merged when tests fail, configure branch protection rules in repository settings to require the "Test Pull Request" workflow to pass before merging.
+
 ### Project Structure
 
 ```
