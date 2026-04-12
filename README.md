@@ -130,7 +130,7 @@ Options:
   --max-pages INTEGER          Max result pages to fetch (20 movies/page). [default: 10]
   --api-key TEXT               TMDB API key (overrides TMDB_API_KEY env var).
   --region TEXT                Netflix region code (e.g., US, GB). Default: US.
-  -v, --verbose                Enable verbose debug logging.
+  -v, --verbose                Enable verbose debug logging to stderr.
   --version                    Show the version and exit.
   --help                       Show this message and exit.
 ```
