@@ -290,9 +290,9 @@ pytest tests/ -v --cov=platelet_movie --cov-report=term-missing
 
 ### Code Coverage
 
-The project requires **≥ 80% code coverage** (enforced by CI).
+The project requires **≥ 80% code coverage** (enforced by CI) for the `platelet_movie` package.
 
-All TMDB API interactions are tested by mocking the `requests.get` calls via `pytest-mock`.
+All TMDB API interactions are tested by mocking the `requests.get` calls via `pytest-mock`. The Lady Whistledown commentary generator (`scripts/lady_whistledown.py`) is also tested with mocked OpenAI API calls.
 
 ### Continuous Integration
 
@@ -323,6 +323,12 @@ The project uses GitHub Actions to ensure code quality:
 
 ```
 Platelet-Movie/
+├── .github/
+│   └── workflows/
+│       ├── weekly-movie-report.yml       # Weekly email report automation
+│       ├── pr-movie-report-test.yml      # E2E functional test for PRs
+│       ├── test-pr.yml                   # PR testing (lint + coverage)
+│       └── test-main.yml                 # Main branch testing
 ├── platelet_movie/
 │   ├── __init__.py       # Package metadata
 │   ├── cli.py            # Click-based CLI entry point
@@ -334,7 +340,8 @@ Platelet-Movie/
 │   ├── test_cli.py
 │   ├── test_tmdb_client.py
 │   ├── test_config.py
-│   └── test_models.py
+│   ├── test_models.py
+│   └── test_lady_whistledown.py
 ├── scripts/
 │   └── lady_whistledown.py  # OpenAI-powered commentary generator
 ├── pyproject.toml        # Poetry + Poe tasks + Ruff config
