@@ -8,6 +8,7 @@ import sys
 import click
 
 from platelet_movie.config import Config
+from platelet_movie.formatters import format_movies
 from platelet_movie.tmdb_client import TMDBAPIError, TMDBClient
 
 logger = logging.getLogger(__name__)
@@ -15,6 +16,7 @@ logger = logging.getLogger(__name__)
 _DEFAULT_MIN_MINUTES = 135
 _DEFAULT_MAX_MINUTES = 145
 _DEFAULT_LANGUAGE = "en"
+_DEFAULT_FORMAT = "markdown"
 
 
 @click.command()
@@ -57,6 +59,14 @@ _DEFAULT_LANGUAGE = "en"
     help="Netflix region code (e.g., US, GB). Default: US.",
 )
 @click.option(
+    "--format",
+    "output_format",
+    type=click.Choice(["markdown", "html", "csv", "json"], case_sensitive=False),
+    default=_DEFAULT_FORMAT,
+    show_default=True,
+    help="Output format for the movie list.",
+)
+@click.option(
     "--verbose",
     "-v",
     is_flag=True,
@@ -71,6 +81,7 @@ def main(
     max_pages: int | None,
     api_key: str | None,
     region: str | None,
+    output_format: str,
     verbose: bool,
 ) -> None:
     """Discover Netflix movies long enough for a Platelet Donation.
@@ -167,17 +178,13 @@ def main(
     runtime_header = f">= {min_minutes} minutes"
     if max_minutes:
         runtime_header = f"{min_minutes}-{max_minutes} minutes"
-    click.echo(f"Netflix movies with a runtime {runtime_header}:\n")
-    click.echo(f"{'Runtime':>10}  {'Score':>6}  {'Rated':<7}  {'Genres':<20}  Title")
-    click.echo("-" * 85)
-    for movie in movies:
-        rating_str = f"{movie.rating:.1f}" if movie.rating is not None else "N/A"
-        cert_str = movie.certification if movie.certification else "NR"
-        genres_str = ", ".join(movie.genres[:2]) if movie.genres else "N/A"
-        # Truncate genres if too long
-        if len(genres_str) > 20:
-            genres_str = genres_str[:17] + "..."
-        click.echo(
-            f"{movie.runtime_minutes:>8} m  {rating_str:>6}  {cert_str:<7}  "
-            f"{genres_str:<20}  {movie.title}"
-        )
+
+    # For JSON and CSV, we only output the formatted data, no headers
+    if output_format in ("json", "csv"):
+        formatted_output = format_movies(movies, output_format)
+        click.echo(formatted_output)
+    else:
+        # For markdown and html, include a header
+        click.echo(f"Netflix movies with a runtime {runtime_header}:\n")
+        formatted_output = format_movies(movies, output_format)
+        click.echo(formatted_output)
