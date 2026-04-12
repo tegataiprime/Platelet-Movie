@@ -514,9 +514,7 @@ class TestDiscoverMoviesOnNetflix:
 
         client = TMDBClient(api_key="test_key")
 
-        discover_data = _make_discover_response(
-            [{"id": 1, "title": "No Year", "overview": "desc"}]
-        )
+        discover_data = _make_discover_response([{"id": 1, "title": "No Year", "overview": "desc"}])
 
         # Movie details without release_date field
         movie_details = {

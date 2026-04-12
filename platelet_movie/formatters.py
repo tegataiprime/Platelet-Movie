@@ -117,7 +117,14 @@ def _format_csv(movies: list[Movie]) -> str:
         genres_str = ", ".join(movie.genres) if movie.genres else "N/A"
 
         writer.writerow(
-            [f"{movie.runtime_minutes} min", year_str, rating_str, cert_str, genres_str, movie.title]
+            [
+                f"{movie.runtime_minutes} min",
+                year_str,
+                rating_str,
+                cert_str,
+                genres_str,
+                movie.title,
+            ]
         )
 
     return output.getvalue()
