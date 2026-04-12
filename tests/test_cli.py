@@ -296,3 +296,72 @@ class TestCLI:
         # The genres should be truncated with "..."
         # Original: "Science Fiction, Adventure" (28 chars) -> truncated to 17 chars + "..."
         assert "Science Fiction..." in result.output or "..." in result.output
+
+    def test_format_option_default_markdown(self, mocker):
+        """Test that default format is markdown."""
+        movies = [Movie(title="Test Movie", runtime_minutes=140, rating=7.5)]
+        mocker.patch(
+            "platelet_movie.cli.TMDBClient.discover_movies_on_netflix", return_value=movies
+        )
+        runner = self._runner()
+        result = runner.invoke(main, env=self._base_env())
+        assert result.exit_code == 0
+        # Markdown format should have dashes separator
+        assert "-" * 20 in result.output
+
+    def test_format_option_html(self, mocker):
+        """Test --format html option."""
+        movies = [Movie(title="Test Movie", runtime_minutes=140, rating=7.5)]
+        mocker.patch(
+            "platelet_movie.cli.TMDBClient.discover_movies_on_netflix", return_value=movies
+        )
+        runner = self._runner()
+        result = runner.invoke(main, ["--format", "html"], env=self._base_env())
+        assert result.exit_code == 0
+        assert "<table" in result.output
+        assert "<tr>" in result.output
+        assert "Test Movie" in result.output
+
+    def test_format_option_csv(self, mocker):
+        """Test --format csv option."""
+        movies = [Movie(title="Test Movie", runtime_minutes=140, rating=7.5)]
+        mocker.patch(
+            "platelet_movie.cli.TMDBClient.discover_movies_on_netflix", return_value=movies
+        )
+        runner = self._runner()
+        result = runner.invoke(main, ["--format", "csv"], env=self._base_env())
+        assert result.exit_code == 0
+        lines = result.output.strip().split("\n")
+        # Should have CSV header
+        assert "Runtime" in lines[0]
+        assert "Test Movie" in result.output
+
+    def test_format_option_json(self, mocker):
+        """Test --format json option."""
+        import json
+
+        movies = [Movie(title="Test Movie", runtime_minutes=140, rating=7.5)]
+        mocker.patch(
+            "platelet_movie.cli.TMDBClient.discover_movies_on_netflix", return_value=movies
+        )
+        runner = self._runner()
+        result = runner.invoke(main, ["--format", "json"], env=self._base_env())
+        assert result.exit_code == 0
+        # Should be valid JSON
+        # Extract just the JSON part (may have headers before it)
+        output = result.output
+        # Find the first '[' which starts the JSON array
+        json_start = output.find("[")
+        if json_start != -1:
+            json_output = output[json_start:]
+            parsed = json.loads(json_output)
+            assert isinstance(parsed, list)
+            assert parsed[0]["title"] == "Test Movie"
+
+    def test_invalid_format_option(self, mocker):
+        """Test that invalid format option raises error."""
+        mocker.patch("platelet_movie.cli.TMDBClient.discover_movies_on_netflix", return_value=[])
+        runner = self._runner()
+        result = runner.invoke(main, ["--format", "invalid"], env=self._base_env())
+        # Click should reject invalid choice
+        assert result.exit_code != 0
