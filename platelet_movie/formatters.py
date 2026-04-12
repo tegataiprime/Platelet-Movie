@@ -38,13 +38,13 @@ def format_movies(movies: list[Movie], format_type: FormatType) -> str:
 
 
 def _format_markdown(movies: list[Movie]) -> str:
-    """Format movies as a markdown table."""
+    """Format movies as a GFM pipe table."""
     if not movies:
         return ""
 
     lines = []
-    lines.append(f"{'Runtime':>10}  {'Year':>6}  {'Score':>6}  {'Rated':<7}  {'Genres':<20}  Title")
-    lines.append("-" * 95)
+    lines.append(f"| {'Runtime':>10} | {'Year':>6} | {'Score':>6} | {'Rated':<7} | {'Genres':<20} | Title |")
+    lines.append(f"| {'---':>10} | {'---':>6} | {'---':>6} | {'---':<7} | {'---':<20} | --- |")
 
     for movie in movies:
         rating_str = f"{movie.rating:.1f}" if movie.rating is not None else "N/A"
@@ -55,8 +55,8 @@ def _format_markdown(movies: list[Movie]) -> str:
         if len(genres_str) > 20:
             genres_str = genres_str[:17] + "..."
         lines.append(
-            f"{movie.runtime_minutes:>8} m  {year_str:>6}  {rating_str:>6}  {cert_str:<7}  "
-            f"{genres_str:<20}  {movie.title}"
+            f"| {movie.runtime_minutes:>8} m | {year_str:>6} | {rating_str:>6} | {cert_str:<7} | "
+            f"{genres_str:<20} | {movie.title} |"
         )
 
     return "\n".join(lines)
