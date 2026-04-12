@@ -72,13 +72,14 @@ function renderMovies(movies) {
     const tbody = document.getElementById('movie-tbody');
     
     if (!movies || movies.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="loading">No movies found.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="loading">No movies found.</td></tr>';
         return;
     }
     
     tbody.innerHTML = movies.map(movie => {
         const rating = movie.rating != null ? movie.rating.toFixed(1) : 'N/A';
         const certification = movie.certification || 'NR';
+        const year = movie.year != null ? movie.year : 'N/A';
         const genres = movie.genres && movie.genres.length > 0 
             ? movie.genres.join(', ') 
             : 'N/A';
@@ -86,6 +87,7 @@ function renderMovies(movies) {
         return `
             <tr>
                 <td>${movie.runtime_minutes} min</td>
+                <td>${year}</td>
                 <td>${rating}</td>
                 <td>${certification}</td>
                 <td>${genres}</td>
@@ -115,6 +117,10 @@ function sortMovies(column) {
             case 'runtime':
                 aVal = a.runtime_minutes;
                 bVal = b.runtime_minutes;
+                break;
+            case 'year':
+                aVal = a.year != null ? a.year : -1;
+                bVal = b.year != null ? b.year : -1;
                 break;
             case 'score':
                 aVal = a.rating != null ? a.rating : -1;
