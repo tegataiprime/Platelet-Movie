@@ -1,13 +1,18 @@
 """Tests for scripts/lady_whistledown.py."""
 
+import os
 import sys
 from io import StringIO
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
 
 # Import after modifying path to include scripts directory
-sys.path.insert(0, "/home/runner/work/Platelet-Movie/Platelet-Movie/scripts")
+# Get the project root directory dynamically
+PROJECT_ROOT = Path(__file__).parent.parent
+SCRIPTS_DIR = PROJECT_ROOT / "scripts"
+sys.path.insert(0, str(SCRIPTS_DIR))
 from lady_whistledown import generate_commentary, generate_fallback_commentary
 
 
@@ -72,7 +77,8 @@ class TestGenerateCommentaryWithAPIKey:
         call_args = mock_urlopen.call_args
         request = call_args[0][0]
         assert request.get_method() == "POST"
-        assert "api.openai.com" in request.full_url
+        # Check the full URL matches expected OpenAI API endpoint
+        assert request.full_url == "https://api.openai.com/v1/chat/completions"
         assert request.headers["Authorization"] == "Bearer test-api-key-123"
         assert request.headers["Content-type"] == "application/json"
 
@@ -247,11 +253,12 @@ class TestMainFunction:
         """Test executing the script as main with valid input."""
         import subprocess
 
-        script_path = "/home/runner/work/Platelet-Movie/Platelet-Movie/scripts/lady_whistledown.py"
+        # Get script path relative to project root
+        script_path = SCRIPTS_DIR / "lady_whistledown.py"
         movie_list = "1. The Matrix (136m)\n2. Inception (148m)"
 
         result = subprocess.run(
-            ["python", script_path],
+            ["python", str(script_path)],
             input=movie_list,
             capture_output=True,
             text=True,
@@ -264,10 +271,11 @@ class TestMainFunction:
         """Test executing the script as main with empty input exits with error."""
         import subprocess
 
-        script_path = "/home/runner/work/Platelet-Movie/Platelet-Movie/scripts/lady_whistledown.py"
+        # Get script path relative to project root
+        script_path = SCRIPTS_DIR / "lady_whistledown.py"
 
         result = subprocess.run(
-            ["python", script_path],
+            ["python", str(script_path)],
             input="",
             capture_output=True,
             text=True,
