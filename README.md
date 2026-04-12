@@ -238,7 +238,7 @@ A GitHub Actions workflow automatically runs `platelet-movie` weekly and emails 
 
 ### Schedule
 
-The workflow runs every **Friday at 8:00 PM US Eastern Time** (midnight UTC Saturday). You can also trigger it manually from the Actions tab.
+The workflow runs every **Friday at 8:00 PM UTC** (4:00 PM EDT / 3:00 PM EST). You can also trigger it manually from the Actions tab.
 
 ### Lady Whistledown Commentary
 
