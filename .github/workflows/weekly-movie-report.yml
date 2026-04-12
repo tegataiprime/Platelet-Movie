@@ -36,7 +36,7 @@ jobs:
           TMDB_REGION: ${{ vars.TMDB_REGION || 'US' }}
         run: |
           echo "Running platelet-movie..."
-          OUTPUT=$(poetry run platelet-movie 2>&1) || true
+          OUTPUT=$(poetry run platelet-movie --format html 2>&1) || true
           echo "output<<EOF" >> $GITHUB_OUTPUT
           echo "$OUTPUT" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
@@ -65,14 +65,18 @@ jobs:
           subject: "🎬 Lady Whistledown's Weekly Platelet Movie Report"
           to: ${{ secrets.PLATELET_MOVIE_SUBSCRIBERS }}
           from: ${{ secrets.MAIL_FROM || secrets.MAIL_USERNAME }}
-          body: |
+          html_body: |
+            <html>
+            <body>
+            <pre style="font-family: Georgia, serif; white-space: pre-wrap;">
             ${{ steps.commentary.outputs.intro }}
-
-            ═══════════════════════════════════════════════════════════════
-
+            </pre>
+            <hr>
             ${{ steps.platelet.outputs.output }}
-
-            ═══════════════════════════════════════════════════════════════
-            
-            This report was generated automatically by GitHub Actions.
+            <hr>
+            <p style="font-size: 0.9em; color: #666;">
+            This report was generated automatically by GitHub Actions.<br>
             Repository: ${{ github.repository }}
+            </p>
+            </body>
+            </html>

@@ -26,6 +26,7 @@ TMDB provides reliable watch provider data (including Netflix availability) that
 - 🌐 Filter by original language (ISO 639-1 codes, default: **English**)
 - ⭐ Shows **TMDB score**, **MPAA rating** (R, PG-13, etc.), and **genres** for each movie
 - 📋 Returns results **sorted ascending** by runtime, then by title
+- 📄 **Multiple output formats**: Markdown (default), HTML, CSV, and JSON
 - 🌍 Supports different Netflix regions (US, GB, CA, etc.)
 - 🐍 Written in Python 3.11+, managed with [Poetry](https://python-poetry.org/) and task-automated with [Poe the Poet](https://poethepoet.natn.io/)
 
@@ -130,6 +131,8 @@ Options:
   --max-pages INTEGER          Max result pages to fetch (20 movies/page). [default: 10]
   --api-key TEXT               TMDB API key (overrides TMDB_API_KEY env var).
   --region TEXT                Netflix region code (e.g., US, GB). Default: US.
+  --format [markdown|html|csv|json]
+                               Output format for the movie list.  [default: markdown]
   -v, --verbose                Enable verbose debug logging to stderr.
   --version                    Show the version and exit.
   --help                       Show this message and exit.
@@ -164,10 +167,20 @@ platelet-movie --max-pages 20
 
 # Pass API key directly (not recommended for production)
 platelet-movie --api-key your_key_here
+
+# Output as HTML table (useful for email reports)
+platelet-movie --format html
+
+# Output as CSV (useful for spreadsheets)
+platelet-movie --format csv
+
+# Output as JSON (useful for programmatic consumption)
+platelet-movie --format json
 ```
 
 #### Sample Output
 
+Default (Markdown) format:
 ```
 Netflix movies with a runtime 135-145 minutes:
 
