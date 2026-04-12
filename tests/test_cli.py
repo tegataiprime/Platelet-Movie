@@ -235,3 +235,38 @@ class TestCLI:
         result = runner.invoke(main, env=self._base_env())
         assert result.exit_code == 1
         assert "Error" in result.output
+
+    def test_no_logging_output_without_verbose(self, mocker):
+        """Verify that logging messages don't appear in output when --verbose is not set."""
+        movies = [Movie(title="Test Movie", runtime_minutes=140)]
+        mocker.patch(
+            "platelet_movie.cli.TMDBClient.discover_movies_on_netflix", return_value=movies
+        )
+        runner = self._runner()
+        result = runner.invoke(main, env=self._base_env())
+        assert result.exit_code == 0
+        # Ensure no logging timestamps or level indicators appear
+        assert "INFO" not in result.output
+        assert "DEBUG" not in result.output
+        assert "WARNING" not in result.output
+        # Ensure the actual movie data is present
+        assert "Test Movie" in result.output
+
+    def test_logging_output_with_verbose(self, mocker):
+        """Verify that logging messages appear when --verbose is set."""
+        movies = [Movie(title="Test Movie", runtime_minutes=140)]
+        mocker.patch(
+            "platelet_movie.cli.TMDBClient.discover_movies_on_netflix", return_value=movies
+        )
+        runner = self._runner()
+        result = runner.invoke(main, ["--verbose"], env=self._base_env())
+        assert result.exit_code == 0
+        # When verbose, debug logs should appear in stderr (captured by Click's runner)
+        # Click's CliRunner captures both stdout and stderr in result.output
+        # Verify logging indicators are present
+        assert any(
+            indicator in result.output
+            for indicator in ["DEBUG", "Starting Platelet-Movie CLI", "Arguments:"]
+        ), f"Expected logging output with --verbose flag. Got: {result.output[:500]}"
+        # The actual movie data should still be present
+        assert "Test Movie" in result.output

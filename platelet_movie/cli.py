@@ -88,10 +88,26 @@ def main(
         TMDB_MAX_PAGES  – max result pages to fetch, 20 movies/page (default: 10)
     """
     # Configure logging
-    logging.basicConfig(
-        level=logging.DEBUG if verbose else logging.INFO,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    )
+    # Only output logs to stderr when --verbose is set
+    # This prevents log messages from appearing in stdout (e.g., email reports)
+    root_logger = logging.getLogger()
+    # Remove any existing handlers
+    for handler in root_logger.handlers[:]:
+        root_logger.removeHandler(handler)
+
+    if verbose:
+        # Set up debug logging to stderr
+        handler = logging.StreamHandler(sys.stderr)
+        handler.setFormatter(
+            logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+        )
+        root_logger.addHandler(handler)
+        root_logger.setLevel(logging.DEBUG)
+    else:
+        # When not verbose, suppress all logging to keep stdout clean
+        # Use NullHandler to avoid "No handlers could be found" warnings
+        root_logger.addHandler(logging.NullHandler())
+        root_logger.setLevel(logging.CRITICAL + 1)  # Silence all logs
 
     logger.debug("Starting Platelet-Movie CLI")
     logger.debug(
