@@ -301,11 +301,13 @@ All pull requests automatically trigger a GitHub Actions workflow that:
 - Executes the full test suite with coverage (`poe test`)
 - Enforces the 80% coverage threshold
 
-**Pull requests will be blocked** if tests fail or coverage drops below 80%. The workflow runs on:
+The workflow runs on:
 - New PR creation
 - New commits pushed to the PR
 - PR reopened
 - Draft PR marked as ready for review
+
+**Note:** To block PRs from being merged when tests fail, configure branch protection rules in repository settings to require the "Test Pull Request" workflow to pass before merging.
 
 ### Project Structure
 
