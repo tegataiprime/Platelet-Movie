@@ -262,6 +262,11 @@ class TestCLI:
         result = runner.invoke(main, ["--verbose"], env=self._base_env())
         assert result.exit_code == 0
         # When verbose, debug logs should appear in stderr (captured by Click's runner)
-        # Note: Click's CliRunner captures both stdout and stderr in result.output
+        # Click's CliRunner captures both stdout and stderr in result.output
+        # Verify logging indicators are present
+        assert any(
+            indicator in result.output
+            for indicator in ["DEBUG", "Starting Platelet-Movie CLI", "Arguments:"]
+        ), f"Expected logging output with --verbose flag. Got: {result.output[:500]}"
         # The actual movie data should still be present
         assert "Test Movie" in result.output

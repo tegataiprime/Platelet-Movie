@@ -412,9 +412,7 @@ class TestDiscoverMoviesOnNetflix:
             release_dates_2,
         ]
 
-        movies = client.discover_movies_on_netflix(
-            min_runtime_minutes=150, max_runtime_minutes=180
-        )
+        movies = client.discover_movies_on_netflix(min_runtime_minutes=150, max_runtime_minutes=180)
 
         titles = [m.title for m in movies]
         assert "Short" in titles

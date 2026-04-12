@@ -36,9 +36,7 @@ class Config:
         logger.debug(f"TMDB region: {self.tmdb_region}")
 
         self.max_pages = (
-            max_pages
-            if max_pages is not None
-            else int(os.environ.get("TMDB_MAX_PAGES", "10"))
+            max_pages if max_pages is not None else int(os.environ.get("TMDB_MAX_PAGES", "10"))
         )
         logger.debug(f"Max pages: {self.max_pages}")
 
