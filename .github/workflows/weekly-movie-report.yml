@@ -42,6 +42,20 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
           echo "$OUTPUT"
 
+      - name: Generate Lady Whistledown commentary
+        id: commentary
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Generating Lady Whistledown commentary..."
+          chmod +x scripts/lady_whistledown.py
+          COMMENTARY=$(echo "${{ steps.platelet.outputs.output }}" | poetry run python scripts/lady_whistledown.py)
+          echo "intro<<EOF" >> $GITHUB_OUTPUT
+          echo "$COMMENTARY" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "$COMMENTARY"
+
       - name: Send email report
         uses: dawidd6/action-send-mail@v3
         with:
@@ -49,17 +63,17 @@ jobs:
           server_port: ${{ secrets.MAIL_PORT || 587 }}
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
-          subject: "🎬 Weekly Platelet Movie Report"
+          subject: "🎬 Lady Whistledown's Weekly Platelet Movie Report"
           to: ${{ secrets.PLATELET_MOVIE_SUBSCRIBERS }}
           from: ${{ secrets.MAIL_FROM || secrets.MAIL_USERNAME }}
           body: |
-            Weekly Netflix Movie Report for Platelet Donations
-            ==================================================
+            ${{ steps.commentary.outputs.intro }}
 
-            Here are the movies on Netflix that are long enough for a platelet donation:
+            ═══════════════════════════════════════════════════════════════
 
             ${{ steps.platelet.outputs.output }}
 
-            ---
+            ═══════════════════════════════════════════════════════════════
+            
             This report was generated automatically by GitHub Actions.
             Repository: ${{ github.repository }}
