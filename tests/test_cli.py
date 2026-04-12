@@ -278,7 +278,10 @@ class TestCLI:
             Movie(
                 title="Epic Movie",
                 runtime_minutes=150,
-                genres=["Science Fiction", "Adventure"],  # Combined: "Science Fiction, Adventure" = 28 chars
+                genres=[
+                    "Science Fiction",
+                    "Adventure",
+                ],  # Combined: "Science Fiction, Adventure" = 28 chars
                 rating=8.5,
                 certification="PG-13",
             )
@@ -289,7 +292,7 @@ class TestCLI:
         runner = self._runner()
         result = runner.invoke(main, env=self._base_env())
         assert result.exit_code == 0
-        
+
         # The genres should be truncated with "..."
         # Original: "Science Fiction, Adventure" (28 chars) -> truncated to 17 chars + "..."
         assert "Science Fiction..." in result.output or "..." in result.output
