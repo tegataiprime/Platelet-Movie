@@ -27,7 +27,7 @@ async function loadData() {
     } catch (error) {
         console.error('Error loading data:', error);
         document.getElementById('movie-tbody').innerHTML = `
-            <tr><td colspan="5" class="loading">Error loading movie data. Please try again later.</td></tr>
+            <tr><td colspan="6" class="loading">Error loading movie data. Please try again later.</td></tr>
         `;
         document.querySelector('.commentary-content').innerHTML = `
             <p class="loading">Error loading commentary.</p>
