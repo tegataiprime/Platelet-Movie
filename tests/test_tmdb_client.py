@@ -21,6 +21,7 @@ def _make_tmdb_movie_response(
     overview: str = "A movie.",
     genres: list[str] | None = None,
     vote_average: float = 7.5,
+    release_date: str = "2024-01-15",
 ) -> dict:
     """Create a TMDB movie object as returned by the API."""
     genre_list = genres or ["Action", "Drama"]
@@ -29,7 +30,7 @@ def _make_tmdb_movie_response(
         "title": title,
         "runtime": runtime,
         "overview": overview,
-        "release_date": "2024-01-15",
+        "release_date": release_date,
         "vote_average": vote_average,
         "genres": [{"id": i, "name": name} for i, name in enumerate(genre_list)],
     }
@@ -472,6 +473,107 @@ class TestDiscoverMoviesOnNetflix:
         assert movies[0].genres == ["Action", "Sci-Fi", "Thriller"]
         assert movies[0].rating == 8.7
         assert movies[0].certification == "PG-13"
+
+    def test_extracts_year_from_release_date(self, mocker):
+        """Test that the year is correctly extracted from release_date."""
+        from platelet_movie.tmdb_client import TMDBClient
+
+        client = TMDBClient(api_key="test_key")
+
+        discover_data = _make_discover_response(
+            [{"id": 1, "title": "Inception", "overview": "desc"}]
+        )
+
+        movie_details = _make_tmdb_movie_response(
+            1,
+            "Inception",
+            148,
+            release_date="2010-07-16",
+        )
+        providers = _make_watch_providers_response(1, has_netflix=True)
+        release_dates = _make_release_dates_response(1, "PG-13")
+
+        mock_get = mocker.patch("platelet_movie.tmdb_client.requests.get")
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.raise_for_status = MagicMock()
+        mock_get.return_value.json.side_effect = [
+            discover_data,
+            movie_details,
+            providers,
+            release_dates,
+        ]
+
+        movies = client.discover_movies_on_netflix(min_runtime_minutes=135)
+
+        assert len(movies) == 1
+        assert movies[0].year == 2010
+
+    def test_handles_missing_release_date(self, mocker):
+        """Test that missing release_date results in year being None."""
+        from platelet_movie.tmdb_client import TMDBClient
+
+        client = TMDBClient(api_key="test_key")
+
+        discover_data = _make_discover_response([{"id": 1, "title": "No Year", "overview": "desc"}])
+
+        # Movie details without release_date field
+        movie_details = {
+            "id": 1,
+            "title": "No Year",
+            "runtime": 150,
+            "vote_average": 7.0,
+        }
+        providers = _make_watch_providers_response(1, has_netflix=True)
+        release_dates = _make_release_dates_response(1, "R")
+
+        mock_get = mocker.patch("platelet_movie.tmdb_client.requests.get")
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.raise_for_status = MagicMock()
+        mock_get.return_value.json.side_effect = [
+            discover_data,
+            movie_details,
+            providers,
+            release_dates,
+        ]
+
+        movies = client.discover_movies_on_netflix(min_runtime_minutes=135)
+
+        assert len(movies) == 1
+        assert movies[0].year is None
+
+    def test_handles_invalid_release_date_format(self, mocker):
+        """Test that an invalid release_date format results in year being None."""
+        from platelet_movie.tmdb_client import TMDBClient
+
+        client = TMDBClient(api_key="test_key")
+
+        discover_data = _make_discover_response(
+            [{"id": 1, "title": "Bad Date", "overview": "desc"}]
+        )
+
+        movie_details = _make_tmdb_movie_response(
+            1,
+            "Bad Date",
+            150,
+            release_date="invalid-date",
+        )
+        providers = _make_watch_providers_response(1, has_netflix=True)
+        release_dates = _make_release_dates_response(1, "R")
+
+        mock_get = mocker.patch("platelet_movie.tmdb_client.requests.get")
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.raise_for_status = MagicMock()
+        mock_get.return_value.json.side_effect = [
+            discover_data,
+            movie_details,
+            providers,
+            release_dates,
+        ]
+
+        movies = client.discover_movies_on_netflix(min_runtime_minutes=135)
+
+        assert len(movies) == 1
+        assert movies[0].year is None
 
     def test_handles_missing_genres(self, mocker):
         from platelet_movie.tmdb_client import TMDBClient

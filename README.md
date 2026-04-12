@@ -24,7 +24,7 @@ TMDB provides reliable watch provider data (including Netflix availability) that
 - 🔐 Only requires a free TMDB API key (no Netflix credentials needed)
 - ⏱️ Filters movies by runtime range (min/max configurable, default: **135-145 minutes**)
 - 🌐 Filter by original language (ISO 639-1 codes, default: **English**)
-- ⭐ Shows **TMDB score**, **MPAA rating** (R, PG-13, etc.), and **genres** for each movie
+- ⭐ Shows **release year**, **TMDB score**, **MPAA rating** (R, PG-13, etc.), and **genres** for each movie
 - 📋 Returns results **sorted ascending** by runtime, then by title
 - 📄 **Multiple output formats**: Markdown (default), HTML, CSV, and JSON
 - 🌍 Supports different Netflix regions (US, GB, CA, etc.)
@@ -184,13 +184,13 @@ Default (Markdown) format:
 ```
 Netflix movies with a runtime 135-145 minutes:
 
-   Runtime   Score  Rated    Genres               Title
--------------------------------------------------------------------------------------
-    135 m     8.1  R        Crime, Drama         The Irishman
-    138 m     7.9  PG-13    Thriller, Drama      Prisoners
-    140 m     8.0  R        Drama, Crime         Heat
-    142 m     8.5  PG-13    Drama, Mystery       Interstellar
-    145 m     7.8  R        Action, Thriller     John Wick: Chapter 4
+   Runtime    Year   Score  Rated    Genres               Title
+-----------------------------------------------------------------------------------------------
+    135 m    2019     8.1  R        Crime, Drama         The Irishman
+    138 m    2013     7.9  PG-13    Thriller, Drama      Prisoners
+    140 m    1995     8.0  R        Drama, Crime         Heat
+    142 m    2014     8.5  PG-13    Drama, Mystery       Interstellar
+    145 m    2023     7.8  R        Action, Thriller     John Wick: Chapter 4
 ```
 
 ---

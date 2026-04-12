@@ -16,6 +16,7 @@ class TestFormatters:
                 genres=["Crime", "Drama"],
                 rating=8.1,
                 certification="R",
+                year=2019,
             ),
             Movie(
                 title="Interstellar",
@@ -23,6 +24,7 @@ class TestFormatters:
                 genres=["Drama", "Mystery"],
                 rating=8.5,
                 certification="PG-13",
+                year=2014,
             ),
             Movie(
                 title="Basic Movie",
@@ -30,6 +32,7 @@ class TestFormatters:
                 genres=[],
                 rating=None,
                 certification=None,
+                year=None,
             ),
         ]
 
@@ -41,10 +44,13 @@ class TestFormatters:
         assert "Rated" in result
         assert "Genres" in result
         assert "Title" in result
+        assert "Year" in result
         assert "The Irishman" in result
         assert "135" in result
         assert "8.1" in result
         assert "R" in result
+        assert "2019" in result
+        assert "2014" in result
         assert "Crime, Drama" in result
         # Check that it's formatted as a table with separators
         assert "-" in result
@@ -60,6 +66,7 @@ class TestFormatters:
         assert "The Irishman" in result
         assert "135" in result
         assert "8.1" in result
+        assert "2019" in result
 
     def test_format_csv(self):
         """Test CSV formatting."""
@@ -71,10 +78,12 @@ class TestFormatters:
         assert "Runtime" in lines[0]
         assert "Score" in lines[0]
         assert "Title" in lines[0]
+        assert "Year" in lines[0]
         # Check data
         assert "The Irishman" in result
         assert "135" in result
         assert "8.1" in result
+        assert "2019" in result
 
     def test_format_json(self):
         """Test JSON formatting."""
@@ -90,6 +99,7 @@ class TestFormatters:
         assert parsed[0]["runtime_minutes"] == 135
         assert parsed[0]["rating"] == 8.1
         assert parsed[0]["certification"] == "R"
+        assert parsed[0]["year"] == 2019
         assert "Crime" in parsed[0]["genres"]
 
     def test_format_handles_none_values(self):
@@ -175,3 +185,4 @@ class TestFormatters:
         assert "genres" in first_movie
         assert "rating" in first_movie
         assert "certification" in first_movie
+        assert "year" in first_movie

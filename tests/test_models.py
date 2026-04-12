@@ -11,6 +11,7 @@ class TestMovie:
         assert m.genres == []
         assert m.rating is None
         assert m.certification is None
+        assert m.year is None
 
     def test_creation_with_all_fields(self):
         m = Movie(
@@ -19,12 +20,14 @@ class TestMovie:
             genres=["Action", "Sci-Fi"],
             rating=8.8,
             certification="PG-13",
+            year=2010,
         )
         assert m.title == "Inception"
         assert m.runtime_minutes == 148
         assert m.genres == ["Action", "Sci-Fi"]
         assert m.rating == 8.8
         assert m.certification == "PG-13"
+        assert m.year == 2010
 
     def test_equality(self):
         m1 = Movie(
@@ -33,6 +36,7 @@ class TestMovie:
             genres=["Action"],
             rating=8.8,
             certification="PG-13",
+            year=2010,
         )
         m2 = Movie(
             title="Inception",
@@ -40,6 +44,7 @@ class TestMovie:
             genres=["Action"],
             rating=8.8,
             certification="PG-13",
+            year=2010,
         )
         assert m1 == m2
 
@@ -103,3 +108,8 @@ class TestMovie:
     def test_lt_not_implemented_for_non_movie(self):
         m = Movie(title="Inception", runtime_minutes=148)
         assert m.__lt__("not a movie") == NotImplemented
+
+    def test_inequality_different_year(self):
+        m1 = Movie(title="Inception", runtime_minutes=148, year=2010)
+        m2 = Movie(title="Inception", runtime_minutes=148, year=2011)
+        assert m1 != m2
