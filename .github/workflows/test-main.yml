@@ -37,7 +37,7 @@ jobs:
             venv-${{ runner.os }}-
 
       - name: Install dependencies
-        run: poetry install
+        run: poetry install --all-extras
 
       - name: Run linter
         run: poetry run poe lint
