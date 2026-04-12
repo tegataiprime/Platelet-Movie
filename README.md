@@ -290,9 +290,9 @@ pytest tests/ -v --cov=platelet_movie --cov-report=term-missing
 
 ### Code Coverage
 
-The project requires **≥ 80% code coverage** (enforced by CI) for the `platelet_movie` package.
+The project requires **≥ 80% code coverage** (enforced by CI) for both the `platelet_movie` package and the `scripts` directory.
 
-All TMDB API interactions are tested by mocking the `requests.get` calls via `pytest-mock`. The Lady Whistledown commentary generator (`scripts/lady_whistledown.py`) is also tested with mocked OpenAI API calls.
+All TMDB API interactions are tested by mocking the `requests.get` calls via `pytest-mock`. The Lady Whistledown commentary generator (`scripts/lady_whistledown.py`) is also tested with mocked OpenAI API calls and is included in coverage requirements.
 
 ### Continuous Integration
 
