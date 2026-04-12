@@ -104,9 +104,9 @@ class TestFormatters:
         html_result = format_movies(movies, "html")
         assert "N/A" in html_result or "NR" in html_result
 
-        # CSV
+        # CSV - should contain N/A for None values
         csv_result = format_movies(movies, "csv")
-        assert "N/A" in csv_result or "" in csv_result
+        assert "N/A" in csv_result
 
         # JSON (None should be preserved in JSON)
         import json
@@ -150,8 +150,17 @@ class TestFormatters:
             )
         ]
         result = format_movies(movies, "csv")
-        # CSV should properly quote or escape the title
-        assert "Movie with, comma" in result or '"Movie with, comma "and" quotes"' in result
+        # CSV should properly quote the title field containing commas and quotes
+        # Parse the CSV to verify proper escaping
+        import csv
+        import io
+
+        reader = csv.reader(io.StringIO(result))
+        rows = list(reader)
+        # Should have header + 1 data row
+        assert len(rows) == 2
+        # The title should be in the last column and properly preserved
+        assert rows[1][-1] == 'Movie with, comma "and" quotes'
 
     def test_json_preserves_all_fields(self):
         """Test that JSON output includes all movie fields."""
