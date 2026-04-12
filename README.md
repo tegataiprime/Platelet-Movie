@@ -309,6 +309,14 @@ The project uses GitHub Actions to ensure code quality:
 - Validates that merged code maintains quality standards
 - Provides immediate feedback if issues slip through
 
+**PR Movie Report Test** (`pr-movie-report-test.yml`):
+- End-to-end functional test of the weekly movie report workflow
+- Runs the full `platelet-movie` CLI with the same configuration as the weekly report
+- Generates Lady Whistledown commentary using the OpenAI API
+- Posts the complete report as a PR comment (instead of sending email)
+- Validates that the entire movie discovery and reporting pipeline works correctly
+- Triggers on: PR opened, synchronized, reopened
+
 **Note:** To block PRs from being merged when tests fail, configure branch protection rules in repository settings to require the "Test Pull Request" workflow to pass before merging.
 
 ### Project Structure
