@@ -37,7 +37,7 @@ Here are the movies that will follow your introduction:
 
 {movie_list}
 
-Write ONLY the Lady Whistledown introduction. Do not include the movie list itself."""
+Write ONLY the Lady Whistledown introduction. Do not include the movie list itself.  But you may reference a sample of the movie titles (no more than three) in a playful way to tease the reader. Keep it concise and engaging, as if you were writing for a high-society newsletter."""
 
     payload = {
         "model": "gpt-4o-mini",
