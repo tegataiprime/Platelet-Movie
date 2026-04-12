@@ -11,6 +11,9 @@ jobs:
     # Skip draft PRs unless explicitly marked as ready_for_review
     if: github.event.pull_request.draft == false
     
+    permissions:
+      contents: read
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -43,7 +46,3 @@ jobs:
 
       - name: Run tests with coverage
         run: poetry run poe test
-
-      - name: Check coverage threshold
-        run: |
-          echo "✅ All tests passed with ≥80% coverage"
