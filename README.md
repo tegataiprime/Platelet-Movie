@@ -320,6 +320,7 @@ All common developer tasks are available via [Poe the Poet](https://poethepoet.n
 | `poe lint` | Lint source code and tests with Ruff |
 | `poe format` | Auto-format source code and tests with Ruff |
 | `poe run` | Run the CLI (`platelet-movie`) |
+| `poe docs` | Serve the static website locally for preview (port 8000) |
 
 ### Examples
 
@@ -332,6 +333,11 @@ poe lint
 
 # Format code
 poe format
+
+# Preview the documentation site locally
+poe docs
+# Then open http://localhost:8000 in your browser
+# Works in GitHub Codespaces (port is auto-forwarded)
 ```
 
 ---
@@ -379,6 +385,13 @@ The project uses GitHub Actions to ensure code quality:
 - Generates movie data, Lady Whistledown commentary, and builds `data.json`
 - Deploys to GitHub Pages for public viewing
 - Can be triggered manually from the Actions tab
+
+**Multi-Device Docs Tester** (`.github/aw/multi-device-docs-tester.md`):
+- GitHub Agentic Workflow for automated UI testing across devices
+- Tests the documentation site on mobile, tablet, and desktop viewports
+- Validates responsive design, accessibility, and interactive elements
+- Runs daily on schedule or can be triggered manually
+- Creates GitHub issues when problems are found
 
 **Note:** To block PRs from being merged when tests fail, configure branch protection rules in repository settings to require the "Test Pull Request" workflow to pass before merging.
 
