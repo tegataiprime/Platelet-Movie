@@ -38,7 +38,7 @@ jobs:
           TMDB_REGION: ${{ vars.TMDB_REGION || 'US' }}
         run: |
           echo "Running platelet-movie..."
-          OUTPUT=$(poetry run platelet-movie --format markdown 2>&1) || EXIT_CODE=$?
+          OUTPUT=$(poetry run platelet-movie --format markdown --max-pages 2 2>&1) || EXIT_CODE=$?
           EXIT_CODE=${EXIT_CODE:-0}
           
           echo "output<<EOF" >> $GITHUB_OUTPUT

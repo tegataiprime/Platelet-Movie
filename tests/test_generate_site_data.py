@@ -92,7 +92,9 @@ class TestGetMovieData:
         assert result == mock_movies
         assert len(result) == 2
         assert result[0]["title"] == "The Matrix"
-        mock_run_command.assert_called_once_with(["platelet-movie", "--format", "json"])
+        mock_run_command.assert_called_once_with(
+            ["platelet-movie", "--format", "json", "--min-minutes", "90", "--max-minutes", "160"]
+        )
         assert "Fetching movie data from TMDB..." in mock_stderr.getvalue()
 
     @patch("generate_site_data.run_command")

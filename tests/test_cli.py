@@ -18,7 +18,9 @@ class TestCLI:
         env.update(overrides)
         return env
 
-    def test_missing_api_key_exits_with_error(self):
+    def test_missing_api_key_exits_with_error(self, monkeypatch):
+        # Remove TMDB_API_KEY from the actual environment to ensure test isolation
+        monkeypatch.delenv("TMDB_API_KEY", raising=False)
         runner = self._runner()
         result = runner.invoke(main, env={})
         assert result.exit_code == 1

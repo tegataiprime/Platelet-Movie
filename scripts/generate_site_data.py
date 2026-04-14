@@ -45,7 +45,7 @@ def get_movie_data() -> dict:
     """
     print("Fetching movie data from TMDB...", file=sys.stderr)
     # Use the installed entry point instead of -m
-    output = run_command(["platelet-movie", "--format", "json", "--min-minutes", "90", "--max-minutes", "160"])
+    output = run_command(["platelet-movie", "--format", "json", "--min-minutes", "90", "--max-minutes", "160", "--max-pages", "100"])
     return json.loads(output)
 
 
