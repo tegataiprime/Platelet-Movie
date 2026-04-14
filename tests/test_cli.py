@@ -71,7 +71,8 @@ class TestCLI:
             min_runtime_minutes=120, max_runtime_minutes=145, language="en"
         )
 
-    def test_default_min_minutes_is_135(self, mocker):
+    def test_default_parameters(self, mocker):
+        """Test that CLI uses correct defaults: min=135, max=145, language=en."""
         mock_discover = mocker.patch(
             "platelet_movie.cli.TMDBClient.discover_movies_on_netflix", return_value=[]
         )
@@ -109,16 +110,6 @@ class TestCLI:
         runner.invoke(main, ["--language", "es"], env=self._base_env())
         mock_discover.assert_called_once_with(
             min_runtime_minutes=135, max_runtime_minutes=145, language="es"
-        )
-
-    def test_default_language_is_english(self, mocker):
-        mock_discover = mocker.patch(
-            "platelet_movie.cli.TMDBClient.discover_movies_on_netflix", return_value=[]
-        )
-        runner = self._runner()
-        runner.invoke(main, env=self._base_env())
-        mock_discover.assert_called_once_with(
-            min_runtime_minutes=135, max_runtime_minutes=145, language="en"
         )
 
     def test_region_option(self, mocker):
