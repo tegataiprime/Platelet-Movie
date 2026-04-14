@@ -29,7 +29,8 @@ test       = "pytest --cov=platelet_movie --cov=scripts --cov-report=term-missin
 lint       = "ruff check platelet_movie tests"
 format     = "ruff format platelet_movie tests"
 run        = "platelet-movie"
-docs       = "python -m http.server 8000 --directory docs --bind 0.0.0.0"
+generate   = "python scripts/generate_site_data.py"
+site       = "python -m http.server 8000 --directory site --bind 0.0.0.0"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

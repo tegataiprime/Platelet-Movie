@@ -30,7 +30,7 @@ TMDB provides reliable watch provider data (including Netflix availability) that
 - 📋 Returns results **sorted ascending** by runtime, then by title
 - 📄 **Multiple output formats**: Markdown (default), HTML, CSV, and JSON
 - 🌍 Supports different Netflix regions (US, GB, CA, etc.)
-- 🌙 **GitHub Pages site** with light/dark mode, sortable columns, and Lady Whistledown commentary
+- 🌙 **GitHub Pages site** with light/dark mode, runtime filter, sortable columns, and Lady Whistledown commentary
 - 🐍 Written in Python 3.11+, managed with [Poetry](https://python-poetry.org/) and task-automated with [Poe the Poet](https://poethepoet.natn.io/)
 
 ---
@@ -237,6 +237,7 @@ The project includes a static website hosted on GitHub Pages that displays the w
 
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
 - **Light/Dark Mode**: Toggle between themes with persistent preference storage
+- **Runtime Filter**: Filter movies by minimum (default: 90 min) and maximum (default: 160 min) runtime
 - **Sortable Columns**: Click any column header to sort the movie list
 - **Lady Whistledown Commentary**: AI-generated introduction in the style of Bridgerton
 - **Acknowledgements**: Proper attribution for TMDB data, accuracy disclaimers, and Bridgerton credits
@@ -320,7 +321,8 @@ All common developer tasks are available via [Poe the Poet](https://poethepoet.n
 | `poe lint` | Lint source code and tests with Ruff |
 | `poe format` | Auto-format source code and tests with Ruff |
 | `poe run` | Run the CLI (`platelet-movie`) |
-| `poe docs` | Serve the static website locally for preview (port 8000) |
+| `poe generate` | Regenerate `site/data.json` with fresh movie data and Lady Whistledown commentary |
+| `poe site` | Serve the static website locally for preview (port 8000) |
 
 ### Examples
 
@@ -334,8 +336,11 @@ poe lint
 # Format code
 poe format
 
-# Preview the documentation site locally
-poe docs
+# Regenerate the website data (fetches fresh movies & generates commentary)
+poe generate
+
+# Preview the static site locally
+poe site
 # Then open http://localhost:8000 in your browser
 # Works in GitHub Codespaces (port is auto-forwarded)
 ```
@@ -388,7 +393,7 @@ The project uses GitHub Actions to ensure code quality:
 
 **Multi-Device Docs Tester** (`.github/aw/multi-device-docs-tester.md`):
 - GitHub Agentic Workflow for automated UI testing across devices
-- Tests the documentation site on mobile, tablet, and desktop viewports
+- Tests the static site on mobile, tablet, and desktop viewports
 - Validates responsive design, accessibility, and interactive elements
 - Runs daily on schedule or can be triggered manually
 - Creates GitHub issues when problems are found
@@ -406,7 +411,7 @@ Platelet-Movie/
 │       ├── pr-movie-report-test.yml      # E2E functional test for PRs
 │       ├── test-pr.yml                   # PR testing (lint + coverage)
 │       └── test-main.yml                 # Main branch testing
-├── docs/                                 # GitHub Pages static site
+├── site/                                 # GitHub Pages static site
 │   ├── index.html                        # Main HTML page
 │   ├── styles.css                        # Styles with light/dark mode
 │   ├── app.js                            # JavaScript for sorting & theme

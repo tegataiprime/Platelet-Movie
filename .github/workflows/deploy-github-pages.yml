@@ -43,62 +43,12 @@ jobs:
       - name: Install dependencies
         run: poetry install --only main
 
-      - name: Generate movie data
-        id: movies
+      - name: Generate static site data
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
           TMDB_REGION: ${{ vars.TMDB_REGION || 'US' }}
-        run: |
-          echo "Generating movie data..."
-          poetry run platelet-movie --format json > movies.json
-          cat movies.json
-
-      - name: Generate Lady Whistledown commentary
-        id: commentary
-        env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          echo "Generating commentary..."
-          chmod +x scripts/lady_whistledown.py
-          # Generate plain text version for the movie list
-          MOVIE_TEXT=$(poetry run platelet-movie --format markdown)
-          COMMENTARY=$(echo "$MOVIE_TEXT" | poetry run python scripts/lady_whistledown.py)
-          
-          # Save commentary to file
-          echo "$COMMENTARY" > commentary.txt
-          cat commentary.txt
-
-      - name: Build data.json
-        run: |
-          echo "Building data.json..."
-          # Create a Python script to merge movies and commentary
-          cat > build_data.py << 'EOF'
-          import json
-          from datetime import datetime, timezone
-
-          # Read movies JSON
-          with open('movies.json', 'r') as f:
-              movies = json.load(f)
-
-          # Read commentary
-          with open('commentary.txt', 'r') as f:
-              commentary = f.read().strip()
-
-          # Build final data structure
-          data = {
-              "generated_at": datetime.now(timezone.utc).isoformat(),
-              "commentary": commentary,
-              "movies": movies
-          }
-
-          # Write to docs/data.json
-          with open('docs/data.json', 'w') as f:
-              json.dump(data, f, indent=2)
-
-          print("✓ Generated docs/data.json")
-          EOF
-
-          python build_data.py
+        run: poetry run python scripts/generate_site_data.py
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -106,7 +56,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'docs'
+          path: 'site'
 
       - name: Deploy to GitHub Pages
         id: deployment
