@@ -1,6 +1,6 @@
 ---
-name: Multi-Device Docs Tester
-description: Tests documentation site functionality and responsive design across multiple device form factors
+name: Multi-Device Web Site Tester
+description: Tests the generated static site functionality and responsive design across multiple device form factors
 on:
   schedule: daily
   workflow_dispatch:
@@ -41,9 +41,9 @@ network:
     - python
 ---
 
-# Multi-Device Documentation Testing
+# Multi-Device Web Site Testing
 
-You are a documentation testing specialist. Your task is to comprehensively test the documentation site across multiple devices and form factors.
+You are a web user interface testing specialist. Your task is to comprehensively test the generated static site across multiple devices and form factors.
 
 ## Context
 
@@ -61,7 +61,7 @@ You are a documentation testing specialist. Your task is to comprehensively test
 
 ## Your Mission
 
-Serve the static documentation site locally and perform comprehensive multi-device testing. Test layout responsiveness, accessibility, interactive elements, and visual rendering across all device types. Use a single Playwright browser instance for efficiency.
+Serve the static generated web site locally and perform comprehensive multi-device testing. Test layout responsiveness, accessibility, interactive elements, and visual rendering across all device types. Use a single Playwright browser instance for efficiency.
 
 ## Step 1: Serve the Static Site
 
@@ -121,7 +121,7 @@ For each device viewport, use Playwright MCP tools to:
 
 ### Key Elements to Test
 
-The Platelet Movie documentation site includes:
+The Platelet Movie generated static site includes:
 - **Header** with title and dark mode toggle button
 - **Lady Whistledown commentary section** with dynamic content
 - **Movie table** with sortable columns (Runtime, Year, Score, Rated, Genres, Title)
