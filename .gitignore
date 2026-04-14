@@ -211,4 +211,7 @@ movies.json
 commentary.txt
 build_data.py
 
+# Ignore gh-aw generated files but track workflow definitions
 .github/aw/
+!.github/aw/*.md
+!.github/aw/actions-lock.json

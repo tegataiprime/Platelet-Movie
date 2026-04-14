@@ -22,7 +22,8 @@
 				"ms-python.vscode-pylance",
 				"ms-python.vscode-python-envs",
 				"postman.postman-for-vscode",
-				"sonarsource.sonarlint-vscode"
+				"sonarsource.sonarlint-vscode",
+				"github.vscode-github-actions"
 			],
 			"settings": {
 				"python.defaultInterpreterPath": "/usr/local/bin/python",

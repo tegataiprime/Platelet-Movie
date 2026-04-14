@@ -49,7 +49,9 @@ class TestConfig:
         cfg = Config(tmdb_api_key="valid_key")
         cfg.validate()  # should not raise
 
-    def test_validate_raises_when_api_key_missing(self):
+    def test_validate_raises_when_api_key_missing(self, monkeypatch):
+        # Ensure environment variable is also not set
+        monkeypatch.delenv("TMDB_API_KEY", raising=False)
         cfg = Config(tmdb_api_key="")
         with pytest.raises(ValueError, match="TMDB_API_KEY"):
             cfg.validate()
