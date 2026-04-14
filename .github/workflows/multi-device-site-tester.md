@@ -15,8 +15,7 @@ permissions:
   pull-requests: read
 tracker-id: multi-device-docs-tester
 engine:
-  id: claude
-  max-turns: 30  # Prevent runaway token usage
+  id: copilot
 strict: true
 timeout-minutes: 30
 tools:
