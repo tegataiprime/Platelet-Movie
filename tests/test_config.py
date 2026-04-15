@@ -77,8 +77,13 @@ class TestConfig:
         valid_url_found = False
         for url in urls:
             parsed = urlparse(url)
-            # Check exact domain match (or subdomain of themoviedb.org)
-            if parsed.netloc == "www.themoviedb.org" or parsed.netloc.endswith(".themoviedb.org"):
+            # Check exact domain match (themoviedb.org or www.themoviedb.org)
+            # or subdomain (*.themoviedb.org)
+            if (
+                parsed.netloc == "themoviedb.org"
+                or parsed.netloc == "www.themoviedb.org"
+                or parsed.netloc.endswith(".themoviedb.org")
+            ):
                 valid_url_found = True
                 break
 
@@ -93,13 +98,15 @@ class TestConfig:
             "http://themoviedb.org.evil.com/settings",
             "http://evil-themoviedb.org.com/api",
             "http://notthemoviedb.org/settings",
+            "http://evilthemoviedb.org/api",  # Ends with themoviedb.org but not a subdomain
         ]
 
         for malicious_url in malicious_urls:
             parsed = urlparse(malicious_url)
             # This is the proper validation logic used in the test above
             is_valid = (
-                parsed.netloc == "www.themoviedb.org"
+                parsed.netloc == "themoviedb.org"
+                or parsed.netloc == "www.themoviedb.org"
                 or parsed.netloc.endswith(".themoviedb.org")
             )
             assert not is_valid, f"Malicious URL {malicious_url} should not be valid"
@@ -108,12 +115,14 @@ class TestConfig:
         valid_urls = [
             "https://www.themoviedb.org/settings/api",
             "https://api.themoviedb.org/3/movie",
+            "https://themoviedb.org/signup",  # Bare domain without www
         ]
 
         for valid_url in valid_urls:
             parsed = urlparse(valid_url)
             is_valid = (
-                parsed.netloc == "www.themoviedb.org"
+                parsed.netloc == "themoviedb.org"
+                or parsed.netloc == "www.themoviedb.org"
                 or parsed.netloc.endswith(".themoviedb.org")
             )
             assert is_valid, f"Valid URL {valid_url} should be considered valid"
