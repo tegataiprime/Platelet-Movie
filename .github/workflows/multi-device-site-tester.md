@@ -24,22 +24,15 @@ tools:
   playwright:
     version: "v1.56.1"
   bash:
-    - "python*"  # For serving the static site with http.server
-    - "curl*"    # For health checks
-    - "kill*"    # For cleanup
-    - "lsof*"    # For finding server process
     - "ls*"      # List files for directory navigation
     - "pwd*"     # Print working directory
     - "cd*"      # Change directory
+    - "cat*"     # View file contents
 safe-outputs:
   upload-asset:
   create-issue:
     expires: 2d
     labels: [multi-device-testing]
-
-network:
-  allowed:
-    - python
 ---
 
 # Multi-Device Web Site Testing
@@ -56,35 +49,29 @@ You are a web user interface testing specialist. Your task is to comprehensively
 **IMPORTANT SETUP NOTES:**
 1. You're already in the repository root
 2. The site folder is at: `${{ github.workspace }}/site`
-3. **The site/data.json file is pre-generated** - no need to run Python scripts
-4. Use absolute paths or change directory explicitly
-5. Keep token usage low by being efficient with your code and minimizing iterations
-6. **Playwright is available via MCP tools only** - do NOT try to `require('playwright')` or install it via npm
+3. **Use `file://` URLs with Playwright** - No HTTP server needed
+4. Keep token usage low by being efficient with your code and minimizing iterations
+5. **Playwright is available via MCP tools only** - do NOT try to `require('playwright')` or install it via npm
 
 ## Your Mission
 
-Serve the static generated web site locally and perform comprehensive multi-device testing. Test layout responsiveness, accessibility, interactive elements, and visual rendering across all device types. Use a single Playwright browser instance for efficiency.
+Test the static generated web site across multiple devices and form factors using Playwright's `file://` protocol. Test layout responsiveness, accessibility, interactive elements, and visual rendering across all device types. Use a single Playwright browser instance for efficiency.
 
-**Note**: The site is completely static (HTML/CSS/JS + data.json) and requires no build step or Python environment.
+**Note**: The site is completely static (HTML/CSS/JS + data.json) and can be tested directly via `file://` URLs without needing an HTTP server.
 
-## Step 1: Serve the Static Site
+## Step 1: Prepare File URL
 
-The site folder contains a pre-generated static site ready to serve. Start a Python HTTP server:
+Playwright can navigate directly to local files using the `file://` protocol:
 
 ```bash
+# Get the absolute path to the site directory
 cd ${{ github.workspace }}
-
-# Start Python's built-in HTTP server in background
-python3 -m http.server 8000 --directory site --bind 0.0.0.0 &
-
-# Wait for server to be ready (2 seconds should be sufficient)
-sleep 2
-
-# Verify server is responding
-curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/
+SITE_PATH="$(pwd)/site"
+echo "Site path: $SITE_PATH"
+echo "File URL: file://$SITE_PATH/index.html"
 ```
 
-The server should respond with HTTP 200 when ready. The site will be available at `http://localhost:8000/`.
+The site will be tested at: `file://${{ github.workspace }}/site/index.html`
 
 ## Step 2: Device Configuration
 
@@ -107,20 +94,31 @@ Playwright is provided through an MCP server interface, **NOT** as an npm packag
 **Example Usage:**
 
 ```javascript
-// Use browser_run_code to execute Playwright commands
+// Use Playwright MCP tools to navigate and test
+// Example: Navigate to the local file
+mcp__playwright__navigate({
+  url: 'file:///home/runner/work/Platelet-Movie/Platelet-Movie/site/index.html'
+})
+
+// Example: Run code to test functionality
 mcp__playwright__browser_run_code({
   code: `async (page) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.goto('http://localhost:8000/');
-    return { url: page.url(), title: await page.title() };
+    const title = await page.title();
+    return { url: page.url(), title };
   }`
 })
 ```
 
+**Important**: Use the full absolute path in `file://` URLs:
+- Format: `file://${{ github.workspace }}/site/index.html`
+- Example: `file:///home/runner/work/Platelet-Movie/Platelet-Movie/site/index.html`
+
 For each device viewport, use Playwright MCP tools to:
-- Set viewport size and navigate to http://localhost:8000/
+- Navigate to `file://${{ github.workspace }}/site/index.html`
+- Set viewport size for the device being tested
 - Take screenshots and run accessibility audits
-- Test interactions (navigation, theme toggle, table sorting)
+- Test interactions (theme toggle, table sorting)
 - Check for layout issues (overflow, truncation, broken layouts)
 
 ### Key Elements to Test
@@ -260,15 +258,6 @@ Create a GitHub issue titled "🔍 Multi-Device Docs Testing Report - [Date]" wi
 ```
 
 Label with: `documentation`, `testing`, `automated`
-
-## Step 6: Cleanup
-
-Stop the Python HTTP server:
-
-```bash
-# Find and kill the Python HTTP server
-lsof -ti:8000 | xargs kill -9 2>/dev/null || true
-```
 
 ## Summary
 
