@@ -102,7 +102,7 @@ class TestGetMovieData:
                 "--max-minutes",
                 "160",
                 "--max-pages",
-                "100",
+                "50",
             ]
         )
         assert "Fetching movie data from TMDB..." in mock_stderr.getvalue()
@@ -135,6 +135,48 @@ class TestGetMovieData:
 
         with pytest.raises(subprocess.CalledProcessError):
             get_movie_data()
+
+    @patch("generate_site_data.run_command")
+    def test_custom_max_pages(self, mock_run_command):
+        """Test that custom max_pages value is passed to CLI."""
+        mock_run_command.return_value = "[]"
+
+        get_movie_data(max_pages=10)
+
+        mock_run_command.assert_called_once_with(
+            [
+                "platelet-movie",
+                "--format",
+                "json",
+                "--min-minutes",
+                "90",
+                "--max-minutes",
+                "160",
+                "--max-pages",
+                "10",
+            ]
+        )
+
+    @patch("generate_site_data.run_command")
+    def test_max_pages_as_string(self, mock_run_command):
+        """Test that max_pages can be passed as a string (e.g., from CLI args)."""
+        mock_run_command.return_value = "[]"
+
+        get_movie_data(max_pages="25")
+
+        mock_run_command.assert_called_once_with(
+            [
+                "platelet-movie",
+                "--format",
+                "json",
+                "--min-minutes",
+                "90",
+                "--max-minutes",
+                "160",
+                "--max-pages",
+                "25",
+            ]
+        )
 
 
 class TestGetCommentary:

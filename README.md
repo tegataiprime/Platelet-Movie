@@ -322,7 +322,7 @@ All common developer tasks are available via [Poe the Poet](https://poethepoet.n
 | `poe lint` | Lint source code and tests with Ruff |
 | `poe format` | Auto-format source code and tests with Ruff |
 | `poe run` | Run the CLI (`platelet-movie`) |
-| `poe generate` | Regenerate `site/data.json` with fresh movie data and Lady Whistledown commentary |
+| `poe generate` | Regenerate `site/data.json` with fresh movie data and Lady Whistledown commentary (fetches 50 pages by default) |
 | `poe site` | Serve the static website locally for preview (port 8000) |
 
 ### Examples
@@ -340,6 +340,9 @@ poe format
 # Regenerate the website data (fetches fresh movies & generates commentary)
 poe generate
 
+# Regenerate with custom max-pages for faster testing (default: 50)
+python scripts/generate_site_data.py --max-pages 5
+
 # Preview the static site locally
 poe site
 # Then open http://localhost:8000 in your browser
@@ -349,6 +352,27 @@ poe site
 ---
 
 ## Development
+
+### Generating Site Data
+
+The `scripts/generate_site_data.py` script fetches movie data from TMDB and generates Lady Whistledown commentary for the static website.
+
+**Usage:**
+```bash
+# Generate with default settings (50 pages = ~1000 movies)
+python scripts/generate_site_data.py
+
+# Generate with custom max-pages for faster testing
+python scripts/generate_site_data.py --max-pages 5
+
+# Or use the Poe task (uses default 50 pages)
+poe generate
+```
+
+**Options:**
+- `--max-pages INTEGER`: Maximum number of TMDB result pages to fetch (default: 50, each page contains ~20 movies)
+
+**Note:** Using a lower `--max-pages` value is recommended for faster end-to-end testing during development.
 
 ### Running Tests Manually
 
