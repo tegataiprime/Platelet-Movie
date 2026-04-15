@@ -235,11 +235,16 @@ The project includes a static website hosted on GitHub Pages that displays the w
 
 ### Features
 
-- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
+- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices with optimized layouts for each screen size
+- **Accessibility (WCAG 2.1 AA)**: 
+  - ARIA attributes for screen readers (aria-sort, aria-live regions)
+  - Keyboard navigation support (Enter/Space on table headers, skip-to-content link)
+  - Touch target compliance (minimum 48×48px on mobile)
+  - Focus indicators for keyboard users
 - **Light/Dark Mode**: Toggle between themes with persistent preference storage
 - **American Red Cross Branding**: Color scheme follows American Red Cross brand guidelines (#E42424 red)
-- **Runtime Filter**: Filter movies by minimum (default: 90 min) and maximum (default: 160 min) runtime
-- **Sortable Columns**: Click any column header to sort (all columns sortable, including genres); visual indicators show sort state (⇅ / ▲ / ▼)
+- **Runtime Filter**: Filter movies by minimum (default: 90 min) and maximum (default: 160 min) runtime with inline validation
+- **Sortable Columns**: Click or use keyboard (Enter/Space) on any column header to sort (all columns sortable, including genres); visual indicators show sort state (⇅ / ▲ / ▼)
 - **Lady Whistledown Commentary**: AI-generated introduction in the style of Bridgerton
 - **Acknowledgements**: Proper attribution for TMDB data, accuracy disclaimers, and Bridgerton credits
 

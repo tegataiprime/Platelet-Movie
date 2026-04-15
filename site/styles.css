@@ -48,6 +48,36 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Skip Link for Keyboard Accessibility */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--accent);
+    color: white;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 0 0 4px 0;
+    z-index: 100;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Visually Hidden (for screen readers) */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
 .container {
     max-width: 1400px;
     margin: 0 auto;
@@ -173,6 +203,17 @@ section h2 {
     margin-top: 1rem;
     font-weight: 600;
     color: var(--text-secondary);
+}
+
+.filter-error {
+    margin-top: 1rem;
+    font-weight: 600;
+    color: var(--accent);
+    display: none;
+}
+
+.filter-error.show {
+    display: block;
 }
 
 /* Buttons */
@@ -351,6 +392,27 @@ footer a:hover {
     font-style: normal;
 }
 
+/* Focus Indicators for Keyboard Navigation (WCAG 2.1) */
+*:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.theme-toggle:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+}
+
+a:focus-visible {
+    outline: 3px solid var(--text-link);
+    outline-offset: 2px;
+}
+
+th.sortable:focus-visible {
+    outline: 3px solid white;
+    outline-offset: -3px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     h1 {
@@ -371,17 +433,31 @@ footer a:hover {
         align-items: stretch;
     }
 
+    /* Increase touch targets for WCAG 2.1 Level AA (2.5.5 Target Size) */
     .filter-group input[type="number"] {
         width: 100%;
+        padding: 0.75rem;
+        min-height: 48px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        padding: 0.75rem 1.2rem;
+        min-height: 48px;
+    }
+
+    /* Increase table header touch targets */
+    th {
+        padding: 1.2rem 1rem;
+        min-height: 48px;
     }
 
     table {
         font-size: 0.9rem;
     }
 
-    th,
     td {
-        padding: 0.5rem;
+        padding: 0.75rem;
     }
 
     .acknowledgements {
@@ -404,6 +480,33 @@ footer a:hover {
 
     th,
     td {
-        padding: 0.4rem;
+        padding: 0.6rem 0.4rem;
+    }
+}
+
+/* Mobile table optimization for very small screens */
+@media (max-width: 375px) {
+    /* Hide non-essential columns on tiny screens */
+    table th:nth-child(3), /* Year */
+    table td:nth-child(3),
+    table th:nth-child(5), /* Rated */
+    table td:nth-child(5) {
+        display: none;
+    }
+
+    /* Adjust remaining columns */
+    table {
+        font-size: 0.75rem;
+    }
+
+    th,
+    td {
+        padding: 0.5rem 0.3rem;
+    }
+
+    /* Ensure primary columns are readable */
+    th:nth-child(1), /* Title */
+    td:nth-child(1) {
+        min-width: 120px;
     }
 }
