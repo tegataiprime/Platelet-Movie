@@ -33,8 +33,6 @@ _DEFAULT_TIMEOUT = 30
 class TMDBAPIError(Exception):
     """Raised when the TMDB API returns an error or is unreachable."""
 
-    pass
-
 
 class TMDBClient:
     """Client for The Movie Database (TMDB) API.

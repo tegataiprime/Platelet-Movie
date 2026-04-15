@@ -1,5 +1,7 @@
 """Unit tests for platelet_movie.models."""
 
+import pytest
+
 from platelet_movie.models import Movie
 
 
@@ -25,7 +27,7 @@ class TestMovie:
         assert m.title == "Inception"
         assert m.runtime_minutes == 148
         assert m.genres == ["Action", "Sci-Fi"]
-        assert m.rating == 8.8
+        assert m.rating == pytest.approx(8.8)
         assert m.certification == "PG-13"
         assert m.year == 2010
 

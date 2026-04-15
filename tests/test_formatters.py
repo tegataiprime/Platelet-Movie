@@ -1,5 +1,6 @@
 """Unit tests for platelet_movie.formatters."""
 
+import pytest
 import re
 
 from platelet_movie.formatters import format_movies
@@ -119,7 +120,7 @@ class TestFormatters:
         # Check first movie
         assert parsed[0]["title"] == "The Irishman"
         assert parsed[0]["runtime_minutes"] == 135
-        assert parsed[0]["vote_average"] == 8.1
+        assert parsed[0]["vote_average"] == pytest.approx(8.1)
         assert parsed[0]["certification"] == "R"
         assert parsed[0]["year"] == 2019
         assert "Crime" in parsed[0]["genres"]
