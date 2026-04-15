@@ -24,12 +24,10 @@ tools:
   playwright:
     version: "v1.56.1"
   bash:
-    - "pip*"     # Install Poetry via pip
-    - "poetry*"  # Run Python via Poetry virtual environment
-    - "python*"
-    - "curl*"
-    - "kill*"
-    - "lsof*"
+    - "python*"  # For serving the static site with http.server
+    - "curl*"    # For health checks
+    - "kill*"    # For cleanup
+    - "lsof*"    # For finding server process
     - "ls*"      # List files for directory navigation
     - "pwd*"     # Print working directory
     - "cd*"      # Change directory
@@ -58,85 +56,37 @@ You are a web user interface testing specialist. Your task is to comprehensively
 **IMPORTANT SETUP NOTES:**
 1. You're already in the repository root
 2. The site folder is at: `${{ github.workspace }}/site`
-3. Use absolute paths or change directory explicitly
-4. Keep token usage low by being efficient with your code and minimizing iterations
-5. **Playwright is available via MCP tools only** - do NOT try to `require('playwright')` or install it via npm
-6. **Poetry is NOT pre-installed** - Install it via pip in Step 0 before running any Python commands
-7. **After installing Poetry and setting PATH** - use `poetry run` for all Python commands (e.g., `poetry run python scripts/...`)
+3. **The site/data.json file is pre-generated** - no need to run Python scripts
+4. Use absolute paths or change directory explicitly
+5. Keep token usage low by being efficient with your code and minimizing iterations
+6. **Playwright is available via MCP tools only** - do NOT try to `require('playwright')` or install it via npm
 
 ## Your Mission
 
 Serve the static generated web site locally and perform comprehensive multi-device testing. Test layout responsiveness, accessibility, interactive elements, and visual rendering across all device types. Use a single Playwright browser instance for efficiency.
 
-## Step 0: Install Poetry and Dependencies
+**Note**: The site is completely static (HTML/CSS/JS + data.json) and requires no build step or Python environment.
 
-**CRITICAL**: The GitHub Actions environment does not have Poetry installed by default. Install it first:
+## Step 1: Serve the Static Site
 
-```bash
-cd ${{ github.workspace }}
-
-# Install Poetry using pip (simpler and more reliable than curl installer)
-python3 -m pip install --user poetry
-
-# Add Poetry to PATH for this session
-export PATH="$HOME/.local/bin:$PATH"
-
-# Verify Poetry is accessible
-poetry --version
-
-# Configure Poetry
-poetry config virtualenvs.in-project true
-
-# Install project dependencies
-poetry install --only main
-```
-
-**Note**: After the initial `export PATH="$HOME/.local/bin:$PATH"`, you can use `poetry` directly without the full path.
-
-**For all subsequent Python commands, use `poetry run`:**
-```bash
-poetry run python scripts/generate_site_data.py
-poetry run python -m http.server 8000 --directory site
-```
-
-## Step 1: Generate Site Data
-
-To generate the `data.json` file, run the following command in the repository root:
+The site folder contains a pre-generated static site ready to serve. Start a Python HTTP server:
 
 ```bash
 cd ${{ github.workspace }}
 
-# Make sure PATH includes Poetry (should be set from Step 0)
-export PATH="$HOME/.local/bin:$PATH"
+# Start Python's built-in HTTP server in background
+python3 -m http.server 8000 --directory site --bind 0.0.0.0 &
 
-poetry run python scripts/generate_site_data.py --max-pages 2
-```
-
-## Step 2: Serve the Static Site
-
-The site folder contains a static HTML/CSS/JS site (no build step required). Start a Python HTTP server to serve it:
-
-```bash
-cd ${{ github.workspace }}
-
-# Make sure PATH includes Poetry (should be set from Step 0)
-export PATH="$HOME/.local/bin:$PATH"
-
-# Start server in background
-poetry run python -m http.server 8000 --directory site --bind 0.0.0.0 &
-```
-
-Wait for server readiness:
-
-```bash
-# Wait for the server to be ready
+# Wait for server to be ready (2 seconds should be sufficient)
 sleep 2
-curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/ || echo "Server not ready"
+
+# Verify server is responding
+curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/
 ```
 
-The server should respond with HTTP 200 when ready.
+The server should respond with HTTP 200 when ready. The site will be available at `http://localhost:8000/`.
 
-## Step 3: Device Configuration
+## Step 2: Device Configuration
 
 Test these device types based on input `${{ inputs.devices }}`:
 
@@ -144,7 +94,7 @@ Test these device types based on input `${{ inputs.devices }}`:
 **Tablet:** iPad (768x1024), iPad Pro 11 (834x1194), iPad Pro 12.9 (1024x1366)
 **Desktop:** HD (1366x768), FHD (1920x1080), 4K (2560x1440)
 
-## Step 4: Run Playwright Tests
+## Step 3: Run Playwright Tests
 
 **IMPORTANT: Using Playwright in gh-aw Workflows**
 
@@ -191,14 +141,14 @@ The Platelet Movie generated static site includes:
 4. **Element Visibility**: Verify all sections are visible and properly rendered
 5. **Links**: Verify external links are present and properly formatted
 
-## Step 5: Analyze Results
+## Step 4: Analyze Results
 
 Organize findings by severity:
 - 🔴 **Critical**: Blocks functionality or major accessibility issues
 - 🟡 **Warning**: Minor issues or potential problems
 - 🟢 **Passed**: Everything working as expected
 
-## Step 6: Report Results
+## Step 5: Report Results
 
 ### If NO Issues Found
 
@@ -311,7 +261,7 @@ Create a GitHub issue titled "🔍 Multi-Device Docs Testing Report - [Date]" wi
 
 Label with: `documentation`, `testing`, `automated`
 
-## Step 7: Cleanup
+## Step 6: Cleanup
 
 Stop the Python HTTP server:
 
