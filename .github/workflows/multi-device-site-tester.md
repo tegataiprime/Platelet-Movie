@@ -24,6 +24,7 @@ tools:
   playwright:
     version: "v1.56.1"
   bash:
+    - "poetry*"  # Run Python via Poetry virtual environment
     - "python*"
     - "curl*"
     - "kill*"
@@ -59,10 +60,38 @@ You are a web user interface testing specialist. Your task is to comprehensively
 3. Use absolute paths or change directory explicitly
 4. Keep token usage low by being efficient with your code and minimizing iterations
 5. **Playwright is available via MCP tools only** - do NOT try to `require('playwright')` or install it via npm
+6. **Poetry is NOT pre-installed** - You MUST install it first (see Step 0) before running any Python commands
+7. **After installing Poetry** - prefix all Python commands with `poetry run` (e.g., `poetry run python scripts/...`)
 
 ## Your Mission
 
 Serve the static generated web site locally and perform comprehensive multi-device testing. Test layout responsiveness, accessibility, interactive elements, and visual rendering across all device types. Use a single Playwright browser instance for efficiency.
+
+## Step 0: Install Poetry and Dependencies
+
+**CRITICAL**: The GitHub Actions environment does not have Poetry installed by default. Install it first:
+
+```bash
+cd ${{ github.workspace }}
+
+# Install Poetry
+curl -sSL https://install.python-poetry.org | python3 -
+
+# Add Poetry to PATH for this session
+export PATH="/root/.local/bin:$PATH"
+
+# Configure Poetry
+poetry config virtualenvs.in-project true
+
+# Install project dependencies
+poetry install --only main
+```
+
+**Verify installation:**
+```bash
+poetry --version
+poetry run python --version
+```
 
 ## Step 1: Generate Site Data
 
@@ -70,7 +99,13 @@ To generate the `data.json` file, run the following command in the repository ro
 
 ```bash
 cd ${{ github.workspace }}
-python scripts/generate_site_data.py --max-pages 2
+poetry run python scripts/generate_site_data.py --max-pages 2
+```
+
+**Alternative using Poetry task:**
+```bash
+cd ${{ github.workspace }}
+poetry run poe generate --max-pages 2
 ```
 
 ## Step 2: Serve the Static Site
@@ -79,7 +114,7 @@ The site folder contains a static HTML/CSS/JS site (no build step required). Sta
 
 ```bash
 cd ${{ github.workspace }}
-python -m http.server 8000 --directory site --bind 0.0.0.0 &
+poetry run python -m http.server 8000 --directory site --bind 0.0.0.0 &
 ```
 
 Wait for server readiness:
@@ -147,14 +182,14 @@ The Platelet Movie generated static site includes:
 4. **Element Visibility**: Verify all sections are visible and properly rendered
 5. **Links**: Verify external links are present and properly formatted
 
-## Step 4: Analyze Results
+## Step 5: Analyze Results
 
 Organize findings by severity:
 - 🔴 **Critical**: Blocks functionality or major accessibility issues
 - 🟡 **Warning**: Minor issues or potential problems
 - 🟢 **Passed**: Everything working as expected
 
-## Step 5: Report Results
+## Step 6: Report Results
 
 ### If NO Issues Found
 
@@ -267,7 +302,7 @@ Create a GitHub issue titled "🔍 Multi-Device Docs Testing Report - [Date]" wi
 
 Label with: `documentation`, `testing`, `automated`
 
-## Step 6: Cleanup
+## Step 7: Cleanup
 
 Stop the Python HTTP server:
 
