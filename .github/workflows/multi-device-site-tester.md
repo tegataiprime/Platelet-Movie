@@ -18,8 +18,9 @@ permissions:
 tracker-id: multi-device-docs-tester
 engine:
   id: copilot
-strict: true
+strict: false
 timeout-minutes: 30
+network: defaults
 tools:
   playwright:
     version: "v1.56.1"
