@@ -1,226 +1,211 @@
 ---
-name: Multi-Device Web Site Tester
-description: Tests the generated static site functionality and responsive design across multiple device form factors
+name: Multi-Device Site Tester
+
+description: Tests a static web site site for responsive layout issues, accessibility problems, and broken interactions across mobile, tablet, and desktop device form factors
+
 on:
-  pull_request:
-    paths:
-      - 'site/**'
+  schedule: daily
   workflow_dispatch:
     inputs:
       devices:
         description: 'Device types to test (comma-separated: mobile,tablet,desktop)'
         required: false
         default: 'mobile,tablet,desktop'
+      docs_dir:
+        description: 'Directory containing the static site (relative to repository root)'
+        required: false
+        default: 'site'
+      build_command:
+        description: 'Command to build the static site (empty if pre-generated)'
+        required: false
+        default: ''
+      serve_command:
+        description: 'Command to serve the static site'
+        required: false
+        default: 'npx serve -l'
+      server_port:
+        description: 'Port the static site server listens on'
+        required: false
+        default: '4321'
+
 permissions:
   contents: read
   issues: read
   pull-requests: read
-tracker-id: multi-device-docs-tester
+
+tracker-id: daily-multi-device-site-tester
+
 engine:
   id: copilot
-strict: false
+
 timeout-minutes: 30
-network: defaults
+
+network:
+  allowed:
+    - defaults
+    - node
+
 tools:
   playwright:
     version: "v1.56.1"
   bash:
-    - "ls*"      # List files for directory navigation
-    - "pwd*"     # Print working directory
-    - "cd*"      # Change directory
-    - "cat*"     # View file contents
+    - "npx serve*"  # Serve static files
+    - "npx http-server*"  # Alternative static server
+    - "curl*"       # Health checks
+    - "kill*"       # Cleanup
+    - "lsof*"       # Find server process
+    - "ls*"         # List files
+    - "pwd*"        # Print working directory
+    - "cat*"        # View file contents
+    - "echo*"       # Debug output
+    - "sleep*"      # Wait for server
 safe-outputs:
   upload-asset:
   create-issue:
     expires: 2d
-    labels: [multi-device-testing]
+    labels: [documentation, testing]
 ---
 
-# Multi-Device Web Site Testing
+# Multi-Device Site Testing
 
-You are a web user interface testing specialist. Your task is to comprehensively test the generated static site across multiple devices and form factors.
+You are a site testing specialist. Your task is to build the project's static site and test it across multiple device form factors to catch responsive design issues, accessibility problems, and broken interactions before they reach users.
 
 ## Context
 
-- Repository: ${{ github.repository }}
-- Triggered by: @${{ github.actor }}
-- Devices to test: ${{ inputs.devices }}
-- Working directory: ${{ github.workspace }}
+- **Repository**: ${{ github.repository }}
+- **Run ID**: ${{ github.run_id }}
+- **Triggered by**: @${{ github.actor }}
+- **Devices to test** (DEVICES): ${{ inputs.devices }} (default: 'mobile,tablet,desktop')
+- **Site directory** (SITE_DIR): ${{ inputs.docs_dir }} (default: 'site' )
+- **Build command** (BUILD_COMMAND): ${{ inputs.build_command }} (default '' )
+- **Serve command** (SERVE_COMMAND): ${{ inputs.serve_command }} (default 'npx serve -l')
+- **Server port** (SERVER_PORT): ${{ inputs.server_port }} (default '4321')
+- **Working directory**: ${{ github.workspace }}
 
-**IMPORTANT SETUP NOTES:**
-1. You're already in the repository root
-2. The site folder is at: `${{ github.workspace }}/site`
-3. **Use `file://` URLs with Playwright** - No HTTP server needed
-4. Keep token usage low by being efficient with your code and minimizing iterations
-5. **Playwright is available via MCP tools only** - do NOT try to `require('playwright')` or install it via npm
+## Step 1: Verify the Static Site Exists
 
-## Your Mission
-
-Test the static generated web site across multiple devices and form factors using Playwright's `file://` protocol. Test layout responsiveness, accessibility, interactive elements, and visual rendering across all device types. Use a single Playwright browser instance for efficiency.
-
-**Note**: The site is completely static (HTML/CSS/JS + data.json) and can be tested directly via `file://` URLs without needing an HTTP server.
-
-## Step 1: Prepare File URL
-
-Playwright can navigate directly to local files using the `file://` protocol:
+Check that the site directory exists and contains an index.html file. This indicates that there is a static site to test:
 
 ```bash
-# Get the absolute path to the site directory
-cd ${{ github.workspace }}
-SITE_PATH="$(pwd)/site"
-echo "Site path: $SITE_PATH"
-echo "File URL: file://$SITE_PATH/index.html"
+ls -la ${{ github.workspace }}/SITE_DIR/
+cat ${{ github.workspace }}/SITE_DIR/index.html 2>/dev/null | head -20 || echo "No index.html found"
 ```
 
-The site will be tested at: `file://${{ github.workspace }}/site/index.html`
+If the site directory doesn't exist or has no index.html, call the `noop` safe output explaining that this repository doesn't have a buildable static site and stop.
 
-## Step 2: Device Configuration
+## Step 2: Start the Preview Server
 
-Test these device types based on input `${{ inputs.devices }}`:
+Start the preview server in the background and wait for it to be ready:
 
-**Mobile:** iPhone 12 (390x844), iPhone 12 Pro Max (428x926), Pixel 5 (393x851), Galaxy S21 (360x800)
-**Tablet:** iPad (768x1024), iPad Pro 11 (834x1194), iPad Pro 12.9 (1024x1366)
-**Desktop:** HD (1366x768), FHD (1920x1080), 4K (2560x1440)
+```bash
+cd ${{ github.workspace }}/SITE_DIR
+# Default command: npx serve -l SERVER_PORT SITE_DIR
+SERVE_COMMAND SERVER_PORT > /tmp/docs-preview.log 2>&1 &
+echo $! > /tmp/docs-server.pid
+echo "Server started with PID: $(cat /tmp/docs-server.pid)"
+```
 
-## Step 3: Run Playwright Tests
+Wait for the server to be ready:
 
-**IMPORTANT: Using Playwright in gh-aw Workflows**
+```bash
+PORT=SERVER_PORT
+for i in {1..30}; do
+  curl -s http://localhost:$PORT > /dev/null && echo "Server ready on port $PORT!" && break
+  echo "Waiting for server... ($i/30)" && sleep 2
+done
+curl -s http://localhost:$PORT > /dev/null || echo "WARNING: Server may not have started properly"
+```
 
-Playwright is provided through an MCP server interface, **NOT** as an npm package. You must use the MCP Playwright tools:
+## Step 3: Device Configuration
 
-- ✅ **Correct**: Use MCP tools like `mcp__playwright__browser_navigate`, `mcp__playwright__browser_run_code`, etc.
-- ❌ **Incorrect**: Do NOT try to `require('playwright')` or create standalone Node.js scripts
-- ❌ **Incorrect**: Do NOT install playwright via npm - it's already available through MCP
+Use these viewport sizes based on the `DEVICES` input:
 
-**Example Usage:**
+**Mobile devices** (test if "mobile" in input):
+- iPhone 12: 390×844
+- Pixel 5: 393×851
+- Galaxy S21: 360×800
+
+**Tablet devices** (test if "tablet" in input):
+- iPad: 768×1024
+- iPad Pro 11": 834×1194
+
+**Desktop devices** (test if "desktop" in input):
+- HD: 1366×768
+- FHD: 1920×1080
+
+## Step 4: Run Playwright Tests
+
+**IMPORTANT: Use Playwright via MCP tools only — do NOT install or require Playwright as an npm package.**
+
+Use Playwright MCP tools (e.g., `mcp__playwright__browser_navigate`, `mcp__playwright__browser_run_code`, `mcp__playwright__browser_snapshot`) to test the documentation site.
+
+For **each device viewport** in the requested device types, perform the following checks:
 
 ```javascript
-// Use Playwright MCP tools to navigate and test
-// Example: Navigate to the local file
-mcp__playwright__navigate({
-  url: 'file:///home/runner/work/Platelet-Movie/Platelet-Movie/site/index.html'
-})
-
-// Example: Run code to test functionality
+// Example: set viewport, navigate, snapshot
 mcp__playwright__browser_run_code({
   code: `async (page) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    const title = await page.title();
-    return { url: page.url(), title };
+    await page.goto('http://localhost:SERVER_PORT/');
+    return { url: page.url(), title: await page.title() };
   }`
 })
 ```
 
-**Important**: Use the full absolute path in `file://` URLs:
-- Format: `file://${{ github.workspace }}/site/index.html`
-- Example: `file:///home/runner/work/Platelet-Movie/Platelet-Movie/site/index.html`
+For each device, check:
+1. **Page loads** successfully (no 404, 500 errors)
+2. **Navigation** is usable (menu accessible, links work)
+3. **Content** is readable without horizontal scrolling
+4. **Images** are properly sized and not overflowing
+5. **Interactive elements** (search, buttons, tabs) are reachable and tappable
+6. **Text** is not truncated or overlapping
+7. **Accessibility** basics: headings present, alt text on images, sufficient contrast
 
-For each device viewport, use Playwright MCP tools to:
-- Navigate to `file://${{ github.workspace }}/site/index.html`
-- Set viewport size for the device being tested
-- Take screenshots and run accessibility audits
-- Test interactions (theme toggle, table sorting)
-- Check for layout issues (overflow, truncation, broken layouts)
+Take screenshots on failure for evidence. Use `upload-asset` safe output to store screenshots.
 
-### Key Elements to Test
+## Step 5: Analyze Results
 
-The Platelet Movie generated static site includes:
-- **Header** with title and dark mode toggle button
-- **Lady Whistledown commentary section** with dynamic content
-- **Movie table** with sortable columns (Runtime, Year, Score, Rated, Genres, Title)
-- **Acknowledgements section** with TMDB attribution, disclaimer, and credits
-- **Footer** with repository link
-- **Responsive design** that adapts to different screen sizes
+Categorize findings by severity:
+- 🔴 **Critical**: Blocks navigation or makes content unreadable
+- 🟡 **Warning**: Layout issues that degrade experience but don't block content
+- 🟢 **Passed**: Device renders correctly
 
-### Test Scenarios
+## Step 6: Stop the Preview Server
 
-1. **Theme Toggle**: Click the theme toggle button and verify light/dark mode switches
-2. **Table Sorting**: Click column headers and verify sorting functionality
-3. **Responsive Layout**: Verify layout adapts correctly at each viewport size
-4. **Element Visibility**: Verify all sections are visible and properly rendered
-5. **Links**: Verify external links are present and properly formatted
+Always clean up when done:
 
-## Step 4: Analyze Results
+```bash
+kill $(cat /tmp/docs-server.pid) 2>/dev/null || true
+rm -f /tmp/docs-server.pid /tmp/docs-preview.log
+echo "Server stopped"
+```
 
-Organize findings by severity:
-- 🔴 **Critical**: Blocks functionality or major accessibility issues
-- 🟡 **Warning**: Minor issues or potential problems
-- 🟢 **Passed**: Everything working as expected
-
-## Step 5: Report Results
+## Step 8: Report Results
 
 ### If NO Issues Found
 
-**YOU MUST CALL** the `noop` tool to log completion:
+Call the `noop` safe output to log completion:
 
 ```json
 {
   "noop": {
-    "message": "Multi-device documentation testing complete. All {device_count} devices tested successfully with no issues found."
+    "message": "Multi-device documentation testing complete. All devices tested successfully with no issues found."
   }
 }
 ```
 
-**DO NOT just write this message in your output text** - you MUST actually invoke the `noop` tool. The workflow will fail if you don't call it.
+**You MUST invoke the noop tool — do not just write this message as text.**
 
 ### If Issues ARE Found
 
-## 📝 Report Formatting Guidelines
-
-**CRITICAL**: Follow these formatting guidelines to create well-structured, readable reports:
-
-### 1. Header Levels
-**Use h3 (###) or lower for all headers in your report to maintain proper document hierarchy.**
-
-The issue or discussion title serves as h1, so all content headers should start at h3:
-- Use `###` for main sections (e.g., "### Executive Summary", "### Key Metrics")
-- Use `####` for subsections (e.g., "#### Detailed Analysis", "#### Recommendations")
-- Never use `##` (h2) or `#` (h1) in the report body
-
-### 2. Progressive Disclosure
-**Wrap long sections in `<details><summary><b>Section Name</b></summary>` tags to improve readability and reduce scrolling.**
-
-Use collapsible sections for:
-- Detailed analysis and verbose data
-- Per-item breakdowns when there are many items
-- Complete logs, traces, or raw data
-- Secondary information and extra context
-
-Example:
-```markdown
-<details>
-<summary><b>View Detailed Analysis</b></summary>
-
-[Long detailed content here...]
-
-</details>
-```
-
-### 3. Report Structure Pattern
-
-Your report should follow this structure for optimal readability:
-
-1. **Brief Summary** (always visible): 1-2 paragraph overview of key findings
-2. **Key Metrics/Highlights** (always visible): Critical information and important statistics
-3. **Detailed Analysis** (in `<details>` tags): In-depth breakdowns, verbose data, complete lists
-4. **Recommendations** (always visible): Actionable next steps and suggestions
-
-### Design Principles
-
-Create reports that:
-- **Build trust through clarity**: Most important info immediately visible
-- **Exceed expectations**: Add helpful context, trends, comparisons
-- **Create delight**: Use progressive disclosure to reduce overwhelm
-- **Maintain consistency**: Follow the same patterns as other reporting workflows
-
-Create a GitHub issue titled "🔍 Multi-Device Docs Testing Report - [Date]" with:
+Create a GitHub issue titled "📱 Multi-Device Docs Testing Report - [Date]" with:
 
 ```markdown
 ### Test Summary
 - Triggered by: @${{ github.actor }}
 - Workflow run: [§${{ github.run_id }}](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
 - Devices tested: {count}
-- Test date: [Date]
+- Test date: {date}
 
 ### Results Overview
 - 🟢 Passed: {count}
@@ -228,12 +213,12 @@ Create a GitHub issue titled "🔍 Multi-Device Docs Testing Report - [Date]" wi
 - 🔴 Critical: {count}
 
 ### Critical Issues
-[List critical issues that block functionality or major accessibility problems - keep visible]
+[List issues that block functionality or readability — keep visible]
 
 <details>
 <summary><b>View All Warnings</b></summary>
 
-[Minor issues and potential problems with device names and details]
+[Minor layout and UX issues with device names and details]
 
 </details>
 
@@ -241,29 +226,25 @@ Create a GitHub issue titled "🔍 Multi-Device Docs Testing Report - [Date]" wi
 <summary><b>View Detailed Test Results by Device</b></summary>
 
 #### Mobile Devices
-[Test results, screenshots, findings]
+[Test results per device]
 
 #### Tablet Devices
-[Test results, screenshots, findings]
+[Test results per device]
 
 #### Desktop Devices
-[Test results, screenshots, findings]
+[Test results per device]
 
 </details>
 
 ### Accessibility Findings
-[Key accessibility issues - keep visible as these are important]
+[Key accessibility issues — keep visible as they are important]
 
 ### Recommendations
-[Actionable recommendations for fixing issues - keep visible]
+[Actionable steps to fix the issues found]
 ```
 
-Label with: `documentation`, `testing`, `automated`
+**Important**: If no action is needed after completing your analysis, you **MUST** call the `noop` safe-output tool with a brief explanation. Failing to call any safe-output tool is the most common cause of workflow failures.
 
-## Summary
-
-**Always provide a safe output:**
-- **If issues found**: Create GitHub issue with test results, findings, and recommendations
-- **If no issues found**: Call `noop` tool with completion message including total devices tested and pass status
-
-The workflow requires explicit safe output (either issue creation or noop) to confirm completion.
+```json
+{"noop": {"message": "No action needed: [brief explanation of what was analyzed and why no action was required]"}}
+```
