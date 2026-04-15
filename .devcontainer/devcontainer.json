@@ -47,6 +47,15 @@
 		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
 	],
 
+	"forwardPorts": [8000],
+
+	"portsAttributes": {
+		"8000": {
+			"label": "Movie Site",
+			"onAutoForward": "notify"
+		}
+	},
+
 	"remoteEnv": {
 		"SONAR_TOKEN": "${localEnv:SONAR_TOKEN}",
 		"DOPPLER_TOKEN": "${localEnv:DOPPLER_TOKEN}"
