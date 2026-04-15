@@ -374,7 +374,7 @@ class TestGenerateSiteData:
     @patch("generate_site_data.get_movie_data")
     @patch("sys.stderr", new_callable=StringIO)
     def test_movie_data_fetch_failure_exits(self, mock_stderr, mock_get_movie_data):
-        """Test that movie data fetch failure causes exit with code 1 when specific region is requested."""
+        """Test that movie data fetch failure exits with code 1 for specific region."""
         mock_get_movie_data.side_effect = subprocess.CalledProcessError(
             returncode=1,
             cmd=["platelet-movie", "--format", "json"],
