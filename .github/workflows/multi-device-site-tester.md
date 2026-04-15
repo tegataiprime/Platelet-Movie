@@ -5,6 +5,9 @@ description: Tests a static web site site for responsive layout issues, accessib
 
 on:
   schedule: daily
+  pull_request:
+    paths:
+      - 'site/**'
   workflow_dispatch:
     inputs:
       devices:
