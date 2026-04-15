@@ -237,8 +237,9 @@ The project includes a static website hosted on GitHub Pages that displays the w
 
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
 - **Light/Dark Mode**: Toggle between themes with persistent preference storage
+- **American Red Cross Branding**: Color scheme follows American Red Cross brand guidelines (#E42424 red)
 - **Runtime Filter**: Filter movies by minimum (default: 90 min) and maximum (default: 160 min) runtime
-- **Sortable Columns**: Click any column header to sort the movie list
+- **Sortable Columns**: Click any column header to sort (all columns sortable, including genres); visual indicators show sort state (⇅ / ▲ / ▼)
 - **Lady Whistledown Commentary**: AI-generated introduction in the style of Bridgerton
 - **Acknowledgements**: Proper attribution for TMDB data, accuracy disclaimers, and Bridgerton credits
 
