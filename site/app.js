@@ -21,7 +21,7 @@ function initTheme() {
 }
 
 function toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const currentTheme = document.documentElement.dataset.theme;
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
@@ -57,7 +57,7 @@ function setupEventListeners() {
     sortableHeaders.forEach(header => {
         // Click handler
         header.addEventListener('click', () => {
-            const column = header.getAttribute('data-sort');
+            const column = header.dataset.sort;
             handleSort(column);
         });
         
@@ -65,7 +65,7 @@ function setupEventListeners() {
         header.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                const column = header.getAttribute('data-sort');
+                const column = header.dataset.sort;
                 handleSort(column);
             }
         });
