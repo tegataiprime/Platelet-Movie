@@ -237,8 +237,9 @@ The project includes a static website hosted on GitHub Pages that displays the w
 
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
 - **Light/Dark Mode**: Toggle between themes with persistent preference storage
+- **American Red Cross Branding**: Color scheme follows American Red Cross brand guidelines (#E42424 red)
 - **Runtime Filter**: Filter movies by minimum (default: 90 min) and maximum (default: 160 min) runtime
-- **Sortable Columns**: Click any column header to sort the movie list
+- **Sortable Columns**: Click any column header to sort (all columns sortable, including genres); visual indicators show sort state (⇅ / ▲ / ▼)
 - **Lady Whistledown Commentary**: AI-generated introduction in the style of Bridgerton
 - **Acknowledgements**: Proper attribution for TMDB data, accuracy disclaimers, and Bridgerton credits
 
@@ -466,6 +467,42 @@ CLI (cli.py)
               │
               └─► [Movie]  →  sorted list  →  CLI output
 ```
+
+---
+
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on:
+
+- Code of conduct
+- Development setup
+- Testing requirements
+- Code style guidelines
+- Pull request process
+
+---
+
+## Acknowledgements & Disclaimers
+
+### 📊 Data Source
+
+This product uses the [TMDB API](https://www.themoviedb.org/) but is not endorsed or certified by TMDB. Movie data, ratings, and Netflix availability information are provided by [The Movie Database (TMDB)](https://www.themoviedb.org/).
+
+### ⚠️ Accuracy Disclaimer
+
+Netflix availability and movie data may have a 24-48 hour lag from TMDB's updates. Regional availability varies, and content may be removed or added without notice. Always verify movie availability on Netflix before your donation appointment.
+
+### ✍️ Commentary Attribution
+
+"Lady Whistledown" commentary is AI-generated in the style of the character from *Bridgerton*, a Netflix series created by Chris Van Dusen and produced by Shondaland. *Bridgerton* is based on the novels by Julia Quinn. This is a parody/homage and is not affiliated with Netflix, Shondaland, or Julia Quinn.
+
+### 🩸 About Platelet Donation
+
+Platelet donation typically takes 2-3 hours and helps cancer patients, trauma victims, and surgical patients. Learn more about platelet donation at the [American Red Cross](https://www.redcross.org/give-blood/how-to-donate/types-of-blood-donations/platelet-donation.html).
+
+### ⚠️ Red Cross Disclaimer
+
+This project is not affiliated with, endorsed by, or connected to the American Red Cross or any other Red Cross organization. The use of the American Red Cross brand colors and references to platelet donation are for informational purposes only. All trademarks and brand elements belong to their respective owners.
 
 ---
 

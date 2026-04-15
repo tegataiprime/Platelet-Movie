@@ -119,7 +119,7 @@ class TestFormatters:
         # Check first movie
         assert parsed[0]["title"] == "The Irishman"
         assert parsed[0]["runtime_minutes"] == 135
-        assert parsed[0]["rating"] == 8.1
+        assert parsed[0]["vote_average"] == 8.1
         assert parsed[0]["certification"] == "R"
         assert parsed[0]["year"] == 2019
         assert "Crime" in parsed[0]["genres"]
@@ -145,7 +145,7 @@ class TestFormatters:
 
         json_result = format_movies(movies, "json")
         parsed = json.loads(json_result)
-        assert parsed[0]["rating"] is None
+        assert parsed[0]["vote_average"] is None
         assert parsed[0]["certification"] is None
 
     def test_format_empty_list(self):
@@ -205,6 +205,6 @@ class TestFormatters:
         assert "title" in first_movie
         assert "runtime_minutes" in first_movie
         assert "genres" in first_movie
-        assert "rating" in first_movie
+        assert "vote_average" in first_movie
         assert "certification" in first_movie
         assert "year" in first_movie
