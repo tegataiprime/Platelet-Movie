@@ -30,7 +30,7 @@ TMDB provides reliable watch provider data (including Netflix availability) that
 - 📋 Returns results **sorted ascending** by runtime, then by title
 - 📄 **Multiple output formats**: Markdown (default), HTML, CSV, and JSON
 - 🌍 Supports different Netflix regions (US, GB, CA, etc.)
-- 🌙 **GitHub Pages site** with light/dark mode, runtime filter, sortable columns, and Lady Whistledown commentary
+- 🌙 **GitHub Pages site** with light/dark mode, runtime filter with persistence, sortable columns, and Lady Whistledown commentary
 - 🐍 Written in Python 3.11+, managed with [Poetry](https://python-poetry.org/) and task-automated with [Poe the Poet](https://poethepoet.natn.io/)
 
 ---
@@ -243,7 +243,7 @@ The project includes a static website hosted on GitHub Pages that displays the w
   - Focus indicators for keyboard users
 - **Light/Dark Mode**: Toggle between themes with persistent preference storage
 - **American Red Cross Branding**: Color scheme follows American Red Cross brand guidelines (#E42424 red)
-- **Runtime Filter**: Filter movies by minimum (default: 90 min) and maximum (default: 160 min) runtime with inline validation
+- **Runtime Filter**: Filter movies by minimum (default: 90 min) and maximum (default: 160 min) runtime with inline validation. **Filter selections are automatically saved to browser local storage and persist between visits.**
 - **Sortable Columns**: Click or use keyboard (Enter/Space) on any column header to sort (all columns sortable, including genres); visual indicators show sort state (⇅ / ▲ / ▼)
 - **Lady Whistledown Commentary**: AI-generated introduction in the style of Bridgerton
 - **Acknowledgements**: Proper attribution for TMDB data, accuracy disclaimers, and Bridgerton credits
