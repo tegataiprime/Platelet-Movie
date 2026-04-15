@@ -10,16 +10,12 @@ API Documentation: https://developer.themoviedb.org/docs
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING
 
 import requests
 
 from platelet_movie.models import Movie
 
 logger = logging.getLogger(__name__)
-
-if TYPE_CHECKING:
-    pass
 
 # -----------------------------------------------------------------------
 # TMDB API configuration
@@ -36,8 +32,6 @@ _DEFAULT_TIMEOUT = 30
 
 class TMDBAPIError(Exception):
     """Raised when the TMDB API returns an error or is unreachable."""
-
-    pass
 
 
 class TMDBClient:

@@ -49,14 +49,14 @@ function changeRegion(region) {
 // Theme Management
 function initTheme() {
     const savedTheme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.documentElement.dataset.theme = savedTheme;
     updateThemeIcon(savedTheme);
 }
 
 function toggleTheme() {
     const currentTheme = document.documentElement.dataset.theme;
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', newTheme);
+    document.documentElement.dataset.theme = newTheme;
     localStorage.setItem('theme', newTheme);
     updateThemeIcon(newTheme);
 }
@@ -248,8 +248,8 @@ function renderMovies() {
 
 // Filtering
 function applyRuntimeFilters() {
-    const minRuntime = parseInt(document.getElementById('min-runtime').value) || 0;
-    const maxRuntime = parseInt(document.getElementById('max-runtime').value) || Infinity;
+    const minRuntime = Number.parseInt(document.getElementById('min-runtime').value) || 0;
+    const maxRuntime = Number.parseInt(document.getElementById('max-runtime').value) || Infinity;
     const errorElement = document.getElementById('filter-error');
 
     // Clear any previous error
@@ -334,8 +334,8 @@ function sortMovies() {
 
         // Handle numeric columns
         if (['runtime_minutes', 'year', 'vote_average'].includes(sortColumn)) {
-            aVal = parseFloat(aVal) || 0;
-            bVal = parseFloat(bVal) || 0;
+            aVal = Number.parseFloat(aVal) || 0;
+            bVal = Number.parseFloat(bVal) || 0;
         } else if (sortColumn === 'genres') {
             // Handle genres array - convert to string for sorting
             aVal = Array.isArray(aVal) ? aVal.join(', ').toLowerCase() : String(aVal).toLowerCase();
@@ -373,9 +373,9 @@ function updateSortIndicators() {
 function escapeHtml(unsafe) {
     if (typeof unsafe !== 'string') return unsafe;
     return unsafe
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 }

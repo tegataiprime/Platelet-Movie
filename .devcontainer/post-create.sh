@@ -8,6 +8,13 @@ sudo apt-get install -y gpgv
 echo "Installing Doppler CLI..."
 curl -Ls --tlsv1.2 --proto "=https" --retry 3 https://cli.doppler.com/install.sh | sudo sh
 
+echo "Installing Docker CLI..."
+sudo apt-get install -y docker.io
+
+echo "Configuring Docker permissions..."
+sudo usermod -aG docker vscode || true
+sudo chmod 666 /var/run/docker.sock || true
+
 echo "Installing GitHub CLI Agentic Workflows extension..."
 gh extension install github/gh-aw
 
@@ -33,6 +40,7 @@ echo ""
 echo "Installed versions:"
 poetry --version
 doppler --version
+docker --version
 gh --version
 gh extension list
 poetry run playwright --version

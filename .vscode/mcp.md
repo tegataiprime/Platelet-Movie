@@ -40,15 +40,33 @@ This project includes Model Context Protocol (MCP) servers for enhanced developm
   - Find streaming providers by region
   - Get recommendations and similar movies
 
+### 6. SonarQube (SonarCloud)
+- **Docker Image**: `mcp/sonarqube`
+- **Purpose**: Code quality and security analysis through SonarCloud
+- **Environment**: Requires `SONAR_TOKEN` environment variable
+- **Prerequisites**: Docker
+- **Configuration**:
+  - Organization: `tegataiprime`
+  - Cloud URL: `https://sonarcloud.io`
+  - IDE Port: `64120`
+- **Features**:
+  - Analyze files for code quality issues
+  - List potential security vulnerabilities
+  - Setup connected mode for IDE integration
+  - Exclude files from analysis
+
 ## Setup
 
 MCP servers are automatically configured in [.vscode/mcp.json](.vscode/mcp.json) and will be available after:
 
-1. **Rebuilding the devcontainer** - Node.js (LTS) is configured in the devcontainer
+1. **Rebuilding the devcontainer** - Node.js (LTS) and Docker CLI are configured in the devcontainer
+   - Docker socket is mounted from Codespaces host
+   - Docker CLI is installed via post-create script
 2. **Setting environment variables**:
    - `GITHUB_TOKEN` - GitHub personal access token
    - `DOPPLER_TOKEN` - Doppler API token
    - `TMDB_API_KEY` - The Movie Database API key
+   - `SONAR_TOKEN` - SonarCloud authentication token
 
 ## Environment Variables
 
@@ -58,6 +76,7 @@ Set these in your environment or through Doppler:
 export GITHUB_TOKEN="your_github_token"
 export DOPPLER_TOKEN="your_doppler_token"
 export TMDB_API_KEY="your_tmdb_api_key"
+export SONAR_TOKEN="your_sonar_token"
 ```
 
 Or use Doppler to manage all secrets:
@@ -66,22 +85,31 @@ Or use Doppler to manage all secrets:
 doppler run -- code .
 ```
 
-## MCP Servers Run Via npx
+## MCP Servers Run Via npx and Docker
 
-The GitHub, Playwright, Doppler, and TMDB MCP servers are run via `npx` with the `-y` flag to auto-install packages on demand. This means:
-
+**npx-based servers** (GitHub, Playwright, Doppler, TMDB):
+- Run via `npx` with the `-y` flag to auto-install packages on demand
 - No manual npm installation required
 - Packages are cached after first use
 - Always uses the latest version
+
+**Docker-based servers** (SonarQube):
+- Run via Docker containers
+- Uses host Docker socket mounted at `/var/run/docker.sock`
+- Docker CLI installed during container creation
+- Configured with environment variables passed to the container
 
 ## Troubleshooting
 
 If MCP servers fail to start:
 
 1. **Check Node.js is installed**: `node --version && npm --version`
-2. **Verify environment variables are set**: `echo $GITHUB_TOKEN $DOPPLER_TOKEN $TMDB_API_KEY`
-3. **Check GitHub CLI extension**: `gh extension list` (should show `gh-aw`)
-4. **Rebuild devcontainer** if Node.js is missing
+2. **Check Docker is available**: `docker --version` (for SonarQube server)
+3. **Check Docker daemon is running**: `docker ps` (should not error)
+4. **Verify environment variables are set**: `echo $GITHUB_TOKEN $DOPPLER_TOKEN $TMDB_API_KEY $SONAR_TOKEN`
+5. **Check GitHub CLI extension**: `gh extension list` (should show `gh-aw`)
+6. **Verify Docker image is available**: `docker images | grep mcp/sonarqube`
+7. **Rebuild devcontainer** to apply Docker socket mount and install Docker CLI if just added
 
 ## References
 
@@ -90,3 +118,4 @@ If MCP servers fail to start:
 - [Doppler MCP Server](https://github.com/dopplerhq/mcp-server-doppler)
 - [Playwright MCP Server](https://github.com/executeautomation/playwright-mcp-server)
 - [TMDB MCP Server](https://github.com/Laksh-star/mcp-server-tmdb)
+- [SonarQube MCP Server](https://github.com/modelcontextprotocol/servers/tree/main/src/sonarqube)

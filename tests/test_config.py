@@ -87,7 +87,7 @@ class TestConfig:
 
         # Extract URLs from the error message and validate domain properly
         # This prevents CWE-20 issues with substring sanitization
-        url_pattern = r'https?://[^\s]+'
+        url_pattern = r"https?://[^\s]+"
         urls = re.findall(url_pattern, msg)
         assert len(urls) > 0, "Error message should contain at least one URL"
 
@@ -113,9 +113,9 @@ class TestConfig:
         ]
 
         for malicious_url in malicious_urls:
-            assert not _is_valid_themoviedb_url(
-                malicious_url
-            ), f"Malicious URL {malicious_url} should not be valid"
+            assert not _is_valid_themoviedb_url(malicious_url), (
+                f"Malicious URL {malicious_url} should not be valid"
+            )
 
         # Valid URLs should pass
         valid_urls = [
@@ -125,6 +125,6 @@ class TestConfig:
         ]
 
         for valid_url in valid_urls:
-            assert _is_valid_themoviedb_url(
-                valid_url
-            ), f"Valid URL {valid_url} should be considered valid"
+            assert _is_valid_themoviedb_url(valid_url), (
+                f"Valid URL {valid_url} should be considered valid"
+            )

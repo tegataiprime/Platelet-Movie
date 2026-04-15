@@ -8,14 +8,7 @@
       ]
     },
     "github": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-github"
-      ],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
-      }
+      "command": "/workspaces/Platelet-Movie/.vscode/run-github-mcp.sh"
     },
     "playwright": {
       "command": "npx",
@@ -24,15 +17,14 @@
         "@executeautomation/playwright-mcp-server"
       ]
     },
+    "doppler": {
+      "command": "/workspaces/Platelet-Movie/.vscode/run-doppler-mcp.sh"
+    },
     "tmdb": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-server-tmdb"
-      ],
-      "env": {
-        "TMDB_API_KEY": "${TMDB_API_KEY}"
-      }
-    }
+      "command": "/workspaces/Platelet-Movie/.vscode/run-tmdb-mcp.sh"
+    },
+   "sonarqube": {
+    "command": "/workspaces/Platelet-Movie/.vscode/run-sonar-mcp.sh"
+  }
   }
 }

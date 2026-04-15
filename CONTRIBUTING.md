@@ -357,6 +357,43 @@ tests/
 
 ---
 
+## Code Quality with SonarCloud
+
+This project uses [SonarCloud](https://sonarcloud.io/project/overview?id=tegataiprime_Platelet-Movie) for continuous code quality and security analysis.
+
+### Before Committing
+
+1. **Enable SonarLint in VS Code** for real-time feedback:
+   - Install the SonarLint extension
+   - Configure connected mode via Command Palette → "SonarLint: Add SonarCloud Connection"
+   - Organization: `tegataiprime`
+   - Project key: `tegataiprime_Platelet-Movie`
+
+2. **Address all SonarLint issues** shown in the PROBLEMS panel
+   - Fix all bugs, vulnerabilities, and code smells
+   - Document any accepted technical debt with inline comments
+
+### Issue Priority
+
+All code must pass SonarCloud quality gates before merging:
+
+- 🔴 **Blockers**: Must fix immediately - prevents merge
+- 🟠 **Critical/High**: Fix before merge
+- 🟡 **Medium**: Fix in same PR if possible, create issue if not
+- ⚪ **Low/Info**: Optional improvements, consider for maintainability
+
+### Common Issues to Avoid
+
+- Hardcoded secrets or tokens
+- SQL injection vulnerabilities  
+- Unreachable code
+- Cognitive complexity violations (keep functions simple)
+- Insufficient test coverage on new code
+
+**View analysis results**: [SonarCloud Dashboard](https://sonarcloud.io/project/overview?id=tegataiprime_Platelet-Movie)
+
+---
+
 ## Commit Message Guidelines
 
 ### Format

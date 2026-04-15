@@ -33,6 +33,7 @@ TMDB provides reliable watch provider data (including Netflix availability) that
 - 🌙 **GitHub Pages site** with light/dark mode, runtime filter with persistence, sortable columns, and Lady Whistledown commentary
 - 🌏 **Multi-region support on website**: Switch between US 🇺🇸, UK 🇬🇧, and India 🇮🇳 Netflix catalogs with preference persistence
 - 🐍 Written in Python 3.11+, managed with [Poetry](https://python-poetry.org/) and task-automated with [Poe the Poet](https://poethepoet.natn.io/)
+- 🔍 **Code quality monitoring** with SonarCloud integration and real-time feedback via SonarLint
 
 ---
 
@@ -79,11 +80,20 @@ poetry shell
 
 Platelet-Movie follows the [12-Factor App](https://12factor.net/config) methodology – all settings are read from **environment variables**.
 
+### Runtime Configuration
+
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `TMDB_API_KEY` | ✅ | – | Your TMDB API key (v3 auth) |
 | `TMDB_REGION` | ❌ | `US` | Netflix region code (ISO 3166-1 alpha-2, e.g., US, GB, CA) |
 | `TMDB_MAX_PAGES` | ❌ | `10` | Maximum number of TMDB result pages to fetch (20 movies per page) |
+
+### Development Configuration
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `SONAR_TOKEN` | ❌ | – | SonarCloud authentication token (for code quality analysis in Codespaces) |
+| `DOPPLER_TOKEN` | ❌ | – | Doppler API token (for secrets management) |
 
 ### Setting environment variables
 
@@ -404,6 +414,44 @@ The project requires **≥ 80% code coverage** (enforced by CI) for both the `pl
 
 All TMDB API interactions are tested by mocking the `requests.get` calls via `pytest-mock`. The Lady Whistledown commentary generator (`scripts/lady_whistledown.py`) is also tested with mocked OpenAI API calls and is included in coverage requirements.
 
+### Code Quality with SonarCloud
+
+The project uses [SonarCloud](https://sonarcloud.io/project/overview?id=tegataiprime_Platelet-Movie) for continuous code quality and security analysis.
+
+**Integration Points:**
+
+1. **SonarLint VS Code Extension** - Real-time feedback while coding
+   - Shows issues directly in the editor
+   - Configured in connected mode with `tegataiprime` organization
+   - Project key: `tegataiprime_Platelet-Movie`
+
+2. **SonarQube MCP Server** - AI-assisted code analysis via GitHub Copilot
+   - Available in GitHub Codespaces
+   - Integrates security scanning into development workflow
+   - Requires `SONAR_TOKEN` environment variable
+
+**Setup in Codespaces:**
+
+The devcontainer is pre-configured with:
+- SonarLint extension for VS Code
+- Docker support for running the SonarQube MCP server
+- Automatic injection of `SONAR_TOKEN` from Codespace secrets
+
+To enable SonarCloud features:
+1. Add `SONAR_TOKEN` as a [Codespace secret](https://github.com/tegataiprime/Platelet-Movie/settings/secrets/codespaces)
+2. Configure SonarLint connection via Command Palette → "SonarLint: Add SonarCloud Connection"
+3. Use organization key: `tegataiprime`
+
+**Code Quality Standards:**
+
+All code must pass SonarCloud quality gates before merging:
+- 🔴 **Blockers**: Must fix immediately - prevents merge
+- 🟠 **Critical/High**: Fix before merge
+- 🟡 **Medium**: Fix in same PR if possible, create issue if not
+- ⚪ **Low/Info**: Optional improvements
+
+See [.github/copilot-instructions.md](.github/copilot-instructions.md) for detailed code quality guidelines.
+
 ### Continuous Integration
 
 The project uses GitHub Actions to ensure code quality:
@@ -448,12 +496,20 @@ The project uses GitHub Actions to ensure code quality:
 ```
 Platelet-Movie/
 ├── .github/
-│   └── workflows/
-│       ├── weekly-movie-report.yml       # Weekly email report automation
-│       ├── deploy-github-pages.yml       # GitHub Pages deployment
-│       ├── pr-movie-report-test.yml      # E2E functional test for PRs
-│       ├── test-pr.yml                   # PR testing (lint + coverage)
-│       └── test-main.yml                 # Main branch testing
+│   ├── workflows/
+│   │   ├── weekly-movie-report.yml       # Weekly email report automation
+│   │   ├── deploy-github-pages.yml       # GitHub Pages deployment
+│   │   ├── pr-movie-report-test.yml      # E2E functional test for PRs
+│   │   ├── test-pr.yml                   # PR testing (lint + coverage)
+│   │   └── test-main.yml                 # Main branch testing
+│   └── copilot-instructions.md           # Development guidelines for GitHub Copilot
+├── .devcontainer/
+│   ├── devcontainer.json                 # Codespaces configuration
+│   └── post-create.sh                    # Container setup script
+├── .vscode/
+│   ├── settings.json                     # Workspace settings
+│   ├── mcp.json                          # MCP server configuration
+│   └── mcp.md                            # MCP server documentation
 ├── site/                                 # GitHub Pages static site
 │   ├── index.html                        # Main HTML page
 │   ├── styles.css                        # Styles with light/dark mode

@@ -3,5 +3,11 @@
         "markdown": true
     },
     "doppler.autocomplete.enable": true,
-    "doppler.hover.enable": true
+    "doppler.hover.enable": true,
+    
+    // Optional: Bind this workspace to a specific SonarCloud project
+    "sonarlint.connectedMode.project": {
+        "connectionId": "tegataiprime",
+        "projectKey": "tegataiprime_Platelet-Movie"
+    }
 }

@@ -140,7 +140,7 @@ class TestGenerateCommentaryWithAPIKey:
         request_data = json.loads(request.data.decode("utf-8"))
 
         assert request_data["model"] == "gpt-4o-mini"
-        assert request_data["temperature"] == 0.8
+        assert request_data["temperature"] == pytest.approx(0.8)
         assert request_data["max_tokens"] == 500
 
 

@@ -471,7 +471,7 @@ class TestDiscoverMoviesOnNetflix:
 
         assert len(movies) == 1
         assert movies[0].genres == ["Action", "Sci-Fi", "Thriller"]
-        assert movies[0].rating == 8.7
+        assert movies[0].rating == pytest.approx(8.7)
         assert movies[0].certification == "PG-13"
 
     def test_extracts_year_from_release_date(self, mocker):
@@ -608,7 +608,7 @@ class TestDiscoverMoviesOnNetflix:
 
         assert len(movies) == 1
         assert movies[0].genres == []
-        assert movies[0].rating == 7.0
+        assert movies[0].rating == pytest.approx(7.0)
 
     def test_handles_missing_rating(self, mocker):
         from platelet_movie.tmdb_client import TMDBClient

@@ -94,6 +94,55 @@ doppler run -- poetry shell
 - Follow PEP 8, enforced by ruff configuration in `pyproject.toml`
 - Maximum line length: 100 characters
 
+## Code Quality with SonarCloud
+
+**All SonarCloud issues must be addressed before merging.**
+
+This project uses SonarCloud for continuous code quality and security analysis:
+
+### Integration Points
+
+1. **SonarLint VS Code Extension** - Real-time feedback while coding
+   - Shows issues directly in the editor
+   - Configured in connected mode with `tegataiprime` organization
+   - Project key: `tegataiprime_Platelet-Movie`
+
+2. **SonarCloud MCP Server** - AI-assisted analysis
+   - Available via Copilot: `sonarqube_analyze_file`, `sonarqube_list_potential_security_issues`
+   - Integrates security scanning into development workflow
+   - Uses `SONAR_TOKEN` from Doppler/Codespace secrets
+
+### Workflow
+
+**Before committing code:**
+1. Check SonarLint warnings in VS Code PROBLEMS panel
+2. Address all bugs, vulnerabilities, and code smells
+3. Use `sonarqube_analyze_file` for additional validation
+4. Ensure no new security issues are introduced
+
+**When reviewing code:**
+- Run `sonarqube_list_potential_security_issues` on changed files
+- Verify all critical and high-severity issues are resolved
+- Document any accepted technical debt with inline comments
+
+### Issue Priority
+
+1. **🔴 Blockers**: Must fix immediately - prevents merge
+2. **🟠 Critical/High**: Fix before merge
+3. **🟡 Medium**: Fix in same PR if possible, create issue if not
+4. **⚪ Low/Info**: Optional improvements, consider for maintainability
+
+### Common Issues to Avoid
+
+- Hardcoded secrets or tokens
+- SQL injection vulnerabilities
+- Unreachable code
+- Cognitive complexity violations (keep functions simple)
+- Insufficient test coverage on new code
+
+**All code must pass SonarCloud quality gates.** Check analysis results at:
+https://sonarcloud.io/project/overview?id=tegataiprime_Platelet-Movie
+
 ## Commands Reference
 
 ```bash
