@@ -226,6 +226,10 @@ function sortMovies() {
         if (['runtime_minutes', 'year', 'vote_average'].includes(sortColumn)) {
             aVal = parseFloat(aVal) || 0;
             bVal = parseFloat(bVal) || 0;
+        } else if (sortColumn === 'genres') {
+            // Handle genres array - convert to string for sorting
+            aVal = Array.isArray(aVal) ? aVal.join(', ').toLowerCase() : String(aVal).toLowerCase();
+            bVal = Array.isArray(bVal) ? bVal.join(', ').toLowerCase() : String(bVal).toLowerCase();
         } else {
             // Convert to string for text comparison
             aVal = String(aVal).toLowerCase();

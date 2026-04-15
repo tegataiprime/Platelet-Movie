@@ -144,7 +144,7 @@ def _format_json(movies: list[Movie]) -> str:
             "runtime_minutes": movie.runtime_minutes,
             "year": movie.year,
             "genres": movie.genres,
-            "rating": movie.rating,
+            "vote_average": movie.rating,
             "certification": movie.certification,
         }
         for movie in movies
