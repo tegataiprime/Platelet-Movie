@@ -4,11 +4,11 @@
     --bg-secondary: #f8f9fa;
     --bg-card: #ffffff;
     --text-primary: #212529;
-    --text-secondary: #76777A;
+    --text-secondary: #76777A;  /* American Red Cross brand: Gray 7 */
     --text-link: #0d6efd;
     --border-color: #dee2e6;
     --shadow: rgba(0, 0, 0, 0.1);
-    --accent: #E42424;
+    --accent: #E42424;  /* American Red Cross Red (Pantone 185 C) */
     --accent-light: #ffe5e5;
     --table-hover: #f8f9fa;
     --button-bg: #E42424;
@@ -246,15 +246,14 @@ th.sortable:hover {
     opacity: 0.5;
 }
 
+/* Default: show bidirectional arrow when not sorted */
 .sort-arrow::after {
     content: "⇅";
 }
 
-th.sorted-asc .sort-arrow {
-    opacity: 1;
-}
-
-th.sorted-desc .sort-arrow {
+/* Sorted state: show directional arrow and increase opacity */
+th.sorted-asc .sort-arrow::after,
+th.sorted-desc .sort-arrow::after {
     opacity: 1;
 }
 
