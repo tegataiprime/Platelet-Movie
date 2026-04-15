@@ -470,6 +470,18 @@ CLI (cli.py)
 
 ---
 
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on:
+
+- Code of conduct
+- Development setup
+- Testing requirements
+- Code style guidelines
+- Pull request process
+
+---
+
 ## Acknowledgements & Disclaimers
 
 ### 📊 Data Source
