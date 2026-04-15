@@ -5,13 +5,44 @@ let allMovies = [];
 let filteredMovies = [];
 let sortColumn = 'runtime_minutes';
 let sortDirection = 'asc';
+let currentRegion = 'us'; // Default region
 
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
+    initRegion();
     loadData();
     setupEventListeners();
 });
+
+// Region Management
+function initRegion() {
+    // Get saved region from localStorage or use default
+    const savedRegion = localStorage.getItem('region') || 'us';
+    currentRegion = savedRegion;
+    
+    // Set the select element to the saved region
+    const regionSelect = document.getElementById('region-select');
+    if (regionSelect) {
+        regionSelect.value = savedRegion;
+    }
+}
+
+function changeRegion(region) {
+    // Validate region
+    const validRegions = ['us', 'gb', 'in'];
+    if (!validRegions.includes(region)) {
+        console.error('Invalid region:', region);
+        return;
+    }
+    
+    // Save to localStorage
+    localStorage.setItem('region', region);
+    currentRegion = region;
+    
+    // Reload data for new region
+    loadData();
+}
 
 // Theme Management
 function initTheme() {
@@ -40,6 +71,13 @@ function setupEventListeners() {
     const themeToggle = document.getElementById('theme-toggle');
     if (themeToggle) {
         themeToggle.addEventListener('click', toggleTheme);
+    }
+
+    const regionSelect = document.getElementById('region-select');
+    if (regionSelect) {
+        regionSelect.addEventListener('change', (e) => {
+            changeRegion(e.target.value);
+        });
     }
 
     const applyFiltersBtn = document.getElementById('apply-filters');
@@ -75,7 +113,9 @@ function setupEventListeners() {
 // Data Loading
 async function loadData() {
     try {
-        const response = await fetch('data.json');
+        // Construct the data file name based on current region
+        const dataFile = `data-${currentRegion}.json`;
+        const response = await fetch(dataFile);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }

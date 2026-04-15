@@ -17,9 +17,19 @@
             <div class="header-content">
                 <h1>🎬 Platelet-Movie</h1>
                 <p class="subtitle">Netflix Movies for Platelet Donation</p>
-                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
-                    <span class="theme-icon">🌙</span>
-                </button>
+                <div class="header-controls">
+                    <div class="region-selector">
+                        <label for="region-select" class="visually-hidden">Select Netflix Region</label>
+                        <select id="region-select" class="region-select" aria-label="Select Netflix Region">
+                            <option value="us">🇺🇸 United States</option>
+                            <option value="gb">🇬🇧 United Kingdom</option>
+                            <option value="in">🇮🇳 India</option>
+                        </select>
+                    </div>
+                    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                </div>
             </div>
         </header>
 

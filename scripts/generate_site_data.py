@@ -34,11 +34,12 @@ def run_command(cmd: list[str]) -> str:
         raise
 
 
-def get_movie_data(max_pages: int | str = 50) -> dict:
+def get_movie_data(max_pages: int | str = 50, region: str = "US") -> dict:
     """Get movie data from platelet-movie CLI.
     
     Args:
         max_pages: Maximum number of pages to fetch from TMDB (default: 50)
+        region: Netflix region code (e.g., US, GB, IN) (default: US)
     
     Returns:
         Parsed JSON data with movies
@@ -47,9 +48,16 @@ def get_movie_data(max_pages: int | str = 50) -> dict:
         subprocess.CalledProcessError: If CLI fails
         json.JSONDecodeError: If output is not valid JSON
     """
-    print("Fetching movie data from TMDB...", file=sys.stderr)
+    print(f"Fetching movie data from TMDB for region {region}...", file=sys.stderr)
     # Use the installed entry point instead of -m
-    output = run_command(["platelet-movie", "--format", "json", "--min-minutes", "90", "--max-minutes", "160", "--max-pages", str(max_pages)])
+    output = run_command([
+        "platelet-movie",
+        "--format", "json",
+        "--min-minutes", "90",
+        "--max-minutes", "160",
+        "--max-pages", str(max_pages),
+        "--region", region
+    ])
     return json.loads(output)
 
 
@@ -92,53 +100,69 @@ def get_commentary(movie_data: list[dict] | str) -> str:
     return result.stdout.strip()
 
 
-def generate_site_data(max_pages: int = 50) -> None:
-    """Generate and save site/data.json with current movie data and commentary.
+def generate_site_data(max_pages: int = 50, region: str | None = None) -> None:
+    """Generate and save site/data-{region}.json with current movie data and commentary.
     
     Args:
         max_pages: Maximum number of pages to fetch from TMDB (default: 50)
+        region: Netflix region code (e.g., US, GB, IN). If None, generates for all supported regions.
     """
-    try:
-        # Get movie data
-        movies = get_movie_data(max_pages=max_pages)
-        
-        # Get commentary
-        movie_markdown = "\n".join(
-            f"- {m.get('title', 'Unknown')} ({m.get('runtime_minutes', '?')}m, {m.get('year', '')})"
-            for m in (movies if isinstance(movies, list) else [])
-        )
-        commentary = get_commentary(movie_markdown)
-        
-        # Prepare combined data
-        site_data = {
-            "generated_at": datetime.now(timezone.utc).isoformat(),
-            "commentary": commentary,
-            "movies": movies if isinstance(movies, list) else movies.get("movies", []),
-        }
-        
-        # Save to site/data.json
-        output_path = Path(__file__).parent.parent / "site" / "data.json"
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        
-        with open(output_path, "w") as f:
-            json.dump(site_data, f, indent=2)
-        
-        print(f"✓ Generated {output_path} with {len(site_data['movies'])} movies", file=sys.stderr)
-        
-    except subprocess.CalledProcessError as e:
-        print(f"Error: Failed to generate site data: {e}", file=sys.stderr)
-        sys.exit(1)
-    except json.JSONDecodeError as e:
-        print(f"Error: Invalid JSON in response: {e}", file=sys.stderr)
-        sys.exit(1)
-    except Exception as e:
-        print(f"Error: Unexpected error during site generation: {e}", file=sys.stderr)
-        sys.exit(1)
+    # Define supported regions
+    supported_regions = ["US", "GB", "IN"]
+    regions_to_generate = [region.upper()] if region else supported_regions
+    
+    for region_code in regions_to_generate:
+        try:
+            print(f"\n{'='*60}", file=sys.stderr)
+            print(f"Generating data for region: {region_code}", file=sys.stderr)
+            print(f"{'='*60}", file=sys.stderr)
+            
+            # Get movie data
+            movies = get_movie_data(max_pages=max_pages, region=region_code)
+            
+            # Get commentary
+            movie_markdown = "\n".join(
+                f"- {m.get('title', 'Unknown')} ({m.get('runtime_minutes', '?')}m, {m.get('year', '')})"
+                for m in (movies if isinstance(movies, list) else [])
+            )
+            commentary = get_commentary(movie_markdown)
+            
+            # Prepare combined data
+            site_data = {
+                "generated_at": datetime.now(timezone.utc).isoformat(),
+                "region": region_code,
+                "commentary": commentary,
+                "movies": movies if isinstance(movies, list) else movies.get("movies", []),
+            }
+            
+            # Save to site/data-{region}.json
+            output_filename = f"data-{region_code.lower()}.json"
+            output_path = Path(__file__).parent.parent / "site" / output_filename
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            
+            with open(output_path, "w") as f:
+                json.dump(site_data, f, indent=2)
+            
+            print(f"✓ Generated {output_path} with {len(site_data['movies'])} movies", file=sys.stderr)
+            
+        except subprocess.CalledProcessError as e:
+            print(f"Error: Failed to generate site data for region {region_code}: {e}", file=sys.stderr)
+            if region:  # If generating for a specific region, exit on error
+                sys.exit(1)
+            # Otherwise, continue with next region
+        except json.JSONDecodeError as e:
+            print(f"Error: Invalid JSON in response for region {region_code}: {e}", file=sys.stderr)
+            if region:
+                sys.exit(1)
+        except Exception as e:
+            print(f"Error: Unexpected error during site generation for region {region_code}: {e}", file=sys.stderr)
+            if region:
+                sys.exit(1)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Generate data.json for the static website with movie data and commentary."
+        description="Generate data-{region}.json files for the static website with movie data and commentary."
     )
     parser.add_argument(
         "--max-pages",
@@ -146,5 +170,11 @@ if __name__ == "__main__":
         default=50,
         help="Maximum number of pages to fetch from TMDB (default: 50)",
     )
+    parser.add_argument(
+        "--region",
+        type=str,
+        default=None,
+        help="Netflix region code (e.g., US, GB, IN). If not specified, generates for all supported regions (US, GB, IN).",
+    )
     args = parser.parse_args()
-    generate_site_data(max_pages=args.max_pages)
+    generate_site_data(max_pages=args.max_pages, region=args.region)

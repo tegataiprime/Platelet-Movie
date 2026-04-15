@@ -1,0 +1,87 @@
+{
+  "generated_at": "2026-04-15T12:00:00Z",
+  "commentary": "Dearest Gentle Reader,\n\nThis author finds herself most delighted to present a selection of moving pictures of considerable length, perfect for one's platelet donation appointment. The season brings us several noteworthy productions that shall keep you most agreeably entertained during your generous contribution to society.\n\nOne cannot help but notice the prevalence of epic dramas and adventurous tales, each exceeding the requisite duration of 135 minutes. The cinematographic offerings range from thrilling science fiction to heartwarming dramas, ensuring there is something to suit every discerning taste.\n\nYours in entertainment,\nLady Whistledown",
+  "movies": [
+    {
+      "title": "The Grand Budapest Hotel",
+      "runtime_minutes": 99,
+      "year": 2014,
+      "vote_average": 8.1,
+      "certification": "R",
+      "genres": "Comedy, Drama"
+    },
+    {
+      "title": "Inception",
+      "runtime_minutes": 148,
+      "year": 2010,
+      "vote_average": 8.8,
+      "certification": "PG-13",
+      "genres": "Action, Science Fiction, Thriller"
+    },
+    {
+      "title": "The Irishman",
+      "runtime_minutes": 209,
+      "year": 2019,
+      "vote_average": 7.8,
+      "certification": "R",
+      "genres": "Crime, Drama"
+    },
+    {
+      "title": "Dunkirk",
+      "runtime_minutes": 106,
+      "year": 2017,
+      "vote_average": 7.9,
+      "certification": "PG-13",
+      "genres": "Action, Drama, History, War"
+    },
+    {
+      "title": "Interstellar",
+      "runtime_minutes": 169,
+      "year": 2014,
+      "vote_average": 8.6,
+      "certification": "PG-13",
+      "genres": "Adventure, Drama, Science Fiction"
+    },
+    {
+      "title": "The Departed",
+      "runtime_minutes": 151,
+      "year": 2006,
+      "vote_average": 8.2,
+      "certification": "R",
+      "genres": "Crime, Drama, Thriller"
+    },
+    {
+      "title": "Gladiator",
+      "runtime_minutes": 155,
+      "year": 2000,
+      "vote_average": 8.2,
+      "certification": "R",
+      "genres": "Action, Adventure, Drama"
+    },
+    {
+      "title": "The Wolf of Wall Street",
+      "runtime_minutes": 180,
+      "year": 2013,
+      "vote_average": 8.0,
+      "certification": "R",
+      "genres": "Comedy, Crime, Drama"
+    },
+    {
+      "title": "Schindler's List",
+      "runtime_minutes": 195,
+      "year": 1993,
+      "vote_average": 8.9,
+      "certification": "R",
+      "genres": "Drama, History, War"
+    },
+    {
+      "title": "The Green Mile",
+      "runtime_minutes": 189,
+      "year": 1999,
+      "vote_average": 8.5,
+      "certification": "R",
+      "genres": "Crime, Drama, Fantasy"
+    }
+  ],
+  "region": "IN"
+}
