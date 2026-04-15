@@ -6,11 +6,13 @@ let filteredMovies = [];
 let sortColumn = 'runtime_minutes';
 let sortDirection = 'asc';
 let currentRegion = 'us'; // Default region
+let hasSavedFilters = false;
 
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initRegion();
+    hasSavedFilters = initFilters();
     loadData();
     setupEventListeners();
 });
@@ -64,6 +66,33 @@ function updateThemeIcon(theme) {
     if (icon) {
         icon.textContent = theme === 'light' ? '🌙' : '☀️';
     }
+}
+
+// Filter Persistence Management
+function initFilters() {
+    const savedMinRuntime = localStorage.getItem('minRuntime');
+    const savedMaxRuntime = localStorage.getItem('maxRuntime');
+    
+    if (savedMinRuntime !== null) {
+        document.getElementById('min-runtime').value = savedMinRuntime;
+    }
+    
+    if (savedMaxRuntime !== null) {
+        document.getElementById('max-runtime').value = savedMaxRuntime;
+    }
+    
+    // Return true if saved filters exist
+    return savedMinRuntime !== null || savedMaxRuntime !== null;
+}
+
+function saveFilterValues(minRuntime, maxRuntime) {
+    localStorage.setItem('minRuntime', minRuntime);
+    localStorage.setItem('maxRuntime', maxRuntime);
+}
+
+function clearSavedFilters() {
+    localStorage.removeItem('minRuntime');
+    localStorage.removeItem('maxRuntime');
 }
 
 // Event Listeners Setup
@@ -128,6 +157,11 @@ async function loadData() {
         // Load movies
         allMovies = data.movies || [];
         filteredMovies = [...allMovies];
+        
+        // Apply saved filters if they exist
+        if (hasSavedFilters) {
+            applyRuntimeFilters();
+        }
         
         // Apply initial sort and render
         sortMovies();
@@ -233,6 +267,9 @@ function applyRuntimeFilters() {
         return;
     }
 
+    // Save filter values to localStorage
+    saveFilterValues(minRuntime, maxRuntime);
+
     filteredMovies = allMovies.filter(movie => {
         const runtime = movie.runtime_minutes || 0;
         return runtime >= minRuntime && runtime <= maxRuntime;
@@ -246,6 +283,9 @@ function applyRuntimeFilters() {
 function resetFilters() {
     document.getElementById('min-runtime').value = 90;
     document.getElementById('max-runtime').value = 160;
+    
+    // Clear saved filter values from localStorage
+    clearSavedFilters();
     
     // Clear any error message
     const errorElement = document.getElementById('filter-error');
