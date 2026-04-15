@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platelet-Movie | Netflix Movies for Platelet Donation</title>
+    <meta name="description" content="Discover Netflix movies long enough for a Platelet Donation (≥ 135 minutes). Updated weekly with curated selections.">
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>🎬 Platelet-Movie</h1>
+                <p class="subtitle">Netflix Movies for Platelet Donation (≥ 135 minutes)</p>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                    <span class="theme-icon">🌙</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Lady Whistledown Commentary Section -->
+            <section class="commentary-section">
+                <h2>✨ Lady Whistledown's Commentary</h2>
+                <div id="commentary" class="commentary-content">
+                    <p class="loading">Loading commentary...</p>
+                </div>
+                <p class="commentary-meta" id="generated-at"></p>
+            </section>
+
+            <!-- Filters Section -->
+            <section class="filters-section">
+                <h2>🎯 Filter Movies</h2>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="min-runtime">Minimum Runtime (minutes):</label>
+                        <input type="number" id="min-runtime" value="90" min="0" max="500">
+                    </div>
+                    <div class="filter-group">
+                        <label for="max-runtime">Maximum Runtime (minutes):</label>
+                        <input type="number" id="max-runtime" value="160" min="0" max="500">
+                    </div>
+                    <button id="apply-filters" class="btn-primary">Apply Filters</button>
+                    <button id="reset-filters" class="btn-secondary">Reset</button>
+                </div>
+                <p class="filter-results" id="filter-results"></p>
+            </section>
+
+            <!-- Movies Table Section -->
+            <section class="movies-section">
+                <h2>📋 Movie List</h2>
+                <div class="table-container">
+                    <table id="movies-table">
+                        <thead>
+                            <tr>
+                                <th data-sort="title" class="sortable">Title <span class="sort-arrow"></span></th>
+                                <th data-sort="runtime_minutes" class="sortable">Runtime <span class="sort-arrow"></span></th>
+                                <th data-sort="year" class="sortable">Year <span class="sort-arrow"></span></th>
+                                <th data-sort="vote_average" class="sortable">Score <span class="sort-arrow"></span></th>
+                                <th data-sort="certification" class="sortable">Rated <span class="sort-arrow"></span></th>
+                                <th data-sort="genres">Genres</th>
+                            </tr>
+                        </thead>
+                        <tbody id="movies-tbody">
+                            <tr>
+                                <td colspan="6" class="loading-row">Loading movies...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Acknowledgements Section -->
+            <section class="acknowledgements-section">
+                <h2>ℹ️ Acknowledgements & Disclaimers</h2>
+                <div class="acknowledgements">
+                    <div class="acknowledgement-item">
+                        <h3>📊 Data Source</h3>
+                        <p>
+                            This product uses the <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">TMDB API</a> 
+                            but is not endorsed or certified by TMDB. Movie data, ratings, and Netflix availability information 
+                            are provided by <a href="https://www.themoviedb.org/" target="_blank" rel="noopener">The Movie Database (TMDB)</a>.
+                        </p>
+                        <p class="tmdb-logo">
+                            <img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg" 
+                                 alt="TMDB Logo" 
+                                 width="100">
+                        </p>
+                    </div>
+                    
+                    <div class="acknowledgement-item">
+                        <h3>⚠️ Accuracy Disclaimer</h3>
+                        <p>
+                            Netflix availability and movie data may have a 24-48 hour lag from TMDB's updates. 
+                            Regional availability varies, and content may be removed or added without notice. 
+                            Always verify movie availability on Netflix before your donation appointment.
+                        </p>
+                    </div>
+                    
+                    <div class="acknowledgement-item">
+                        <h3>✍️ Commentary Attribution</h3>
+                        <p>
+                            "Lady Whistledown" commentary is AI-generated in the style of the character from 
+                            <em>Bridgerton</em>, a Netflix series created by Chris Van Dusen and produced by Shondaland. 
+                            <em>Bridgerton</em> is based on the novels by Julia Quinn. This is a parody/homage and is 
+                            not affiliated with Netflix, Shondaland, or Julia Quinn.
+                        </p>
+                    </div>
+
+                    <div class="acknowledgement-item">
+                        <h3>🩸 About Platelet Donation</h3>
+                        <p>
+                            Platelet donation typically takes 2-3 hours and helps cancer patients, trauma victims, 
+                            and surgical patients. Learn more about platelet donation at 
+                            <a href="https://www.redcross.org/give-blood/how-to-donate/types-of-blood-donations/platelet-donation.html" target="_blank" rel="noopener">American Red Cross</a>.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>
+                Built with ❤️ | 
+                <a href="https://github.com/tegataiprime/Platelet-Movie" target="_blank" rel="noopener">View on GitHub</a> | 
+                Updated weekly
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
