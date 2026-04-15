@@ -70,7 +70,7 @@ To generate the `data.json` file, run the following command in the repository ro
 
 ```bash
 cd ${{ github.workspace }}
-python scripts/generate_site_data.py
+python scripts/generate_site_data.py --max-pages 2
 ```
 
 ## Step 2: Serve the Static Site

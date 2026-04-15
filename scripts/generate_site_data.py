@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Generate data.json for the static website."""
 
+import argparse
 import json
 import subprocess
 import sys
@@ -33,8 +34,11 @@ def run_command(cmd: list[str]) -> str:
         raise
 
 
-def get_movie_data() -> dict:
+def get_movie_data(max_pages: int | str = 50) -> dict:
     """Get movie data from platelet-movie CLI.
+    
+    Args:
+        max_pages: Maximum number of pages to fetch from TMDB (default: 50)
     
     Returns:
         Parsed JSON data with movies
@@ -45,7 +49,7 @@ def get_movie_data() -> dict:
     """
     print("Fetching movie data from TMDB...", file=sys.stderr)
     # Use the installed entry point instead of -m
-    output = run_command(["platelet-movie", "--format", "json", "--min-minutes", "90", "--max-minutes", "160", "--max-pages", "50"])
+    output = run_command(["platelet-movie", "--format", "json", "--min-minutes", "90", "--max-minutes", "160", "--max-pages", str(max_pages)])
     return json.loads(output)
 
 
@@ -88,11 +92,15 @@ def get_commentary(movie_data: list[dict] | str) -> str:
     return result.stdout.strip()
 
 
-def generate_site_data() -> None:
-    """Generate and save site/data.json with current movie data and commentary."""
+def generate_site_data(max_pages: int = 50) -> None:
+    """Generate and save site/data.json with current movie data and commentary.
+    
+    Args:
+        max_pages: Maximum number of pages to fetch from TMDB (default: 50)
+    """
     try:
         # Get movie data
-        movies = get_movie_data()
+        movies = get_movie_data(max_pages=max_pages)
         
         # Get commentary
         movie_markdown = "\n".join(
@@ -129,4 +137,14 @@ def generate_site_data() -> None:
 
 
 if __name__ == "__main__":
-    generate_site_data()
+    parser = argparse.ArgumentParser(
+        description="Generate data.json for the static website with movie data and commentary."
+    )
+    parser.add_argument(
+        "--max-pages",
+        type=int,
+        default=50,
+        help="Maximum number of pages to fetch from TMDB (default: 50)",
+    )
+    args = parser.parse_args()
+    generate_site_data(max_pages=args.max_pages)
