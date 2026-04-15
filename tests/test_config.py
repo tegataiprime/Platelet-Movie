@@ -105,11 +105,11 @@ class TestConfig:
         # These malicious URLs would pass a naive substring check
         # but should fail proper validation
         malicious_urls = [
-            "http://evil.com?redirect=themoviedb.org",
-            "http://themoviedb.org.evil.com/settings",
-            "http://evil-themoviedb.org.com/api",
-            "http://notthemoviedb.org/settings",
-            "http://evilthemoviedb.org/api",  # Ends with themoviedb.org but not a subdomain
+            "https://evil.com?redirect=themoviedb.org",
+            "https://themoviedb.org.evil.com/settings",
+            "https://evil-themoviedb.org.com/api",
+            "https://notthemoviedb.org/settings",
+            "https://evilthemoviedb.org/api",  # Ends with themoviedb.org but not a subdomain
         ]
 
         for malicious_url in malicious_urls:
