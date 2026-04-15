@@ -2,7 +2,9 @@
 name: Multi-Device Web Site Tester
 description: Tests the generated static site functionality and responsive design across multiple device form factors
 on:
-  schedule: daily
+  pull_request:
+    paths:
+      - 'site/**'
   workflow_dispatch:
     inputs:
       devices:
@@ -53,7 +55,7 @@ You are a web user interface testing specialist. Your task is to comprehensively
 
 **IMPORTANT SETUP NOTES:**
 1. You're already in the repository root
-2. The docs folder is at: `${{ github.workspace }}/docs`
+2. The site folder is at: `${{ github.workspace }}/site`
 3. Use absolute paths or change directory explicitly
 4. Keep token usage low by being efficient with your code and minimizing iterations
 5. **Playwright is available via MCP tools only** - do NOT try to `require('playwright')` or install it via npm
@@ -62,13 +64,22 @@ You are a web user interface testing specialist. Your task is to comprehensively
 
 Serve the static generated web site locally and perform comprehensive multi-device testing. Test layout responsiveness, accessibility, interactive elements, and visual rendering across all device types. Use a single Playwright browser instance for efficiency.
 
-## Step 1: Serve the Static Site
+## Step 1: Generate Site Data
 
-The docs folder contains a static HTML/CSS/JS site (no build step required). Start a Python HTTP server to serve it:
+To generate the `data.json` file, run the following command in the repository root:
 
 ```bash
 cd ${{ github.workspace }}
-python -m http.server 8000 --directory docs --bind 0.0.0.0 &
+python scripts/generate_site_data.py
+```
+
+## Step 2: Serve the Static Site
+
+The site folder contains a static HTML/CSS/JS site (no build step required). Start a Python HTTP server to serve it:
+
+```bash
+cd ${{ github.workspace }}
+python -m http.server 8000 --directory site --bind 0.0.0.0 &
 ```
 
 Wait for server readiness:
@@ -81,7 +92,7 @@ curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/ || echo "Server no
 
 The server should respond with HTTP 200 when ready.
 
-## Step 2: Device Configuration
+## Step 3: Device Configuration
 
 Test these device types based on input `${{ inputs.devices }}`:
 
@@ -89,7 +100,7 @@ Test these device types based on input `${{ inputs.devices }}`:
 **Tablet:** iPad (768x1024), iPad Pro 11 (834x1194), iPad Pro 12.9 (1024x1366)
 **Desktop:** HD (1366x768), FHD (1920x1080), 4K (2560x1440)
 
-## Step 3: Run Playwright Tests
+## Step 4: Run Playwright Tests
 
 **IMPORTANT: Using Playwright in gh-aw Workflows**
 
