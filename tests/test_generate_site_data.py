@@ -103,9 +103,11 @@ class TestGetMovieData:
                 "160",
                 "--max-pages",
                 "50",
+                "--region",
+                "US",
             ]
         )
-        assert "Fetching movie data from TMDB..." in mock_stderr.getvalue()
+        assert "Fetching movie data from TMDB for region US..." in mock_stderr.getvalue()
 
     @patch("generate_site_data.run_command")
     def test_invalid_json_raises_error(self, mock_run_command):
@@ -154,6 +156,8 @@ class TestGetMovieData:
                 "160",
                 "--max-pages",
                 "10",
+                "--region",
+                "US",
             ]
         )
 
@@ -175,6 +179,31 @@ class TestGetMovieData:
                 "160",
                 "--max-pages",
                 "25",
+                "--region",
+                "US",
+            ]
+        )
+
+    @patch("generate_site_data.run_command")
+    def test_custom_region(self, mock_run_command):
+        """Test that custom region value is passed to CLI."""
+        mock_run_command.return_value = "[]"
+
+        get_movie_data(region="GB")
+
+        mock_run_command.assert_called_once_with(
+            [
+                "platelet-movie",
+                "--format",
+                "json",
+                "--min-minutes",
+                "90",
+                "--max-minutes",
+                "160",
+                "--max-pages",
+                "50",
+                "--region",
+                "GB",
             ]
         )
 

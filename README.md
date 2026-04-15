@@ -31,6 +31,7 @@ TMDB provides reliable watch provider data (including Netflix availability) that
 - 📄 **Multiple output formats**: Markdown (default), HTML, CSV, and JSON
 - 🌍 Supports different Netflix regions (US, GB, CA, etc.)
 - 🌙 **GitHub Pages site** with light/dark mode, runtime filter, sortable columns, and Lady Whistledown commentary
+- 🌏 **Multi-region support on website**: Switch between US 🇺🇸, UK 🇬🇧, and India 🇮🇳 Netflix catalogs with preference persistence
 - 🐍 Written in Python 3.11+, managed with [Poetry](https://python-poetry.org/) and task-automated with [Poe the Poet](https://poethepoet.natn.io/)
 
 ---
@@ -360,22 +361,34 @@ poe site
 
 ### Generating Site Data
 
-The `scripts/generate_site_data.py` script fetches movie data from TMDB and generates Lady Whistledown commentary for the static website.
+The `scripts/generate_site_data.py` script fetches movie data from TMDB and generates Lady Whistledown commentary for the static website. It supports generating data for multiple Netflix regions.
 
 **Usage:**
 ```bash
-# Generate with default settings (50 pages = ~1000 movies)
+# Generate data for all supported regions (US, GB, IN) - default behavior
 python scripts/generate_site_data.py
 
-# Generate with custom max-pages for faster testing
+# Generate with custom max-pages for faster testing (all regions)
 python scripts/generate_site_data.py --max-pages 5
 
-# Or use the Poe task (uses default 50 pages)
+# Generate for a specific region only
+python scripts/generate_site_data.py --region US
+python scripts/generate_site_data.py --region GB
+python scripts/generate_site_data.py --region IN
+
+# Or use the Poe task (generates all regions with default 50 pages)
 poe generate
 ```
 
 **Options:**
 - `--max-pages INTEGER`: Maximum number of TMDB result pages to fetch (default: 50, each page contains ~20 movies)
+- `--region CODE`: Netflix region code (US, GB, or IN). If not specified, generates data for all supported regions.
+
+**Output:**
+The script generates region-specific data files in the `site/` directory:
+- `data-us.json` - United States Netflix catalog
+- `data-gb.json` - United Kingdom Netflix catalog
+- `data-in.json` - India Netflix catalog
 
 **Note:** Using a lower `--max-pages` value is recommended for faster end-to-end testing during development.
 
