@@ -1,0 +1,458 @@
+{
+  "generated_at": "2026-04-15T18:23:55.029241+00:00",
+  "region": "GB",
+  "commentary": "Dear Reader,\n\nAs the delicate tendrils of autumn weave their way through our beloved society, this Author finds herself once again contemplating the noble act of platelet donation. Indeed, what could be more laudable than lending a helping hand\u2014or, shall we say, a generous pint\u2014to those in need? It is, in every sense, a true display of heart, and what better way to pass the time during such a charitable endeavor than by indulging in the delightful distraction of cinema? \n\nOne must inquire, dear friends, if you prefer your entertainment woven with the silk of animated hilarity, as one might find in a certain tale of a martial arts panda, or perhaps with a spookier edge that resonates with your very soul, as epitomized in the thrilling silence of the recent blockbuster? From romantic escapades to audacious capers, this week's selection promises to tickle your fancy and captivate your attention for a splendid ninety minutes or more. Prepare to be enraptured, for within these cinematic treasures lies the perfect companion to your philanthropic pursuits!",
+  "movies": [
+    {
+      "title": "Kung Fu Panda",
+      "runtime_minutes": 90,
+      "year": 2008,
+      "genres": [
+        "Animation",
+        "Family",
+        "Drama",
+        "Comedy",
+        "Action"
+      ],
+      "vote_average": 7.3,
+      "certification": "PG"
+    },
+    {
+      "title": "A Quiet Place",
+      "runtime_minutes": 91,
+      "year": 2018,
+      "genres": [
+        "Horror",
+        "Drama",
+        "Science Fiction"
+      ],
+      "vote_average": 7.4,
+      "certification": "15"
+    },
+    {
+      "title": "Irish Wish",
+      "runtime_minutes": 94,
+      "year": 2024,
+      "genres": [
+        "Romance",
+        "Comedy",
+        "Fantasy"
+      ],
+      "vote_average": 6.1,
+      "certification": "12"
+    },
+    {
+      "title": "Kung Fu Panda 4",
+      "runtime_minutes": 94,
+      "year": 2024,
+      "genres": [
+        "Animation",
+        "Family",
+        "Action",
+        "Comedy",
+        "Adventure",
+        "Fantasy"
+      ],
+      "vote_average": 7.0,
+      "certification": "PG"
+    },
+    {
+      "title": "KPop Demon Hunters",
+      "runtime_minutes": 96,
+      "year": 2025,
+      "genres": [
+        "Fantasy",
+        "Music",
+        "Comedy",
+        "Animation"
+      ],
+      "vote_average": 8.0,
+      "certification": "PG"
+    },
+    {
+      "title": "Men in Black",
+      "runtime_minutes": 98,
+      "year": 1997,
+      "genres": [
+        "Action",
+        "Adventure",
+        "Comedy",
+        "Science Fiction"
+      ],
+      "vote_average": 7.2,
+      "certification": "12"
+    },
+    {
+      "title": "The Grand Budapest Hotel",
+      "runtime_minutes": 100,
+      "year": 2014,
+      "genres": [
+        "Comedy",
+        "Drama"
+      ],
+      "vote_average": 8.0,
+      "certification": "15"
+    },
+    {
+      "title": "American Psycho",
+      "runtime_minutes": 102,
+      "year": 2000,
+      "genres": [
+        "Thriller",
+        "Drama",
+        "Crime"
+      ],
+      "vote_average": 7.4,
+      "certification": "18"
+    },
+    {
+      "title": "Fifty Shades Freed",
+      "runtime_minutes": 105,
+      "year": 2018,
+      "genres": [
+        "Drama",
+        "Romance"
+      ],
+      "vote_average": 6.7,
+      "certification": "18"
+    },
+    {
+      "title": "After",
+      "runtime_minutes": 106,
+      "year": 2019,
+      "genres": [
+        "Drama",
+        "Romance"
+      ],
+      "vote_average": 7.1,
+      "certification": null
+    },
+    {
+      "title": "Top Gun",
+      "runtime_minutes": 110,
+      "year": 1986,
+      "genres": [
+        "Action",
+        "Drama",
+        "Romance"
+      ],
+      "vote_average": 7.1,
+      "certification": "15"
+    },
+    {
+      "title": "War Machine",
+      "runtime_minutes": 110,
+      "year": 2026,
+      "genres": [
+        "Action",
+        "Science Fiction",
+        "Thriller"
+      ],
+      "vote_average": 7.2,
+      "certification": "15"
+    },
+    {
+      "title": "Kill Bill: Vol. 1",
+      "runtime_minutes": 111,
+      "year": 2003,
+      "genres": [
+        "Action",
+        "Crime"
+      ],
+      "vote_average": 8.0,
+      "certification": "18"
+    },
+    {
+      "title": "Love & Other Drugs",
+      "runtime_minutes": 112,
+      "year": 2010,
+      "genres": [
+        "Drama",
+        "Comedy",
+        "Romance"
+      ],
+      "vote_average": 7.0,
+      "certification": "15"
+    },
+    {
+      "title": "Peaky Blinders: The Immortal Man",
+      "runtime_minutes": 112,
+      "year": 2026,
+      "genres": [
+        "Crime",
+        "Drama"
+      ],
+      "vote_average": 7.2,
+      "certification": "15"
+    },
+    {
+      "title": "The Rip",
+      "runtime_minutes": 113,
+      "year": 2026,
+      "genres": [
+        "Action",
+        "Thriller",
+        "Crime"
+      ],
+      "vote_average": 7.1,
+      "certification": "15"
+    },
+    {
+      "title": "Barbie",
+      "runtime_minutes": 114,
+      "year": 2023,
+      "genres": [
+        "Comedy",
+        "Adventure"
+      ],
+      "vote_average": 6.9,
+      "certification": "12A"
+    },
+    {
+      "title": "Back to the Future",
+      "runtime_minutes": 116,
+      "year": 1985,
+      "genres": [
+        "Adventure",
+        "Comedy",
+        "Science Fiction"
+      ],
+      "vote_average": 8.3,
+      "certification": "PG"
+    },
+    {
+      "title": "Bad Boys: Ride or Die",
+      "runtime_minutes": 116,
+      "year": 2024,
+      "genres": [
+        "Action",
+        "Comedy",
+        "Crime"
+      ],
+      "vote_average": 7.3,
+      "certification": "15"
+    },
+    {
+      "title": "Meg 2: The Trench",
+      "runtime_minutes": 116,
+      "year": 2023,
+      "genres": [
+        "Action",
+        "Science Fiction",
+        "Horror"
+      ],
+      "vote_average": 6.4,
+      "certification": "12A"
+    },
+    {
+      "title": "Nightcrawler",
+      "runtime_minutes": 118,
+      "year": 2014,
+      "genres": [
+        "Crime",
+        "Drama",
+        "Thriller"
+      ],
+      "vote_average": 7.7,
+      "certification": "15"
+    },
+    {
+      "title": "I Swear",
+      "runtime_minutes": 121,
+      "year": 2025,
+      "genres": [
+        "Drama",
+        "History"
+      ],
+      "vote_average": 8.3,
+      "certification": "15"
+    },
+    {
+      "title": "Spider-Man",
+      "runtime_minutes": 121,
+      "year": 2002,
+      "genres": [
+        "Action",
+        "Science Fiction"
+      ],
+      "vote_average": 7.3,
+      "certification": "12A"
+    },
+    {
+      "title": "Fifty Shades of Grey",
+      "runtime_minutes": 125,
+      "year": 2015,
+      "genres": [
+        "Drama",
+        "Romance",
+        "Thriller"
+      ],
+      "vote_average": 5.9,
+      "certification": "18"
+    },
+    {
+      "title": "The Passion of the Christ",
+      "runtime_minutes": 127,
+      "year": 2004,
+      "genres": [
+        "Drama"
+      ],
+      "vote_average": 7.5,
+      "certification": "18"
+    },
+    {
+      "title": "Pride & Prejudice",
+      "runtime_minutes": 128,
+      "year": 2005,
+      "genres": [
+        "Drama",
+        "Romance"
+      ],
+      "vote_average": 8.0,
+      "certification": "U"
+    },
+    {
+      "title": "La La Land",
+      "runtime_minutes": 129,
+      "year": 2016,
+      "genres": [
+        "Comedy",
+        "Drama",
+        "Romance"
+      ],
+      "vote_average": 7.9,
+      "certification": "12A"
+    },
+    {
+      "title": "Knives Out",
+      "runtime_minutes": 131,
+      "year": 2019,
+      "genres": [
+        "Comedy",
+        "Crime",
+        "Mystery"
+      ],
+      "vote_average": 7.8,
+      "certification": "12A"
+    },
+    {
+      "title": "The Amazing Spider-Man",
+      "runtime_minutes": 136,
+      "year": 2012,
+      "genres": [
+        "Action",
+        "Adventure",
+        "Science Fiction"
+      ],
+      "vote_average": 6.7,
+      "certification": "12A"
+    },
+    {
+      "title": "Don't Look Up",
+      "runtime_minutes": 138,
+      "year": 2021,
+      "genres": [
+        "Comedy",
+        "Science Fiction",
+        "Drama"
+      ],
+      "vote_average": 7.1,
+      "certification": "15"
+    },
+    {
+      "title": "Hacksaw Ridge",
+      "runtime_minutes": 139,
+      "year": 2016,
+      "genres": [
+        "Drama",
+        "History",
+        "War"
+      ],
+      "vote_average": 8.2,
+      "certification": "15"
+    },
+    {
+      "title": "Spider-Man 3",
+      "runtime_minutes": 139,
+      "year": 2007,
+      "genres": [
+        "Action",
+        "Adventure",
+        "Science Fiction"
+      ],
+      "vote_average": 6.5,
+      "certification": "12A"
+    },
+    {
+      "title": "Catch Me If You Can",
+      "runtime_minutes": 141,
+      "year": 2002,
+      "genres": [
+        "Drama",
+        "Crime"
+      ],
+      "vote_average": 8.0,
+      "certification": "12A"
+    },
+    {
+      "title": "The Amazing Spider-Man 2",
+      "runtime_minutes": 141,
+      "year": 2014,
+      "genres": [
+        "Action",
+        "Adventure",
+        "Science Fiction"
+      ],
+      "vote_average": 6.5,
+      "certification": "12A"
+    },
+    {
+      "title": "Wake Up Dead Man: A Knives Out Mystery",
+      "runtime_minutes": 145,
+      "year": 2025,
+      "genres": [
+        "Thriller",
+        "Mystery",
+        "Comedy"
+      ],
+      "vote_average": 7.2,
+      "certification": "12A"
+    },
+    {
+      "title": "Frankenstein",
+      "runtime_minutes": 150,
+      "year": 2025,
+      "genres": [
+        "Drama",
+        "Fantasy",
+        "Horror"
+      ],
+      "vote_average": 7.6,
+      "certification": "15"
+    },
+    {
+      "title": "Inglourious Basterds",
+      "runtime_minutes": 153,
+      "year": 2009,
+      "genres": [
+        "Drama",
+        "Thriller",
+        "War"
+      ],
+      "vote_average": 8.2,
+      "certification": "18"
+    },
+    {
+      "title": "Prisoners",
+      "runtime_minutes": 153,
+      "year": 2013,
+      "genres": [
+        "Drama",
+        "Thriller",
+        "Crime"
+      ],
+      "vote_average": 8.1,
+      "certification": "15"
+    }
+  ]
+}

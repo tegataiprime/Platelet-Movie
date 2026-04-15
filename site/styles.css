@@ -101,16 +101,54 @@ header {
     gap: 1rem;
 }
 
-h1 {
+.header-content h1 {
     font-size: 2.5rem;
     color: var(--accent);
-    margin-bottom: 0.5rem;
+    margin: 0;
 }
 
-.subtitle {
-    color: var(--text-secondary);
+.header-content .subtitle {
     font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin: 0.5rem 0 0 0;
+    flex-basis: 100%;
 }
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Region Selector */
+.region-selector {
+    display: flex;
+    align-items: center;
+}
+
+.region-select {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.region-select:hover {
+    border-color: var(--accent);
+    box-shadow: 0 2px 4px var(--shadow);
+}
+
+.region-select:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* Theme Toggle */
 
 /* Theme Toggle Button */
 .theme-toggle {

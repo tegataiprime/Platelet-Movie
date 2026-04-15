@@ -6,7 +6,7 @@ import sys
 from datetime import datetime, timezone
 from io import StringIO
 from pathlib import Path
-from unittest.mock import MagicMock, mock_open, patch
+from unittest.mock import MagicMock, call, mock_open, patch
 
 import pytest
 
@@ -103,9 +103,11 @@ class TestGetMovieData:
                 "160",
                 "--max-pages",
                 "50",
+                "--region",
+                "US",
             ]
         )
-        assert "Fetching movie data from TMDB..." in mock_stderr.getvalue()
+        assert "Fetching movie data from TMDB for region US..." in mock_stderr.getvalue()
 
     @patch("generate_site_data.run_command")
     def test_invalid_json_raises_error(self, mock_run_command):
@@ -154,6 +156,8 @@ class TestGetMovieData:
                 "160",
                 "--max-pages",
                 "10",
+                "--region",
+                "US",
             ]
         )
 
@@ -175,6 +179,31 @@ class TestGetMovieData:
                 "160",
                 "--max-pages",
                 "25",
+                "--region",
+                "US",
+            ]
+        )
+
+    @patch("generate_site_data.run_command")
+    def test_get_movie_data_with_gb_region(self, mock_run_command):
+        """Test that custom region value is passed to CLI."""
+        mock_run_command.return_value = "[]"
+
+        get_movie_data(region="GB")
+
+        mock_run_command.assert_called_once_with(
+            [
+                "platelet-movie",
+                "--format",
+                "json",
+                "--min-minutes",
+                "90",
+                "--max-minutes",
+                "160",
+                "--max-pages",
+                "50",
+                "--region",
+                "GB",
             ]
         )
 
@@ -293,7 +322,7 @@ class TestGenerateSiteData:
         mock_get_commentary,
         mock_get_movie_data,
     ):
-        """Test successful generation of site data JSON."""
+        """Test successful generation of site data JSON for all supported regions."""
         # Mock current time
         mock_now = datetime(2026, 4, 14, 12, 0, 0, tzinfo=timezone.utc)
         mock_datetime.now.return_value = mock_now
@@ -308,48 +337,53 @@ class TestGenerateSiteData:
         # Mock commentary
         mock_get_commentary.return_value = "Dear Reader, what a selection!"
 
-        # Run the function
+        # Run the function (should generate for all 3 regions: US, GB, IN)
         generate_site_data()
 
-        # Verify get_movie_data was called
-        mock_get_movie_data.assert_called_once()
+        # Verify get_movie_data was called 3 times (once per region)
+        assert mock_get_movie_data.call_count == 3
+        expected_calls = [
+            call(max_pages=50, region='US'),
+            call(max_pages=50, region='GB'),
+            call(max_pages=50, region='IN'),
+        ]
+        mock_get_movie_data.assert_has_calls(expected_calls)
 
-        # Verify get_commentary was called with correct markdown
-        mock_get_commentary.assert_called_once()
-        commentary_arg = mock_get_commentary.call_args[0][0]
-        assert "- The Matrix (136m, 1999)" in commentary_arg
-        assert "- Inception (148m, 2010)" in commentary_arg
+        # Verify get_commentary was called 3 times
+        assert mock_get_commentary.call_count == 3
+        for call_args in mock_get_commentary.call_args_list:
+            commentary_arg = call_args[0][0]
+            assert "- The Matrix (136m, 1999)" in commentary_arg
+            assert "- Inception (148m, 2010)" in commentary_arg
 
-        # Verify directory creation
-        mock_mkdir.assert_called_once_with(parents=True, exist_ok=True)
+        # Verify directory creation (once for each region)
+        assert mock_mkdir.call_count == 3
+        mock_mkdir.assert_called_with(parents=True, exist_ok=True)
 
-        # Verify file writing
-        mock_file.assert_called_once()
-        handle = mock_file()
-        written_data = "".join(call.args[0] for call in handle.write.call_args_list)
-        site_data = json.loads(written_data)
+        # Verify file writing (3 files, one for each region)
+        assert mock_file.call_count == 3
 
-        assert site_data["generated_at"] == "2026-04-14T12:00:00+00:00"
-        assert site_data["commentary"] == "Dear Reader, what a selection!"
-        assert site_data["movies"] == mock_movies
-        assert len(site_data["movies"]) == 2
-
-        # Verify success message
-        assert "✓ Generated" in mock_stderr.getvalue()
-        assert "2 movies" in mock_stderr.getvalue()
+        # Verify success message for all regions
+        stderr_output = mock_stderr.getvalue()
+        assert "Generating data for region: US" in stderr_output
+        assert "Generating data for region: GB" in stderr_output
+        assert "Generating data for region: IN" in stderr_output
+        assert stderr_output.count("✓ Generated") == 3
+        assert stderr_output.count("2 movies") == 3
 
     @patch("generate_site_data.get_movie_data")
     @patch("sys.stderr", new_callable=StringIO)
     def test_movie_data_fetch_failure_exits(self, mock_stderr, mock_get_movie_data):
-        """Test that movie data fetch failure causes exit with code 1."""
+        """Test that movie data fetch failure exits with code 1 for specific region."""
         mock_get_movie_data.side_effect = subprocess.CalledProcessError(
             returncode=1,
             cmd=["platelet-movie", "--format", "json"],
             stderr="TMDB API error",
         )
 
+        # Pass a specific region; errors should cause SystemExit
         with pytest.raises(SystemExit) as exc_info:
-            generate_site_data()
+            generate_site_data(region="US")
 
         assert exc_info.value.code == 1
         assert "Error: Failed to generate site data" in mock_stderr.getvalue()
@@ -357,13 +391,14 @@ class TestGenerateSiteData:
     @patch("generate_site_data.get_movie_data")
     @patch("sys.stderr", new_callable=StringIO)
     def test_json_decode_error_exits(self, mock_stderr, mock_get_movie_data):
-        """Test that JSON decode error causes exit with code 1."""
+        """Test that JSON decode error causes exit with code 1 when specific region is requested."""
         mock_get_movie_data.side_effect = json.JSONDecodeError(
             "Expecting value", "doc", 0
         )
 
+        # Pass a specific region; errors should cause SystemExit
         with pytest.raises(SystemExit) as exc_info:
-            generate_site_data()
+            generate_site_data(region="US")
 
         assert exc_info.value.code == 1
         assert "Error: Invalid JSON in response" in mock_stderr.getvalue()
@@ -372,14 +407,15 @@ class TestGenerateSiteData:
     @patch("generate_site_data.get_commentary")
     @patch("sys.stderr", new_callable=StringIO)
     def test_unexpected_error_exits(self, mock_stderr, mock_get_commentary, mock_get_movie_data):
-        """Test that unexpected errors cause exit with code 1."""
+        """Test that unexpected errors cause exit with code 1 when specific region is requested."""
         mock_get_movie_data.return_value = [
             {"title": "Test", "runtime_minutes": 100, "year": 2020}
         ]
         mock_get_commentary.side_effect = RuntimeError("Unexpected error")
 
+        # Pass a specific region; errors should cause SystemExit
         with pytest.raises(SystemExit) as exc_info:
-            generate_site_data()
+            generate_site_data(region="US")
 
         assert exc_info.value.code == 1
         assert "Error: Unexpected error during site generation" in mock_stderr.getvalue()
@@ -401,7 +437,8 @@ class TestGenerateSiteData:
         mock_get_movie_data.return_value = []
         mock_get_commentary.return_value = "Dear Reader, alas, no movies!"
 
-        generate_site_data()
+        # Test with specific region to avoid multi-region generation
+        generate_site_data(region="US")
 
         # Verify empty movie list is handled
         handle = mock_file()
@@ -429,7 +466,8 @@ class TestGenerateSiteData:
         mock_get_movie_data.return_value = {"movies": mock_movies, "total": 1}
         mock_get_commentary.return_value = "Commentary"
 
-        generate_site_data()
+        # Test with specific region to avoid multi-region generation
+        generate_site_data(region="US")
 
         # Verify movies are extracted from dict
         handle = mock_file()

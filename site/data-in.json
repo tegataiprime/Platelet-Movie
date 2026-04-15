@@ -1,0 +1,457 @@
+{
+  "generated_at": "2026-04-15T18:24:03.978484+00:00",
+  "region": "IN",
+  "commentary": "Dear Reader,\n\nAs the gentle clink of china and the rustle of silks fills the air, one must inquire: what noble pursuit could possibly rival the virtuous act of platelet donation? Indeed, while our dashing gentlemen and exquisite ladies of the ton may be preoccupied with the latest soir\u00e9es and scandalous rendezvous, there exists a far more commendable way to spend an afternoon\u2014by donating life-saving platelets and indulging in a captivating film. This Author has learned that there is no better distraction from the prick of a needle than a delightful cinematic escapade.\n\nWith a selection of films as varied as the guests at Lady Danbury's infamous soir\u00e9es, we have curated a list that promises to entertain, enchant, and perhaps even elicit a chuckle or two. Picture yourself laughing alongside an amiable ogre, rooting for a plucky panda, or embarking on fantastical adventures alongside the likes of a dragon and a band of misfits. So, dear reader, prepare your hearts and settle in, for the following selections shall keep you thoroughly entertained during your charitable endeavor, all while ensuring that your noble spirit remains buoyant and your heart light!",
+  "movies": [
+    {
+      "title": "Kung Fu Panda",
+      "runtime_minutes": 90,
+      "year": 2008,
+      "genres": [
+        "Animation",
+        "Family",
+        "Drama",
+        "Comedy",
+        "Action"
+      ],
+      "vote_average": 7.3,
+      "certification": null
+    },
+    {
+      "title": "Shrek",
+      "runtime_minutes": 90,
+      "year": 2001,
+      "genres": [
+        "Animation",
+        "Comedy",
+        "Fantasy",
+        "Adventure",
+        "Family"
+      ],
+      "vote_average": 7.8,
+      "certification": null
+    },
+    {
+      "title": "Shrek 2",
+      "runtime_minutes": 92,
+      "year": 2004,
+      "genres": [
+        "Animation",
+        "Family",
+        "Comedy",
+        "Fantasy",
+        "Romance"
+      ],
+      "vote_average": 7.3,
+      "certification": null
+    },
+    {
+      "title": "Despicable Me 4",
+      "runtime_minutes": 94,
+      "year": 2024,
+      "genres": [
+        "Family",
+        "Comedy",
+        "Animation",
+        "Science Fiction",
+        "Action"
+      ],
+      "vote_average": 7.0,
+      "certification": null
+    },
+    {
+      "title": "Irish Wish",
+      "runtime_minutes": 94,
+      "year": 2024,
+      "genres": [
+        "Romance",
+        "Comedy",
+        "Fantasy"
+      ],
+      "vote_average": 6.1,
+      "certification": "U/A 7+"
+    },
+    {
+      "title": "Karate Kid: Legends",
+      "runtime_minutes": 94,
+      "year": 2025,
+      "genres": [
+        "Action",
+        "Adventure",
+        "Drama"
+      ],
+      "vote_average": 7.0,
+      "certification": "U/A 13+"
+    },
+    {
+      "title": "Despicable Me",
+      "runtime_minutes": 95,
+      "year": 2010,
+      "genres": [
+        "Family",
+        "Comedy",
+        "Animation",
+        "Science Fiction",
+        "Crime"
+      ],
+      "vote_average": 7.3,
+      "certification": null
+    },
+    {
+      "title": "KPop Demon Hunters",
+      "runtime_minutes": 96,
+      "year": 2025,
+      "genres": [
+        "Fantasy",
+        "Music",
+        "Comedy",
+        "Animation"
+      ],
+      "vote_average": 8.0,
+      "certification": "U/A 7+"
+    },
+    {
+      "title": "Venom: Let There Be Carnage",
+      "runtime_minutes": 97,
+      "year": 2021,
+      "genres": [
+        "Science Fiction",
+        "Action",
+        "Adventure"
+      ],
+      "vote_average": 6.7,
+      "certification": null
+    },
+    {
+      "title": "How to Train Your Dragon",
+      "runtime_minutes": 98,
+      "year": 2010,
+      "genres": [
+        "Fantasy",
+        "Adventure",
+        "Animation",
+        "Family"
+      ],
+      "vote_average": 7.9,
+      "certification": null
+    },
+    {
+      "title": "After We Fell",
+      "runtime_minutes": 99,
+      "year": 2021,
+      "genres": [
+        "Drama",
+        "Romance"
+      ],
+      "vote_average": 7.0,
+      "certification": null
+    },
+    {
+      "title": "Anaconda",
+      "runtime_minutes": 100,
+      "year": 2025,
+      "genres": [
+        "Adventure",
+        "Comedy",
+        "Horror"
+      ],
+      "vote_average": 5.9,
+      "certification": "U/A 16+"
+    },
+    {
+      "title": "American Psycho",
+      "runtime_minutes": 102,
+      "year": 2000,
+      "genres": [
+        "Thriller",
+        "Drama",
+        "Crime"
+      ],
+      "vote_average": 7.4,
+      "certification": null
+    },
+    {
+      "title": "The Wild Robot",
+      "runtime_minutes": 102,
+      "year": 2024,
+      "genres": [
+        "Family",
+        "Animation",
+        "Science Fiction",
+        "Adventure"
+      ],
+      "vote_average": 8.3,
+      "certification": null
+    },
+    {
+      "title": "Closer",
+      "runtime_minutes": 104,
+      "year": 2004,
+      "genres": [
+        "Drama",
+        "Romance"
+      ],
+      "vote_average": 6.8,
+      "certification": null
+    },
+    {
+      "title": "Fifty Shades Freed",
+      "runtime_minutes": 105,
+      "year": 2018,
+      "genres": [
+        "Drama",
+        "Romance"
+      ],
+      "vote_average": 6.7,
+      "certification": null
+    },
+    {
+      "title": "Top Gun",
+      "runtime_minutes": 110,
+      "year": 1986,
+      "genres": [
+        "Action",
+        "Drama",
+        "Romance"
+      ],
+      "vote_average": 7.1,
+      "certification": null
+    },
+    {
+      "title": "War Machine",
+      "runtime_minutes": 110,
+      "year": 2026,
+      "genres": [
+        "Action",
+        "Science Fiction",
+        "Thriller"
+      ],
+      "vote_average": 7.2,
+      "certification": "U/A 16+"
+    },
+    {
+      "title": "Kill Bill: Vol. 1",
+      "runtime_minutes": 111,
+      "year": 2003,
+      "genres": [
+        "Action",
+        "Crime"
+      ],
+      "vote_average": 8.0,
+      "certification": null
+    },
+    {
+      "title": "Love & Other Drugs",
+      "runtime_minutes": 112,
+      "year": 2010,
+      "genres": [
+        "Drama",
+        "Comedy",
+        "Romance"
+      ],
+      "vote_average": 7.0,
+      "certification": null
+    },
+    {
+      "title": "Peaky Blinders: The Immortal Man",
+      "runtime_minutes": 112,
+      "year": 2026,
+      "genres": [
+        "Crime",
+        "Drama"
+      ],
+      "vote_average": 7.2,
+      "certification": "A"
+    },
+    {
+      "title": "The Rip",
+      "runtime_minutes": 113,
+      "year": 2026,
+      "genres": [
+        "Action",
+        "Thriller",
+        "Crime"
+      ],
+      "vote_average": 7.1,
+      "certification": "A"
+    },
+    {
+      "title": "Taxi Driver",
+      "runtime_minutes": 114,
+      "year": 1976,
+      "genres": [
+        "Crime",
+        "Drama"
+      ],
+      "vote_average": 8.1,
+      "certification": null
+    },
+    {
+      "title": "28 Years Later",
+      "runtime_minutes": 115,
+      "year": 2025,
+      "genres": [
+        "Horror",
+        "Thriller",
+        "Science Fiction"
+      ],
+      "vote_average": 6.6,
+      "certification": "A"
+    },
+    {
+      "title": "Back to the Future",
+      "runtime_minutes": 116,
+      "year": 1985,
+      "genres": [
+        "Adventure",
+        "Comedy",
+        "Science Fiction"
+      ],
+      "vote_average": 8.3,
+      "certification": null
+    },
+    {
+      "title": "Fifty Shades of Grey",
+      "runtime_minutes": 125,
+      "year": 2015,
+      "genres": [
+        "Drama",
+        "Romance",
+        "Thriller"
+      ],
+      "vote_average": 5.9,
+      "certification": null
+    },
+    {
+      "title": "Bullet Train",
+      "runtime_minutes": 126,
+      "year": 2022,
+      "genres": [
+        "Action",
+        "Comedy",
+        "Thriller"
+      ],
+      "vote_average": 7.4,
+      "certification": null
+    },
+    {
+      "title": "The Passion of the Christ",
+      "runtime_minutes": 127,
+      "year": 2004,
+      "genres": [
+        "Drama"
+      ],
+      "vote_average": 7.5,
+      "certification": "A"
+    },
+    {
+      "title": "Knives Out",
+      "runtime_minutes": 131,
+      "year": 2019,
+      "genres": [
+        "Comedy",
+        "Crime",
+        "Mystery"
+      ],
+      "vote_average": 7.8,
+      "certification": null
+    },
+    {
+      "title": "The Equalizer",
+      "runtime_minutes": 132,
+      "year": 2014,
+      "genres": [
+        "Thriller",
+        "Action",
+        "Crime"
+      ],
+      "vote_average": 7.3,
+      "certification": "A"
+    },
+    {
+      "title": "Spider-Man: Homecoming",
+      "runtime_minutes": 133,
+      "year": 2017,
+      "genres": [
+        "Action",
+        "Adventure",
+        "Science Fiction"
+      ],
+      "vote_average": 7.3,
+      "certification": "UA"
+    },
+    {
+      "title": "Don't Look Up",
+      "runtime_minutes": 138,
+      "year": 2021,
+      "genres": [
+        "Comedy",
+        "Science Fiction",
+        "Drama"
+      ],
+      "vote_average": 7.1,
+      "certification": "A"
+    },
+    {
+      "title": "Shutter Island",
+      "runtime_minutes": 138,
+      "year": 2010,
+      "genres": [
+        "Drama",
+        "Thriller",
+        "Mystery"
+      ],
+      "vote_average": 8.2,
+      "certification": null
+    },
+    {
+      "title": "Spider-Man: Across the Spider-Verse",
+      "runtime_minutes": 140,
+      "year": 2023,
+      "genres": [
+        "Animation",
+        "Action",
+        "Adventure",
+        "Science Fiction"
+      ],
+      "vote_average": 8.3,
+      "certification": "UA"
+    },
+    {
+      "title": "Wake Up Dead Man: A Knives Out Mystery",
+      "runtime_minutes": 145,
+      "year": 2025,
+      "genres": [
+        "Thriller",
+        "Mystery",
+        "Comedy"
+      ],
+      "vote_average": 7.2,
+      "certification": "U/A 16+"
+    },
+    {
+      "title": "Frankenstein",
+      "runtime_minutes": 150,
+      "year": 2025,
+      "genres": [
+        "Drama",
+        "Fantasy",
+        "Horror"
+      ],
+      "vote_average": 7.6,
+      "certification": "A"
+    },
+    {
+      "title": "Inglourious Basterds",
+      "runtime_minutes": 153,
+      "year": 2009,
+      "genres": [
+        "Drama",
+        "Thriller",
+        "War"
+      ],
+      "vote_average": 8.2,
+      "certification": "A"
+    }
+  ]
+}
