@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """Generate Lady Whistledown commentary for movie recommendations."""
 
+import json
 import os
 import sys
-import json
-import urllib.request
 import urllib.error
+import urllib.request
 
 
 def generate_commentary(movie_list: str) -> str:
     """Generate Lady Whistledown-style commentary for the movie list.
-    
+
     Args:
         movie_list: The formatted list of movies from platelet-movie command
-        
+
     Returns:
         Lady Whistledown's witty introduction
     """
@@ -21,7 +21,7 @@ def generate_commentary(movie_list: str) -> str:
     if not api_key:
         print("Warning: OPENAI_API_KEY not set, using fallback commentary", file=sys.stderr)
         return generate_fallback_commentary()
-    
+
     prompt = f"""You are Lady Whistledown, the gossipy, witty Regency-era society columnist from Bridgerton.
 
 Write a short introduction (2-3 paragraphs) for a weekly email about Netflix movies suitable for platelet donation sessions (90+ minutes long).
@@ -44,36 +44,30 @@ Write ONLY the Lady Whistledown introduction. Do not include the movie list itse
         "messages": [
             {
                 "role": "system",
-                "content": "You are Lady Whistledown from Bridgerton, writing in her distinctive gossipy, witty Regency-era style."
+                "content": "You are Lady Whistledown from Bridgerton, writing in her distinctive gossipy, witty Regency-era style.",
             },
-            {
-                "role": "user",
-                "content": prompt
-            }
+            {"role": "user", "content": prompt},
         ],
         "temperature": 0.8,
-        "max_tokens": 500
+        "max_tokens": 500,
     }
-    
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
-    
+
+    headers = {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+
     try:
         req = urllib.request.Request(
             "https://api.openai.com/v1/chat/completions",
-            data=json.dumps(payload).encode('utf-8'),
+            data=json.dumps(payload).encode("utf-8"),
             headers=headers,
-            method='POST'
+            method="POST",
         )
-        
+
         with urllib.request.urlopen(req) as response:
-            result = json.loads(response.read().decode('utf-8'))
+            result = json.loads(response.read().decode("utf-8"))
             return result["choices"][0]["message"]["content"].strip()
-            
+
     except urllib.error.HTTPError as e:
-        error_body = e.read().decode('utf-8')
+        error_body = e.read().decode("utf-8")
         print(f"Warning: OpenAI API error ({e.code}), using fallback commentary", file=sys.stderr)
         print(f"Error details: {error_body}", file=sys.stderr)
         return generate_fallback_commentary()
@@ -94,10 +88,10 @@ One must inquire: which cinematic productions are worthy of accompanying such a 
 if __name__ == "__main__":
     # Read movie list from stdin
     movie_list = sys.stdin.read()
-    
+
     if not movie_list.strip():
         print("Error: No movie list provided on stdin", file=sys.stderr)
         sys.exit(1)
-    
+
     commentary = generate_commentary(movie_list)
     print(commentary)
