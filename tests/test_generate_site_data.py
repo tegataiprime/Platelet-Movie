@@ -343,9 +343,9 @@ class TestGenerateSiteData:
         # Verify get_movie_data was called 3 times (once per region)
         assert mock_get_movie_data.call_count == 3
         expected_calls = [
-            call(max_pages=50, region='US'),
-            call(max_pages=50, region='GB'),
-            call(max_pages=50, region='IN'),
+            call(max_pages=50, region="US"),
+            call(max_pages=50, region="GB"),
+            call(max_pages=50, region="IN"),
         ]
         mock_get_movie_data.assert_has_calls(expected_calls)
 
@@ -392,9 +392,7 @@ class TestGenerateSiteData:
     @patch("sys.stderr", new_callable=StringIO)
     def test_json_decode_error_exits(self, mock_stderr, mock_get_movie_data):
         """Test that JSON decode error causes exit with code 1 when specific region is requested."""
-        mock_get_movie_data.side_effect = json.JSONDecodeError(
-            "Expecting value", "doc", 0
-        )
+        mock_get_movie_data.side_effect = json.JSONDecodeError("Expecting value", "doc", 0)
 
         # Pass a specific region; errors should cause SystemExit
         with pytest.raises(SystemExit) as exc_info:
@@ -408,9 +406,7 @@ class TestGenerateSiteData:
     @patch("sys.stderr", new_callable=StringIO)
     def test_unexpected_error_exits(self, mock_stderr, mock_get_commentary, mock_get_movie_data):
         """Test that unexpected errors cause exit with code 1 when specific region is requested."""
-        mock_get_movie_data.return_value = [
-            {"title": "Test", "runtime_minutes": 100, "year": 2020}
-        ]
+        mock_get_movie_data.return_value = [{"title": "Test", "runtime_minutes": 100, "year": 2020}]
         mock_get_commentary.side_effect = RuntimeError("Unexpected error")
 
         # Pass a specific region; errors should cause SystemExit
@@ -460,9 +456,7 @@ class TestGenerateSiteData:
         mock_get_movie_data,
     ):
         """Test handling when get_movie_data returns dict with 'movies' key."""
-        mock_movies = [
-            {"title": "Test Movie", "runtime_minutes": 100, "year": 2020}
-        ]
+        mock_movies = [{"title": "Test Movie", "runtime_minutes": 100, "year": 2020}]
         mock_get_movie_data.return_value = {"movies": mock_movies, "total": 1}
         mock_get_commentary.return_value = "Commentary"
 
@@ -475,3 +469,53 @@ class TestGenerateSiteData:
         site_data = json.loads(written_data)
 
         assert site_data["movies"] == mock_movies
+
+
+class TestMainEntryPoint:
+    """Tests for the __main__ entry point."""
+
+    def test_main_with_default_args(self):
+        """Test running script as main with default arguments."""
+        script_path = SCRIPTS_DIR / "generate_site_data.py"
+
+        # Run with --help to verify the script can be executed
+        result = subprocess.run(
+            [sys.executable, str(script_path), "--help"],
+            capture_output=True,
+            text=True,
+        )
+
+        assert result.returncode == 0
+        assert "Generate data-{region}.json files" in result.stdout
+        assert "--max-pages" in result.stdout
+        assert "--region" in result.stdout
+
+    @patch("generate_site_data.generate_site_data")
+    def test_main_parses_max_pages_argument(self, mock_generate):
+        """Test that __main__ block correctly parses --max-pages argument."""
+        script_path = SCRIPTS_DIR / "generate_site_data.py"
+
+        # Note: We can't easily test the actual execution without mocking,
+        # but we test that the help text documents the argument correctly
+        result = subprocess.run(
+            [sys.executable, str(script_path), "--help"],
+            capture_output=True,
+            text=True,
+        )
+
+        assert "Maximum number of pages to fetch from TMDB" in result.stdout
+        assert "50" in result.stdout  # default value
+
+    @patch("generate_site_data.generate_site_data")
+    def test_main_parses_region_argument(self, mock_generate):
+        """Test that __main__ block correctly documents region argument."""
+        script_path = SCRIPTS_DIR / "generate_site_data.py"
+
+        result = subprocess.run(
+            [sys.executable, str(script_path), "--help"],
+            capture_output=True,
+            text=True,
+        )
+
+        assert "Netflix region code" in result.stdout
+        assert "US, GB, IN" in result.stdout
