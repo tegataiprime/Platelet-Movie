@@ -24,6 +24,7 @@ tools:
   playwright:
     version: "v1.56.1"
   bash:
+    - "pip*"     # Install Poetry via pip
     - "poetry*"  # Run Python via Poetry virtual environment
     - "python*"
     - "curl*"
@@ -60,9 +61,8 @@ You are a web user interface testing specialist. Your task is to comprehensively
 3. Use absolute paths or change directory explicitly
 4. Keep token usage low by being efficient with your code and minimizing iterations
 5. **Playwright is available via MCP tools only** - do NOT try to `require('playwright')` or install it via npm
-6. **Poetry is NOT pre-installed** - You MUST install it first (see Step 0) before running any Python commands
-7. **After installing Poetry** - use full path `$HOME/.local/bin/poetry` OR set `export PATH="$HOME/.local/bin:$PATH"` first
-8. **All Python commands** must use `poetry run` (e.g., `poetry run python scripts/...`)
+6. **Poetry is NOT pre-installed** - Install it via pip in Step 0 before running any Python commands
+7. **After installing Poetry and setting PATH** - use `poetry run` for all Python commands (e.g., `poetry run python scripts/...`)
 
 ## Your Mission
 
@@ -75,30 +75,28 @@ Serve the static generated web site locally and perform comprehensive multi-devi
 ```bash
 cd ${{ github.workspace }}
 
-# Install Poetry (installs to $HOME/.local/bin)
-curl -sSL https://install.python-poetry.org | python3 -
+# Install Poetry using pip (simpler and more reliable than curl installer)
+python3 -m pip install --user poetry
 
 # Add Poetry to PATH for this session
 export PATH="$HOME/.local/bin:$PATH"
 
 # Verify Poetry is accessible
-$HOME/.local/bin/poetry --version
+poetry --version
 
 # Configure Poetry
-$HOME/.local/bin/poetry config virtualenvs.in-project true
+poetry config virtualenvs.in-project true
 
 # Install project dependencies
-$HOME/.local/bin/poetry install --only main
+poetry install --only main
 ```
 
-**For subsequent commands, use the full path or ensure PATH is set:**
-```bash
-# Option 1: Use full path
-$HOME/.local/bin/poetry run python scripts/generate_site_data.py
+**Note**: After the initial `export PATH="$HOME/.local/bin:$PATH"`, you can use `poetry` directly without the full path.
 
-# Option 2: Export PATH first (do this once)
-export PATH="$HOME/.local/bin:$PATH"
+**For all subsequent Python commands, use `poetry run`:**
+```bash
 poetry run python scripts/generate_site_data.py
+poetry run python -m http.server 8000 --directory site
 ```
 
 ## Step 1: Generate Site Data
@@ -108,16 +106,10 @@ To generate the `data.json` file, run the following command in the repository ro
 ```bash
 cd ${{ github.workspace }}
 
-# Ensure PATH is set (if not done in Step 0)
+# Make sure PATH includes Poetry (should be set from Step 0)
 export PATH="$HOME/.local/bin:$PATH"
 
 poetry run python scripts/generate_site_data.py --max-pages 2
-```
-
-**Alternative using full path:**
-```bash
-cd ${{ github.workspace }}
-$HOME/.local/bin/poetry run python scripts/generate_site_data.py --max-pages 2
 ```
 
 ## Step 2: Serve the Static Site
@@ -127,7 +119,7 @@ The site folder contains a static HTML/CSS/JS site (no build step required). Sta
 ```bash
 cd ${{ github.workspace }}
 
-# Ensure PATH is set
+# Make sure PATH includes Poetry (should be set from Step 0)
 export PATH="$HOME/.local/bin:$PATH"
 
 # Start server in background
