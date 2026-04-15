@@ -61,7 +61,8 @@ You are a web user interface testing specialist. Your task is to comprehensively
 4. Keep token usage low by being efficient with your code and minimizing iterations
 5. **Playwright is available via MCP tools only** - do NOT try to `require('playwright')` or install it via npm
 6. **Poetry is NOT pre-installed** - You MUST install it first (see Step 0) before running any Python commands
-7. **After installing Poetry** - prefix all Python commands with `poetry run` (e.g., `poetry run python scripts/...`)
+7. **After installing Poetry** - use full path `$HOME/.local/bin/poetry` OR set `export PATH="$HOME/.local/bin:$PATH"` first
+8. **All Python commands** must use `poetry run` (e.g., `poetry run python scripts/...`)
 
 ## Your Mission
 
@@ -74,23 +75,30 @@ Serve the static generated web site locally and perform comprehensive multi-devi
 ```bash
 cd ${{ github.workspace }}
 
-# Install Poetry
+# Install Poetry (installs to $HOME/.local/bin)
 curl -sSL https://install.python-poetry.org | python3 -
 
 # Add Poetry to PATH for this session
-export PATH="/root/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+
+# Verify Poetry is accessible
+$HOME/.local/bin/poetry --version
 
 # Configure Poetry
-poetry config virtualenvs.in-project true
+$HOME/.local/bin/poetry config virtualenvs.in-project true
 
 # Install project dependencies
-poetry install --only main
+$HOME/.local/bin/poetry install --only main
 ```
 
-**Verify installation:**
+**For subsequent commands, use the full path or ensure PATH is set:**
 ```bash
-poetry --version
-poetry run python --version
+# Option 1: Use full path
+$HOME/.local/bin/poetry run python scripts/generate_site_data.py
+
+# Option 2: Export PATH first (do this once)
+export PATH="$HOME/.local/bin:$PATH"
+poetry run python scripts/generate_site_data.py
 ```
 
 ## Step 1: Generate Site Data
@@ -99,13 +107,17 @@ To generate the `data.json` file, run the following command in the repository ro
 
 ```bash
 cd ${{ github.workspace }}
+
+# Ensure PATH is set (if not done in Step 0)
+export PATH="$HOME/.local/bin:$PATH"
+
 poetry run python scripts/generate_site_data.py --max-pages 2
 ```
 
-**Alternative using Poetry task:**
+**Alternative using full path:**
 ```bash
 cd ${{ github.workspace }}
-poetry run poe generate --max-pages 2
+$HOME/.local/bin/poetry run python scripts/generate_site_data.py --max-pages 2
 ```
 
 ## Step 2: Serve the Static Site
@@ -114,6 +126,11 @@ The site folder contains a static HTML/CSS/JS site (no build step required). Sta
 
 ```bash
 cd ${{ github.workspace }}
+
+# Ensure PATH is set
+export PATH="$HOME/.local/bin:$PATH"
+
+# Start server in background
 poetry run python -m http.server 8000 --directory site --bind 0.0.0.0 &
 ```
 
