@@ -1,7 +1,8 @@
 """Unit tests for platelet_movie.formatters."""
 
-import pytest
 import re
+
+import pytest
 
 from platelet_movie.formatters import format_movies
 from platelet_movie.models import Movie
