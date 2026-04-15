@@ -1,87 +1,422 @@
 {
-  "generated_at": "2026-04-15T12:00:00Z",
-  "commentary": "Dearest Gentle Reader,\n\nThis author finds herself most delighted to present a selection of moving pictures of considerable length, perfect for one's platelet donation appointment. The season brings us several noteworthy productions that shall keep you most agreeably entertained during your generous contribution to society.\n\nOne cannot help but notice the prevalence of epic dramas and adventurous tales, each exceeding the requisite duration of 135 minutes. The cinematographic offerings range from thrilling science fiction to heartwarming dramas, ensuring there is something to suit every discerning taste.\n\nYours in entertainment,\nLady Whistledown",
+  "generated_at": "2026-04-15T18:23:45.889030+00:00",
+  "region": "US",
+  "commentary": "Dear Reader, \n\nAs the clock chimes in this fine season of giving, one must inquire: what better way to spend those noble hours of platelet donation than in the company of captivating cinema? This Author has learned that while one\u2019s veins may be offering their most generous gifts, the mind ought to be entertained with equally generous tales. And what a splendid selection awaits our most virtuous donors! \n\nPicture it now, dear friends\u2014a heartwarming jaunt in \"Irish Wish,\" the martial prowess of \"Karate Kid: Legends,\" or perhaps a tantalizing romp amidst \"KPop Demon Hunters.\" Each film, a perfectly timed delight, ensures that your charitable endeavor is met with not only the satisfaction of aiding those in need but also a lavish escape into fantastical realms. So, prepare yourself, for your next donation session promises not merely a moment of altruism, but a splendid diversion worthy of the finest soir\u00e9e! \n\nYours in gossip and good humor,  \nLady Whistledown",
   "movies": [
     {
-      "title": "The Grand Budapest Hotel",
-      "runtime_minutes": 99,
-      "year": 2014,
-      "vote_average": 8.1,
-      "certification": "R",
-      "genres": "Comedy, Drama"
+      "title": "Irish Wish",
+      "runtime_minutes": 94,
+      "year": 2024,
+      "genres": [
+        "Romance",
+        "Comedy",
+        "Fantasy"
+      ],
+      "vote_average": 6.1,
+      "certification": "PG"
     },
     {
-      "title": "Inception",
-      "runtime_minutes": 148,
-      "year": 2010,
-      "vote_average": 8.8,
-      "certification": "PG-13",
-      "genres": "Action, Science Fiction, Thriller"
+      "title": "Karate Kid: Legends",
+      "runtime_minutes": 94,
+      "year": 2025,
+      "genres": [
+        "Action",
+        "Adventure",
+        "Drama"
+      ],
+      "vote_average": 7.0,
+      "certification": "PG-13"
     },
     {
-      "title": "The Irishman",
-      "runtime_minutes": 209,
-      "year": 2019,
-      "vote_average": 7.8,
-      "certification": "R",
-      "genres": "Crime, Drama"
-    },
-    {
-      "title": "Dunkirk",
-      "runtime_minutes": 106,
-      "year": 2017,
-      "vote_average": 7.9,
-      "certification": "PG-13",
-      "genres": "Action, Drama, History, War"
-    },
-    {
-      "title": "Interstellar",
-      "runtime_minutes": 169,
-      "year": 2014,
-      "vote_average": 8.6,
-      "certification": "PG-13",
-      "genres": "Adventure, Drama, Science Fiction"
-    },
-    {
-      "title": "The Departed",
-      "runtime_minutes": 151,
-      "year": 2006,
-      "vote_average": 8.2,
-      "certification": "R",
-      "genres": "Crime, Drama, Thriller"
-    },
-    {
-      "title": "Gladiator",
-      "runtime_minutes": 155,
-      "year": 2000,
-      "vote_average": 8.2,
-      "certification": "R",
-      "genres": "Action, Adventure, Drama"
-    },
-    {
-      "title": "The Wolf of Wall Street",
-      "runtime_minutes": 180,
-      "year": 2013,
+      "title": "KPop Demon Hunters",
+      "runtime_minutes": 96,
+      "year": 2025,
+      "genres": [
+        "Fantasy",
+        "Music",
+        "Comedy",
+        "Animation"
+      ],
       "vote_average": 8.0,
-      "certification": "R",
-      "genres": "Comedy, Crime, Drama"
+      "certification": "PG"
     },
     {
-      "title": "Schindler's List",
-      "runtime_minutes": 195,
-      "year": 1993,
-      "vote_average": 8.9,
-      "certification": "R",
-      "genres": "Drama, History, War"
+      "title": "After We Fell",
+      "runtime_minutes": 99,
+      "year": 2021,
+      "genres": [
+        "Drama",
+        "Romance"
+      ],
+      "vote_average": 7.0,
+      "certification": "R"
     },
     {
-      "title": "The Green Mile",
-      "runtime_minutes": 189,
-      "year": 1999,
-      "vote_average": 8.5,
-      "certification": "R",
-      "genres": "Crime, Drama, Fantasy"
+      "title": "Anaconda",
+      "runtime_minutes": 100,
+      "year": 2025,
+      "genres": [
+        "Adventure",
+        "Comedy",
+        "Horror"
+      ],
+      "vote_average": 5.9,
+      "certification": "PG-13"
+    },
+    {
+      "title": "Trap House",
+      "runtime_minutes": 103,
+      "year": 2025,
+      "genres": [
+        "Action",
+        "Crime",
+        "Thriller"
+      ],
+      "vote_average": 6.5,
+      "certification": "R"
+    },
+    {
+      "title": "The Bad Guys 2",
+      "runtime_minutes": 104,
+      "year": 2025,
+      "genres": [
+        "Family",
+        "Comedy",
+        "Crime",
+        "Adventure",
+        "Animation"
+      ],
+      "vote_average": 7.7,
+      "certification": "PG"
+    },
+    {
+      "title": "Fifty Shades Freed",
+      "runtime_minutes": 105,
+      "year": 2018,
+      "genres": [
+        "Drama",
+        "Romance"
+      ],
+      "vote_average": 6.7,
+      "certification": "R"
+    },
+    {
+      "title": "After",
+      "runtime_minutes": 106,
+      "year": 2019,
+      "genres": [
+        "Drama",
+        "Romance"
+      ],
+      "vote_average": 7.1,
+      "certification": "PG-13"
+    },
+    {
+      "title": "Fall",
+      "runtime_minutes": 107,
+      "year": 2022,
+      "genres": [
+        "Thriller"
+      ],
+      "vote_average": 7.1,
+      "certification": "PG-13"
+    },
+    {
+      "title": "Whiplash",
+      "runtime_minutes": 107,
+      "year": 2014,
+      "genres": [
+        "Drama",
+        "Music",
+        "Thriller"
+      ],
+      "vote_average": 8.4,
+      "certification": "R"
+    },
+    {
+      "title": "28 Years Later: The Bone Temple",
+      "runtime_minutes": 109,
+      "year": 2026,
+      "genres": [
+        "Horror",
+        "Thriller",
+        "Science Fiction"
+      ],
+      "vote_average": 7.2,
+      "certification": "R"
+    },
+    {
+      "title": "Saturday Night",
+      "runtime_minutes": 109,
+      "year": 2024,
+      "genres": [
+        "Comedy",
+        "Drama"
+      ],
+      "vote_average": 6.7,
+      "certification": "R"
+    },
+    {
+      "title": "Venom: The Last Dance",
+      "runtime_minutes": 109,
+      "year": 2024,
+      "genres": [
+        "Science Fiction",
+        "Action",
+        "Adventure"
+      ],
+      "vote_average": 6.7,
+      "certification": "PG-13"
+    },
+    {
+      "title": "War Machine",
+      "runtime_minutes": 110,
+      "year": 2026,
+      "genres": [
+        "Action",
+        "Science Fiction",
+        "Thriller"
+      ],
+      "vote_average": 7.2,
+      "certification": "R"
+    },
+    {
+      "title": "Peaky Blinders: The Immortal Man",
+      "runtime_minutes": 112,
+      "year": 2026,
+      "genres": [
+        "Crime",
+        "Drama"
+      ],
+      "vote_average": 7.2,
+      "certification": "R"
+    },
+    {
+      "title": "Ice Road: Vengeance",
+      "runtime_minutes": 113,
+      "year": 2025,
+      "genres": [
+        "Action",
+        "Thriller",
+        "Drama"
+      ],
+      "vote_average": 6.3,
+      "certification": "R"
+    },
+    {
+      "title": "The Rip",
+      "runtime_minutes": 113,
+      "year": 2026,
+      "genres": [
+        "Action",
+        "Thriller",
+        "Crime"
+      ],
+      "vote_average": 7.1,
+      "certification": "R"
+    },
+    {
+      "title": "Scream",
+      "runtime_minutes": 114,
+      "year": 2022,
+      "genres": [
+        "Horror",
+        "Mystery"
+      ],
+      "vote_average": 6.7,
+      "certification": "R"
+    },
+    {
+      "title": "28 Years Later",
+      "runtime_minutes": 115,
+      "year": 2025,
+      "genres": [
+        "Horror",
+        "Thriller",
+        "Science Fiction"
+      ],
+      "vote_average": 6.6,
+      "certification": "R"
+    },
+    {
+      "title": "Spider-Man: Into the Spider-Verse",
+      "runtime_minutes": 117,
+      "year": 2018,
+      "genres": [
+        "Animation",
+        "Action",
+        "Adventure",
+        "Science Fiction"
+      ],
+      "vote_average": 8.4,
+      "certification": "PG"
+    },
+    {
+      "title": "M3GAN 2.0",
+      "runtime_minutes": 120,
+      "year": 2025,
+      "genres": [
+        "Action",
+        "Science Fiction",
+        "Thriller"
+      ],
+      "vote_average": 7.2,
+      "certification": "PG-13"
+    },
+    {
+      "title": "Sicario",
+      "runtime_minutes": 122,
+      "year": 2015,
+      "genres": [
+        "Action",
+        "Crime",
+        "Thriller"
+      ],
+      "vote_average": 7.4,
+      "certification": "R"
+    },
+    {
+      "title": "Jaws",
+      "runtime_minutes": 124,
+      "year": 1975,
+      "genres": [
+        "Horror",
+        "Thriller",
+        "Adventure"
+      ],
+      "vote_average": 7.7,
+      "certification": "PG"
+    },
+    {
+      "title": "Fifty Shades of Grey",
+      "runtime_minutes": 125,
+      "year": 2015,
+      "genres": [
+        "Drama",
+        "Romance",
+        "Thriller"
+      ],
+      "vote_average": 5.9,
+      "certification": "R"
+    },
+    {
+      "title": "How to Train Your Dragon",
+      "runtime_minutes": 125,
+      "year": 2025,
+      "genres": [
+        "Fantasy",
+        "Family",
+        "Action",
+        "Adventure"
+      ],
+      "vote_average": 7.9,
+      "certification": "PG"
+    },
+    {
+      "title": "Kraven the Hunter",
+      "runtime_minutes": 127,
+      "year": 2024,
+      "genres": [
+        "Action",
+        "Adventure",
+        "Thriller"
+      ],
+      "vote_average": 6.4,
+      "certification": "R"
+    },
+    {
+      "title": "Jurassic World Rebirth",
+      "runtime_minutes": 134,
+      "year": 2025,
+      "genres": [
+        "Science Fiction",
+        "Adventure",
+        "Action"
+      ],
+      "vote_average": 6.3,
+      "certification": "PG-13"
+    },
+    {
+      "title": "Bohemian Rhapsody",
+      "runtime_minutes": 135,
+      "year": 2018,
+      "genres": [
+        "Music",
+        "Drama"
+      ],
+      "vote_average": 8.0,
+      "certification": "PG-13"
+    },
+    {
+      "title": "Fury",
+      "runtime_minutes": 135,
+      "year": 2014,
+      "genres": [
+        "War",
+        "Drama",
+        "Action"
+      ],
+      "vote_average": 7.5,
+      "certification": "R"
+    },
+    {
+      "title": "Don't Look Up",
+      "runtime_minutes": 138,
+      "year": 2021,
+      "genres": [
+        "Comedy",
+        "Science Fiction",
+        "Drama"
+      ],
+      "vote_average": 7.1,
+      "certification": "R"
+    },
+    {
+      "title": "Hacksaw Ridge",
+      "runtime_minutes": 139,
+      "year": 2016,
+      "genres": [
+        "Drama",
+        "History",
+        "War"
+      ],
+      "vote_average": 8.2,
+      "certification": "R"
+    },
+    {
+      "title": "Wake Up Dead Man: A Knives Out Mystery",
+      "runtime_minutes": 145,
+      "year": 2025,
+      "genres": [
+        "Thriller",
+        "Mystery",
+        "Comedy"
+      ],
+      "vote_average": 7.2,
+      "certification": "PG-13"
+    },
+    {
+      "title": "Nuremberg",
+      "runtime_minutes": 149,
+      "year": 2025,
+      "genres": [
+        "History",
+        "Drama"
+      ],
+      "vote_average": 7.4,
+      "certification": "PG-13"
+    },
+    {
+      "title": "Frankenstein",
+      "runtime_minutes": 150,
+      "year": 2025,
+      "genres": [
+        "Drama",
+        "Fantasy",
+        "Horror"
+      ],
+      "vote_average": 7.6,
+      "certification": "R"
     }
-  ],
-  "region": "US"
+  ]
 }
