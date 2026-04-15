@@ -52,12 +52,22 @@ function setupEventListeners() {
         resetFiltersBtn.addEventListener('click', resetFilters);
     }
 
-    // Add sorting listeners to table headers
+    // Add sorting listeners to table headers with keyboard support
     const sortableHeaders = document.querySelectorAll('th.sortable');
     sortableHeaders.forEach(header => {
+        // Click handler
         header.addEventListener('click', () => {
             const column = header.getAttribute('data-sort');
             handleSort(column);
+        });
+        
+        // Keyboard handler (Enter or Space)
+        header.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const column = header.getAttribute('data-sort');
+                handleSort(column);
+            }
         });
     });
 }
@@ -83,6 +93,7 @@ async function loadData() {
         sortMovies();
         renderMovies();
         updateFilterResults();
+        updateSortIndicators(); // Initialize aria-sort attributes
     } catch (error) {
         console.error('Error loading data:', error);
         displayError('Failed to load movie data. Please try refreshing the page.');
@@ -165,9 +176,20 @@ function renderMovies() {
 function applyRuntimeFilters() {
     const minRuntime = parseInt(document.getElementById('min-runtime').value) || 0;
     const maxRuntime = parseInt(document.getElementById('max-runtime').value) || Infinity;
+    const errorElement = document.getElementById('filter-error');
+
+    // Clear any previous error
+    if (errorElement) {
+        errorElement.textContent = '';
+        errorElement.classList.remove('show');
+    }
 
     if (minRuntime > maxRuntime) {
-        alert('Minimum runtime cannot be greater than maximum runtime.');
+        // Use inline error message instead of alert
+        if (errorElement) {
+            errorElement.textContent = 'Minimum runtime cannot be greater than maximum runtime.';
+            errorElement.classList.add('show');
+        }
         return;
     }
 
@@ -184,6 +206,14 @@ function applyRuntimeFilters() {
 function resetFilters() {
     document.getElementById('min-runtime').value = 90;
     document.getElementById('max-runtime').value = 160;
+    
+    // Clear any error message
+    const errorElement = document.getElementById('filter-error');
+    if (errorElement) {
+        errorElement.textContent = '';
+        errorElement.classList.remove('show');
+    }
+    
     filteredMovies = [...allMovies];
     sortMovies();
     renderMovies();
@@ -245,15 +275,17 @@ function sortMovies() {
 }
 
 function updateSortIndicators() {
-    // Remove all sorting classes
+    // Remove all sorting classes and reset aria-sort
     document.querySelectorAll('th.sortable').forEach(th => {
         th.classList.remove('sorted-asc', 'sorted-desc');
+        th.setAttribute('aria-sort', 'none');
     });
 
-    // Add class to current sorted column
+    // Add class and aria-sort to current sorted column
     const currentHeader = document.querySelector(`th[data-sort="${sortColumn}"]`);
     if (currentHeader) {
         currentHeader.classList.add(`sorted-${sortDirection}`);
+        currentHeader.setAttribute('aria-sort', sortDirection === 'asc' ? 'ascending' : 'descending');
     }
 }
 

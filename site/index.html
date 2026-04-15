@@ -10,6 +10,9 @@
 </head>
 <body>
     <div class="container">
+        <!-- Skip Navigation Link for Keyboard Users -->
+        <a href="#main-content" class="skip-link">Skip to main content</a>
+        
         <header>
             <div class="header-content">
                 <h1>🎬 Platelet-Movie</h1>
@@ -20,7 +23,7 @@
             </div>
         </header>
 
-        <main>
+        <main id="main-content">
             <!-- Lady Whistledown Commentary Section -->
             <section class="commentary-section">
                 <h2>✨ Lady Whistledown's Commentary</h2>
@@ -45,7 +48,8 @@
                     <button id="apply-filters" class="btn-primary">Apply Filters</button>
                     <button id="reset-filters" class="btn-secondary">Reset</button>
                 </div>
-                <p class="filter-results" id="filter-results"></p>
+                <p class="filter-error" id="filter-error" role="alert" aria-live="assertive"></p>
+                <p class="filter-results" id="filter-results" role="status" aria-live="polite"></p>
             </section>
 
             <!-- Movies Table Section -->
@@ -53,14 +57,15 @@
                 <h2>📋 Movie List</h2>
                 <div class="table-container">
                     <table id="movies-table">
+                        <caption class="visually-hidden">Netflix movies suitable for platelet donation (sorted by runtime)</caption>
                         <thead>
                             <tr>
-                                <th data-sort="title" class="sortable">Title <span class="sort-arrow"></span></th>
-                                <th data-sort="runtime_minutes" class="sortable">Runtime <span class="sort-arrow"></span></th>
-                                <th data-sort="year" class="sortable">Year <span class="sort-arrow"></span></th>
-                                <th data-sort="vote_average" class="sortable">Score <span class="sort-arrow"></span></th>
-                                <th data-sort="certification" class="sortable">Rated <span class="sort-arrow"></span></th>
-                                <th data-sort="genres" class="sortable">Genres <span class="sort-arrow"></span></th>
+                                <th data-sort="title" class="sortable" tabindex="0" aria-sort="none">Title <span class="sort-arrow"></span></th>
+                                <th data-sort="runtime_minutes" class="sortable" tabindex="0" aria-sort="ascending">Runtime <span class="sort-arrow"></span></th>
+                                <th data-sort="year" class="sortable" tabindex="0" aria-sort="none">Year <span class="sort-arrow"></span></th>
+                                <th data-sort="vote_average" class="sortable" tabindex="0" aria-sort="none">Score <span class="sort-arrow"></span></th>
+                                <th data-sort="certification" class="sortable" tabindex="0" aria-sort="none">Rated <span class="sort-arrow"></span></th>
+                                <th data-sort="genres" class="sortable" tabindex="0" aria-sort="none">Genres <span class="sort-arrow"></span></th>
                             </tr>
                         </thead>
                         <tbody id="movies-tbody">
