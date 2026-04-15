@@ -5,11 +5,12 @@ let allMovies = [];
 let filteredMovies = [];
 let sortColumn = 'runtime_minutes';
 let sortDirection = 'asc';
+let hasSavedFilters = false;
 
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
-    initFilters();
+    hasSavedFilters = initFilters();
     loadData();
     setupEventListeners();
 });
@@ -48,6 +49,9 @@ function initFilters() {
     if (savedMaxRuntime !== null) {
         document.getElementById('max-runtime').value = savedMaxRuntime;
     }
+    
+    // Return true if saved filters exist
+    return savedMinRuntime !== null || savedMaxRuntime !== null;
 }
 
 function saveFilterValues(minRuntime, maxRuntime) {
@@ -115,9 +119,7 @@ async function loadData() {
         filteredMovies = [...allMovies];
         
         // Apply saved filters if they exist
-        const savedMinRuntime = localStorage.getItem('minRuntime');
-        const savedMaxRuntime = localStorage.getItem('maxRuntime');
-        if (savedMinRuntime !== null || savedMaxRuntime !== null) {
+        if (hasSavedFilters) {
             applyRuntimeFilters();
         }
         
