@@ -8,6 +8,24 @@ import pytest
 from platelet_movie.config import Config
 
 
+def _is_valid_themoviedb_url(url: str) -> bool:
+    """Check if a URL has a valid themoviedb.org domain.
+
+    Args:
+        url: The URL string to validate
+
+    Returns:
+        True if the URL's domain is themoviedb.org, www.themoviedb.org,
+        or a subdomain (*.themoviedb.org), False otherwise
+    """
+    parsed = urlparse(url)
+    return (
+        parsed.netloc == "themoviedb.org"
+        or parsed.netloc == "www.themoviedb.org"
+        or parsed.netloc.endswith(".themoviedb.org")
+    )
+
+
 class TestConfig:
     def test_defaults_from_env(self, monkeypatch):
         monkeypatch.setenv("TMDB_API_KEY", "abc123")
@@ -76,14 +94,7 @@ class TestConfig:
         # Verify that at least one URL has the correct themoviedb.org domain
         valid_url_found = False
         for url in urls:
-            parsed = urlparse(url)
-            # Check exact domain match (themoviedb.org or www.themoviedb.org)
-            # or subdomain (*.themoviedb.org)
-            if (
-                parsed.netloc == "themoviedb.org"
-                or parsed.netloc == "www.themoviedb.org"
-                or parsed.netloc.endswith(".themoviedb.org")
-            ):
+            if _is_valid_themoviedb_url(url):
                 valid_url_found = True
                 break
 
@@ -102,14 +113,9 @@ class TestConfig:
         ]
 
         for malicious_url in malicious_urls:
-            parsed = urlparse(malicious_url)
-            # This is the proper validation logic used in the test above
-            is_valid = (
-                parsed.netloc == "themoviedb.org"
-                or parsed.netloc == "www.themoviedb.org"
-                or parsed.netloc.endswith(".themoviedb.org")
-            )
-            assert not is_valid, f"Malicious URL {malicious_url} should not be valid"
+            assert not _is_valid_themoviedb_url(
+                malicious_url
+            ), f"Malicious URL {malicious_url} should not be valid"
 
         # Valid URLs should pass
         valid_urls = [
@@ -119,10 +125,6 @@ class TestConfig:
         ]
 
         for valid_url in valid_urls:
-            parsed = urlparse(valid_url)
-            is_valid = (
-                parsed.netloc == "themoviedb.org"
-                or parsed.netloc == "www.themoviedb.org"
-                or parsed.netloc.endswith(".themoviedb.org")
-            )
-            assert is_valid, f"Valid URL {valid_url} should be considered valid"
+            assert _is_valid_themoviedb_url(
+                valid_url
+            ), f"Valid URL {valid_url} should be considered valid"
