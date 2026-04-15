@@ -1,5 +1,8 @@
 """Unit tests for platelet_movie.config."""
 
+import re
+from urllib.parse import urlparse
+
 import pytest
 
 from platelet_movie.config import Config
@@ -63,4 +66,54 @@ class TestConfig:
             cfg.validate()
         msg = str(exc_info.value)
         assert "TMDB_API_KEY" in msg
-        assert "themoviedb.org" in msg  # Should include signup URL
+
+        # Extract URLs from the error message and validate domain properly
+        # This prevents CWE-20 issues with substring sanitization
+        url_pattern = r'https?://[^\s]+'
+        urls = re.findall(url_pattern, msg)
+        assert len(urls) > 0, "Error message should contain at least one URL"
+
+        # Verify that at least one URL has the correct themoviedb.org domain
+        valid_url_found = False
+        for url in urls:
+            parsed = urlparse(url)
+            # Check exact domain match (or subdomain of themoviedb.org)
+            if parsed.netloc == "www.themoviedb.org" or parsed.netloc.endswith(".themoviedb.org"):
+                valid_url_found = True
+                break
+
+        assert valid_url_found, f"Expected a URL with themoviedb.org domain, found: {urls}"
+
+    def test_url_validation_rejects_malicious_urls(self):
+        """Test URL domain validation rejects malicious URLs with domain as substring."""
+        # These malicious URLs would pass a naive substring check
+        # but should fail proper validation
+        malicious_urls = [
+            "http://evil.com?redirect=themoviedb.org",
+            "http://themoviedb.org.evil.com/settings",
+            "http://evil-themoviedb.org.com/api",
+            "http://notthemoviedb.org/settings",
+        ]
+
+        for malicious_url in malicious_urls:
+            parsed = urlparse(malicious_url)
+            # This is the proper validation logic used in the test above
+            is_valid = (
+                parsed.netloc == "www.themoviedb.org"
+                or parsed.netloc.endswith(".themoviedb.org")
+            )
+            assert not is_valid, f"Malicious URL {malicious_url} should not be valid"
+
+        # Valid URLs should pass
+        valid_urls = [
+            "https://www.themoviedb.org/settings/api",
+            "https://api.themoviedb.org/3/movie",
+        ]
+
+        for valid_url in valid_urls:
+            parsed = urlparse(valid_url)
+            is_valid = (
+                parsed.netloc == "www.themoviedb.org"
+                or parsed.netloc.endswith(".themoviedb.org")
+            )
+            assert is_valid, f"Valid URL {valid_url} should be considered valid"
