@@ -109,7 +109,7 @@ def generate_site_data(max_pages: int = 50, region: str | None = None) -> None:
     """
     # Define supported regions
     supported_regions = ["US", "GB", "IN"]
-    regions_to_generate = [region.upper()] if region else supported_regions
+    regions_to_generate = [region.upper()] if region is not None else supported_regions
     
     for region_code in regions_to_generate:
         try:

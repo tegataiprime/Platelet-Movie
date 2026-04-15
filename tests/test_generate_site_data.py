@@ -185,7 +185,7 @@ class TestGetMovieData:
         )
 
     @patch("generate_site_data.run_command")
-    def test_custom_region(self, mock_run_command):
+    def test_get_movie_data_with_gb_region(self, mock_run_command):
         """Test that custom region value is passed to CLI."""
         mock_run_command.return_value = "[]"
 
