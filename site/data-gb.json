@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-04-15T18:23:55.029241+00:00",
+  "generated_at": "2026-04-17T23:30:18.450350+00:00",
   "region": "GB",
-  "commentary": "Dear Reader,\n\nAs the delicate tendrils of autumn weave their way through our beloved society, this Author finds herself once again contemplating the noble act of platelet donation. Indeed, what could be more laudable than lending a helping hand\u2014or, shall we say, a generous pint\u2014to those in need? It is, in every sense, a true display of heart, and what better way to pass the time during such a charitable endeavor than by indulging in the delightful distraction of cinema? \n\nOne must inquire, dear friends, if you prefer your entertainment woven with the silk of animated hilarity, as one might find in a certain tale of a martial arts panda, or perhaps with a spookier edge that resonates with your very soul, as epitomized in the thrilling silence of the recent blockbuster? From romantic escapades to audacious capers, this week's selection promises to tickle your fancy and captivate your attention for a splendid ninety minutes or more. Prepare to be enraptured, for within these cinematic treasures lies the perfect companion to your philanthropic pursuits!",
+  "commentary": "Dear Reader, \n\nAs the sun dips low on another week of societal upheaval and whispered secrets, this Author finds herself contemplating the noble act of platelet donation\u2014a true testament to the benevolence of the human spirit. Indeed, how splendid it is to imagine our esteemed friends and family offering a portion of themselves to mend the world, all whilst indulging in delightful cinematic escapades that stretch beyond a mere hour and a half! One must inquire: what better way to pass the time than with a whimsical panda's martial arts mastery or a jaunt through the quirky corridors of the Grand Budapest Hotel?\n\nAh, but fear not, for this week's selections will not merely serve as background distractions. Nay, dear reader, they are an assembly of tales that will provoke giggles and gasps alike. From charming adventures that might have our hearts racing to darker narratives that challenge our very souls\u2014such as a beloved 'Fifty Shades' or a riveting escapade with 'Men in Black'\u2014these films promise to keep your spirits high as you contribute to a cause most commendable. So settle in, for your next viewing delight awaits, and may your noble actions be matched only by the thrill of your cinematic choices!",
   "movies": [
     {
       "title": "Kung Fu Panda",
@@ -15,19 +15,8 @@
         "Action"
       ],
       "vote_average": 7.3,
-      "certification": "PG"
-    },
-    {
-      "title": "A Quiet Place",
-      "runtime_minutes": 91,
-      "year": 2018,
-      "genres": [
-        "Horror",
-        "Drama",
-        "Science Fiction"
-      ],
-      "vote_average": 7.4,
-      "certification": "15"
+      "certification": "PG",
+      "description": "Chosen by prophecy but doubted by all, Po is an unlikely Dragon Warrior\u2014a clumsy panda thrust into the world of kung fu as a deadly enemy threatens the Valley of Peace. Under reluctant guidance by Master Shifu and the Furious Five, Po must embrace who he is to unlock the power that no scroll can teach."
     },
     {
       "title": "Irish Wish",
@@ -39,7 +28,8 @@
         "Fantasy"
       ],
       "vote_average": 6.1,
-      "certification": "12"
+      "certification": "12",
+      "description": "Maddie's dream guy is days away from marrying her best friend when a wish for true love made on an ancient stone in Ireland magically alters her fate."
     },
     {
       "title": "Kung Fu Panda 4",
@@ -54,7 +44,8 @@
         "Fantasy"
       ],
       "vote_average": 7.0,
-      "certification": "PG"
+      "certification": "PG",
+      "description": "Po is gearing up to become the spiritual leader of his Valley of Peace, but also needs someone to take his place as Dragon Warrior. As such, he will train a new kung fu practitioner for the spot and will encounter a villain called the Chameleon who conjures villains from the past."
     },
     {
       "title": "KPop Demon Hunters",
@@ -67,7 +58,8 @@
         "Animation"
       ],
       "vote_average": 8.0,
-      "certification": "PG"
+      "certification": "PG",
+      "description": "When K-pop superstars Rumi, Mira and Zoey aren't selling out stadiums, they're using their secret powers to protect their fans from supernatural threats."
     },
     {
       "title": "Men in Black",
@@ -80,7 +72,8 @@
         "Science Fiction"
       ],
       "vote_average": 7.2,
-      "certification": "12"
+      "certification": "12",
+      "description": "After a police chase with an otherworldly being, a New York City cop is recruited as an agent in a top-secret organization established to monitor and police alien activity on Earth: the Men in Black. Agent K and new recruit Agent J find themselves in the middle of a deadly plot by an intergalactic terrorist who has arrived on Earth to assassinate two ambassadors from opposing galaxies."
     },
     {
       "title": "The Grand Budapest Hotel",
@@ -91,7 +84,8 @@
         "Drama"
       ],
       "vote_average": 8.0,
-      "certification": "15"
+      "certification": "15",
+      "description": "The Grand Budapest Hotel tells of a legendary concierge at a famous European hotel between the wars and his friendship with a young employee who becomes his trusted prot\u00e9g\u00e9. The story involves the theft and recovery of a priceless Renaissance painting, the battle for an enormous family fortune and the slow and then sudden upheavals that transformed Europe during the first half of the 20th century."
     },
     {
       "title": "American Psycho",
@@ -103,7 +97,8 @@
         "Crime"
       ],
       "vote_average": 7.4,
-      "certification": "18"
+      "certification": "18",
+      "description": "A wealthy New York investment banking executive hides his alternate psychopathic ego from his co-workers and friends as he escalates deeper into his illogical, gratuitous fantasies."
     },
     {
       "title": "Fifty Shades Freed",
@@ -114,7 +109,8 @@
         "Romance"
       ],
       "vote_average": 6.7,
-      "certification": "18"
+      "certification": "18",
+      "description": "Believing they have left behind shadowy figures from their past, newlyweds Christian and Ana fully embrace an inextricable connection and shared life of luxury. But just as she steps into her role as Mrs. Grey and he relaxes into an unfamiliar stability, new threats could jeopardize their happy ending before it even begins."
     },
     {
       "title": "After",
@@ -125,7 +121,8 @@
         "Romance"
       ],
       "vote_average": 7.1,
-      "certification": null
+      "certification": null,
+      "description": "Tessa Young is a dedicated student, dutiful daughter and loyal girlfriend to her high school sweetheart. Entering her first semester of college, Tessa's guarded world opens up when she meets Hardin Scott, a mysterious and brooding rebel who makes her question all she thought she knew about herself -- and what she wants out of life."
     },
     {
       "title": "Top Gun",
@@ -137,7 +134,8 @@
         "Romance"
       ],
       "vote_average": 7.1,
-      "certification": "15"
+      "certification": "15",
+      "description": "For Lieutenant Pete 'Maverick' Mitchell and his friend and co-pilot Nick 'Goose' Bradshaw, being accepted into an elite training school for fighter pilots is a dream come true. But a tragedy, as well as personal demons, will threaten Pete's dreams of becoming an ace pilot."
     },
     {
       "title": "War Machine",
@@ -149,7 +147,8 @@
         "Thriller"
       ],
       "vote_average": 7.2,
-      "certification": "15"
+      "certification": "15",
+      "description": "On one last grueling mission during Army Ranger training, a combat engineer must lead his unit in a fight against a giant otherworldly killing machine."
     },
     {
       "title": "Kill Bill: Vol. 1",
@@ -160,7 +159,8 @@
         "Crime"
       ],
       "vote_average": 8.0,
-      "certification": "18"
+      "certification": "18",
+      "description": "An assassin is shot by her ruthless employer, Bill, and other members of their assassination circle \u2013 but she lives to plot her vengeance."
     },
     {
       "title": "Love & Other Drugs",
@@ -172,7 +172,8 @@
         "Romance"
       ],
       "vote_average": 7.0,
-      "certification": "15"
+      "certification": "15",
+      "description": "Maggie is an alluring free spirit who won't let anyone \u2013 or anything \u2013 tie her down. But she meets her match in Jamie, whose relentless and nearly infallible charm serves him well with the ladies and the cutthroat world of pharmaceutical sales. Maggie and Jamie's evolving relationship takes them both by surprise, as they find themselves under the influence of the ultimate drug: love."
     },
     {
       "title": "Peaky Blinders: The Immortal Man",
@@ -183,7 +184,8 @@
         "Drama"
       ],
       "vote_average": 7.2,
-      "certification": "15"
+      "certification": "15",
+      "description": "After his estranged son gets embroiled in a Nazi plot, self-exiled gangster Tommy Shelby must return to Birmingham to save his family \u2014 and his nation."
     },
     {
       "title": "The Rip",
@@ -195,7 +197,8 @@
         "Crime"
       ],
       "vote_average": 7.1,
-      "certification": "15"
+      "certification": "15",
+      "description": "Trust frays when a team of Miami cops discovers millions in cash inside a run-down stash house, calling everyone \u2014 and everything \u2014 into question."
     },
     {
       "title": "Barbie",
@@ -206,7 +209,8 @@
         "Adventure"
       ],
       "vote_average": 6.9,
-      "certification": "12A"
+      "certification": "12A",
+      "description": "Barbie and Ken are having the time of their lives in the colorful and seemingly perfect world of Barbie Land. However, when they get a chance to go to the real world, they soon discover the joys and perils of living among humans."
     },
     {
       "title": "Back to the Future",
@@ -218,7 +222,8 @@
         "Science Fiction"
       ],
       "vote_average": 8.3,
-      "certification": "PG"
+      "certification": "PG",
+      "description": "Eighties teenager Marty McFly is accidentally sent back in time to 1955, inadvertently disrupting his parents' first meeting and attracting his mother's romantic interest. Marty must repair the damage to history by rekindling his parents' romance and - with the help of his eccentric inventor friend Doc Brown - return to 1985."
     },
     {
       "title": "Bad Boys: Ride or Die",
@@ -230,7 +235,8 @@
         "Crime"
       ],
       "vote_average": 7.3,
-      "certification": "15"
+      "certification": "15",
+      "description": "After their late former Captain is framed, Lowrey and Burnett try to clear his name, only to end up on the run themselves."
     },
     {
       "title": "Meg 2: The Trench",
@@ -242,7 +248,8 @@
         "Horror"
       ],
       "vote_average": 6.4,
-      "certification": "12A"
+      "certification": "12A",
+      "description": "An exploratory dive into the deepest depths of the ocean of a daring research team spirals into chaos when a malevolent mining operation threatens their mission and forces them into a high-stakes battle for survival."
     },
     {
       "title": "Nightcrawler",
@@ -254,7 +261,8 @@
         "Thriller"
       ],
       "vote_average": 7.7,
-      "certification": "15"
+      "certification": "15",
+      "description": "When Lou Bloom, desperate for work, muscles into the world of L.A. crime journalism, he blurs the line between observer and participant to become the star of his own story. Aiding him in his effort is Nina, a TV-news veteran."
     },
     {
       "title": "I Swear",
@@ -265,7 +273,8 @@
         "History"
       ],
       "vote_average": 8.3,
-      "certification": "15"
+      "certification": "15",
+      "description": "Diagnosed with Tourette Syndrome at 15, John Davidson navigates his way against the odds through troubled teenage years and into adulthood, finding inspiration in the kindness of others to discover his true purpose in life."
     },
     {
       "title": "Spider-Man",
@@ -276,7 +285,8 @@
         "Science Fiction"
       ],
       "vote_average": 7.3,
-      "certification": "12A"
+      "certification": "12A",
+      "description": "After being bitten by a genetically altered spider at Oscorp, nerdy but endearing high school student Peter Parker is endowed with amazing powers to become the superhero known as Spider-Man."
     },
     {
       "title": "Fifty Shades of Grey",
@@ -288,7 +298,8 @@
         "Thriller"
       ],
       "vote_average": 5.9,
-      "certification": "18"
+      "certification": "18",
+      "description": "When college senior Anastasia Steele steps in for her sick roommate to interview prominent businessman Christian Grey for their campus paper, little does she realize the path her life will take. Christian, as enigmatic as he is rich and powerful, finds himself strangely drawn to Ana, and she to him. Though sexually inexperienced, Ana plunges headlong into an affair -- and learns that Christian's true sexual proclivities push the boundaries of pain and pleasure."
     },
     {
       "title": "The Passion of the Christ",
@@ -298,7 +309,8 @@
         "Drama"
       ],
       "vote_average": 7.5,
-      "certification": "18"
+      "certification": "18",
+      "description": "A graphic portrayal of the last twelve hours of Jesus of Nazareth's life."
     },
     {
       "title": "Pride & Prejudice",
@@ -309,7 +321,8 @@
         "Romance"
       ],
       "vote_average": 8.0,
-      "certification": "U"
+      "certification": "U",
+      "description": "A story of love and life among the landed English gentry during the Georgian era. Mr. Bennet is a gentleman living in Hertfordshire with his overbearing wife and five daughters, but if he dies their house will be inherited by a distant cousin whom they have never met, so the family's future happiness and security is dependent on the daughters making good marriages."
     },
     {
       "title": "La La Land",
@@ -321,7 +334,8 @@
         "Romance"
       ],
       "vote_average": 7.9,
-      "certification": "12A"
+      "certification": "12A",
+      "description": "Mia, an aspiring actress, serves lattes to movie stars in between auditions and Sebastian, a jazz musician, scrapes by playing cocktail party gigs in dingy bars, but as success mounts they are faced with decisions that begin to fray the fragile fabric of their love affair, and the dreams they worked so hard to maintain in each other threaten to rip them apart."
     },
     {
       "title": "Knives Out",
@@ -333,7 +347,8 @@
         "Mystery"
       ],
       "vote_average": 7.8,
-      "certification": "12A"
+      "certification": "12A",
+      "description": "When renowned crime novelist Harlan Thrombey is found dead at his estate just after his 85th birthday, the inquisitive and debonair Detective Benoit Blanc is mysteriously enlisted to investigate. From Harlan's dysfunctional family to his devoted staff, Blanc sifts through a web of red herrings and self-serving lies to uncover the truth behind Harlan's untimely death."
     },
     {
       "title": "The Amazing Spider-Man",
@@ -345,7 +360,8 @@
         "Science Fiction"
       ],
       "vote_average": 6.7,
-      "certification": "12A"
+      "certification": "12A",
+      "description": "Peter Parker is an outcast high schooler abandoned by his parents as a boy, leaving him to be raised by his Uncle Ben and Aunt May. Like most teenagers, Peter is trying to figure out who he is and how he got to be the person he is today. As Peter discovers a mysterious briefcase that belonged to his father, he begins a quest to understand his parents' disappearance \u2013 leading him directly to Oscorp and the lab of Dr. Curt Connors, his father's former partner. As Spider-Man is set on a collision course with Connors' alter ego, The Lizard, Peter will make life-altering choices to use his powers and shape his destiny to become a hero."
     },
     {
       "title": "Don't Look Up",
@@ -357,7 +373,8 @@
         "Drama"
       ],
       "vote_average": 7.1,
-      "certification": "15"
+      "certification": "15",
+      "description": "Two astronomers go on a media tour to warn humankind of a planet-killing comet hurtling toward Earth. The response from a distracted world: Meh."
     },
     {
       "title": "Hacksaw Ridge",
@@ -369,7 +386,8 @@
         "War"
       ],
       "vote_average": 8.2,
-      "certification": "15"
+      "certification": "15",
+      "description": "WWII American Army Medic Desmond T. Doss, who served during the Battle of Okinawa, refuses to kill people and becomes the first Conscientious Objector in American history to receive the Congressional Medal of Honor."
     },
     {
       "title": "Spider-Man 3",
@@ -381,7 +399,8 @@
         "Science Fiction"
       ],
       "vote_average": 6.5,
-      "certification": "12A"
+      "certification": "12A",
+      "description": "The seemingly invincible Spider-Man goes up against an all-new crop of villains\u2014including the shape-shifting Sandman. While Spider-Man\u2019s superpowers are altered by an alien organism, his alter ego, Peter Parker, deals with nemesis Eddie Brock and also gets caught up in a love triangle."
     },
     {
       "title": "Catch Me If You Can",
@@ -392,7 +411,8 @@
         "Crime"
       ],
       "vote_average": 8.0,
-      "certification": "12A"
+      "certification": "12A",
+      "description": "A true story about Frank Abagnale Jr. who, before his 19th birthday, successfully conned millions of dollars worth of checks as a Pan Am pilot, doctor, and legal prosecutor. An FBI agent makes it his mission to put him behind bars. But Frank not only eludes capture, he revels in the pursuit."
     },
     {
       "title": "The Amazing Spider-Man 2",
@@ -404,7 +424,21 @@
         "Science Fiction"
       ],
       "vote_average": 6.5,
-      "certification": "12A"
+      "certification": "12A",
+      "description": "For Peter Parker, life is busy. Between taking out the bad guys as Spider-Man and spending time with the person he loves, Gwen Stacy, high school graduation cannot come quickly enough. Peter has not forgotten about the promise he made to Gwen\u2019s father to protect her by staying away, but that is a promise he cannot keep. Things will change for Peter when a new villain, Electro, emerges, an old friend, Harry Osborn, returns, and Peter uncovers new clues about his past."
+    },
+    {
+      "title": "The Flash",
+      "runtime_minutes": 144,
+      "year": 2023,
+      "genres": [
+        "Action",
+        "Science Fiction",
+        "Adventure"
+      ],
+      "vote_average": 6.6,
+      "certification": "12A",
+      "description": "When his attempt to save his family inadvertently alters the future, Barry Allen becomes trapped in a reality in which General Zod has returned and there are no Super Heroes to turn to. In order to save the world that he is in and return to the future that he knows, Barry's only hope is to race for his life. But will making the ultimate sacrifice be enough to reset the universe?"
     },
     {
       "title": "Wake Up Dead Man: A Knives Out Mystery",
@@ -416,7 +450,8 @@
         "Comedy"
       ],
       "vote_average": 7.2,
-      "certification": "12A"
+      "certification": "12A",
+      "description": "When young priest Jud Duplenticy is sent to assist charismatic firebrand Monsignor Jefferson Wicks, it\u2019s clear that all is not well in the pews. After a sudden and seemingly impossible murder rocks the town, the lack of an obvious suspect prompts local police chief Geraldine Scott to join forces with renowned detective Benoit Blanc to unravel a mystery that defies all logic."
     },
     {
       "title": "Frankenstein",
@@ -428,7 +463,8 @@
         "Horror"
       ],
       "vote_average": 7.6,
-      "certification": "15"
+      "certification": "15",
+      "description": "Dr. Victor Frankenstein, a brilliant but egotistical scientist, brings a creature to life in a monstrous experiment that ultimately leads to the undoing of both the creator and his tragic creation."
     },
     {
       "title": "Inglourious Basterds",
@@ -440,7 +476,8 @@
         "War"
       ],
       "vote_average": 8.2,
-      "certification": "18"
+      "certification": "18",
+      "description": "In Nazi-occupied France during World War II, a group of Jewish-American soldiers known as \"The Basterds\" are chosen specifically to spread fear throughout the Third Reich by scalping and brutally killing Nazis. The Basterds, lead by Lt. Aldo Raine soon cross paths with a French-Jewish teenage girl who runs a movie theater in Paris which is targeted by the soldiers."
     },
     {
       "title": "Prisoners",
@@ -452,7 +489,8 @@
         "Crime"
       ],
       "vote_average": 8.1,
-      "certification": "15"
+      "certification": "15",
+      "description": "Keller Dover is facing every parent\u2019s worst nightmare. His six-year-old daughter, Anna, is missing, together with her young friend, Joy, and as minutes turn to hours, panic sets in. The only lead is a dilapidated RV that had earlier been parked on their street."
     }
   ]
 }
