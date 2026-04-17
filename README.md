@@ -26,11 +26,12 @@ TMDB provides reliable watch provider data (including Netflix availability) that
 - 🔐 Only requires a free TMDB API key (no Netflix credentials needed)
 - ⏱️ Filters movies by runtime range (min/max configurable, default: **135-145 minutes**)
 - 🌐 Filter by original language (ISO 639-1 codes, default: **English**)
-- ⭐ Shows **TMDB score**, **MPAA rating** (R, PG-13, etc.), and **genres** for each movie
+- ⭐ Shows **TMDB score**, **MPAA rating** (R, PG-13, etc.), **genres**, and **movie descriptions** for each movie
+- 🖼️ Includes **movie poster images** from TMDB (displayed on website and included in JSON output)
 - 📋 Returns results **sorted ascending** by runtime, then by title
 - 📄 **Multiple output formats**: Markdown (default), HTML, CSV, and JSON
 - 🌍 Supports different Netflix regions (US, GB, CA, etc.)
-- 🌙 **GitHub Pages site** with light/dark mode, runtime filter with persistence, sortable columns, and Lady Whistledown commentary
+- 🌙 **GitHub Pages site** with light/dark mode, runtime filter with persistence, sortable columns, movie poster thumbnails, and Lady Whistledown commentary
 - 🌏 **Multi-region support on website**: Switch between US 🇺🇸, UK 🇬🇧, and India 🇮🇳 Netflix catalogs with preference persistence
 - 🐍 Written in Python 3.11+, managed with [Poetry](https://python-poetry.org/) and task-automated with [Poe the Poet](https://poethepoet.natn.io/)
 - 🔍 **Code quality monitoring** with SonarCloud integration and real-time feedback via SonarLint
@@ -198,13 +199,29 @@ Default (Markdown) format:
 ```
 Netflix movies with a runtime 135-145 minutes:
 
-   Runtime    Year   Score  Rated    Genres               Title
------------------------------------------------------------------------------------------------
-    135 m    2019     8.1  R        Crime, Drama         The Irishman
-    138 m    2013     7.9  PG-13    Thriller, Drama      Prisoners
-    140 m    1995     8.0  R        Drama, Crime         Heat
-    142 m    2014     8.5  PG-13    Drama, Mystery       Interstellar
-    145 m    2023     7.8  R        Action, Thriller     John Wick: Chapter 4
+   Runtime    Year   Score  Rated    Genres               Title                     Description
+-----------------------------------------------------------------------------------------
+    135 m    2019     8.1  R        Crime, Drama         The Irishman              A mob hitman recalls...
+    138 m    2013     7.9  PG-13    Thriller, Drama      Prisoners                 When his daughter goes...
+    140 m    1995     8.0  R        Drama, Crime         Heat                      A group of professional...
+    142 m    2014     8.5  PG-13    Drama, Mystery       Interstellar              A team of explorers...
+    145 m    2023     7.8  R        Action, Thriller     John Wick: Chapter 4      John Wick uncovers...
+```
+
+JSON format (includes poster URLs and full descriptions):
+```json
+[
+  {
+    "title": "The Irishman",
+    "runtime_minutes": 135,
+    "year": 2019,
+    "genres": ["Crime", "Drama"],
+    "vote_average": 8.1,
+    "certification": "R",
+    "description": "A mob hitman recalls his possible involvement with the slaying of Jimmy Hoffa.",
+    "poster_url": "https://image.tmdb.org/t/p/w500/mbm8k3GFhXS0ROd9AD1gqYbIFbM.jpg"
+  }
+]
 ```
 
 ---
@@ -254,6 +271,7 @@ The project includes a static website hosted on GitHub Pages that displays the w
   - Focus indicators for keyboard users
 - **Light/Dark Mode**: Toggle between themes with persistent preference storage
 - **American Red Cross Branding**: Color scheme follows American Red Cross brand guidelines (#E42424 red)
+- **Movie Poster Thumbnails**: Each movie displays a 60px poster thumbnail from TMDB, aligned to the left of the movie title and description
 - **Runtime Filter**: Filter movies by minimum (default: 90 min) and maximum (default: 160 min) runtime with inline validation. **Filter selections are automatically saved to browser local storage and persist between visits.**
 - **Sortable Columns**: Click or use keyboard (Enter/Space) on any column header to sort (all columns sortable, including genres); visual indicators show sort state (⇅ / ▲ / ▼)
 - **Lady Whistledown Commentary**: AI-generated introduction in the style of Bridgerton
@@ -518,9 +536,9 @@ Platelet-Movie/
 ├── platelet_movie/
 │   ├── __init__.py       # Package metadata
 │   ├── cli.py            # Click-based CLI entry point
-│   ├── tmdb_client.py    # TMDB API client
+│   ├── tmdb_client.py    # TMDB API client (fetches movies, posters, descriptions)
 │   ├── config.py         # 12-Factor configuration (env vars)
-│   ├── models.py         # Movie data model
+│   ├── models.py         # Movie data model (with poster_url field)
 │   └── formatters.py     # Output formatters (markdown, HTML, CSV, JSON)
 ├── tests/
 │   ├── __init__.py

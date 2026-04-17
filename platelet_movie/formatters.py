@@ -51,7 +51,9 @@ def _format_markdown(movies: list[Movie]) -> str:
     lines.append(
         f"| {'Runtime':>10} | {'Year':>6} | {'Score':>6} | {'Rated':<7} | {'Genres':<20} | Title | Description |"
     )
-    lines.append(f"| {'---':>10} | {'---':>6} | {'---':>6} | {'---':<7} | {'---':<20} | --- | --- |")
+    lines.append(
+        f"| {'---':>10} | {'---':>6} | {'---':>6} | {'---':<7} | {'---':<20} | --- | --- |"
+    )
 
     for movie in movies:
         rating_str = f"{movie.rating:.1f}" if movie.rating is not None else "N/A"
@@ -154,6 +156,7 @@ def _format_json(movies: list[Movie]) -> str:
             "vote_average": movie.rating,
             "certification": movie.certification,
             "description": movie.description,
+            "poster_url": movie.poster_url,
         }
         for movie in movies
     ]

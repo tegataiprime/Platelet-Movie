@@ -233,12 +233,20 @@ function renderMovies() {
         
         const description = movie.description || 'N/A';
         
+        // Build poster HTML if available
+        const posterHtml = movie.poster_url 
+            ? `<img src="${escapeHtml(movie.poster_url)}" alt="${escapeHtml(movie.title || 'Unknown')} poster" class="movie-poster" loading="lazy">`
+            : '';
+        
         return `
             <tr>
                 <td>
                     <div class="movie-title-container">
-                        <div class="movie-title">${escapeHtml(movie.title || 'Unknown')}</div>
-                        <div class="movie-description">${escapeHtml(description)}</div>
+                        ${posterHtml}
+                        <div class="movie-info">
+                            <div class="movie-title">${escapeHtml(movie.title || 'Unknown')}</div>
+                            <div class="movie-description">${escapeHtml(description)}</div>
+                        </div>
                     </div>
                 </td>
                 <td>${movie.runtime_minutes || '?'} m</td>

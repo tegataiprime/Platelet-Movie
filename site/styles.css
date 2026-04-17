@@ -359,8 +359,24 @@ td {
 
 .movie-title-container {
     display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.movie-poster {
+    width: 60px;
+    height: auto;
+    border-radius: 4px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.movie-info {
+    display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    flex-grow: 1;
 }
 
 .movie-title {

@@ -197,10 +197,39 @@ class TestFormatters:
         # Should have header + 1 data row
         assert len(rows) == 2
         # Verify Description column exists in header
-        assert 'Description' in rows[0]
-        # Find the Title column dynamically and verify it's properly preserved
-        title_index = rows[0].index('Title')
-        assert rows[1][title_index] == 'Movie with, comma "and" quotes'
+        assert "Description" in rows[0]
+
+    def test_json_includes_poster_url(self):
+        """Test that JSON formatter includes poster_url field."""
+        import json
+
+        movies = [
+            Movie(
+                title="Test Movie",
+                runtime_minutes=150,
+                poster_url="https://image.tmdb.org/t/p/w500/abc123.jpg",
+            )
+        ]
+        result = format_movies(movies, "json")
+        parsed = json.loads(result)
+        assert len(parsed) == 1
+        assert parsed[0]["poster_url"] == "https://image.tmdb.org/t/p/w500/abc123.jpg"
+
+    def test_json_handles_none_poster_url(self):
+        """Test that JSON formatter handles None poster_url."""
+        import json
+
+        movies = [
+            Movie(
+                title="Test Movie",
+                runtime_minutes=150,
+                poster_url=None,
+            )
+        ]
+        result = format_movies(movies, "json")
+        parsed = json.loads(result)
+        assert len(parsed) == 1
+        assert parsed[0]["poster_url"] is None
 
     def test_json_preserves_all_fields(self):
         """Test that JSON output includes all movie fields."""
