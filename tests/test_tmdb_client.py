@@ -22,6 +22,7 @@ def _make_tmdb_movie_response(
     genres: list[str] | None = None,
     vote_average: float = 7.5,
     release_date: str = "2024-01-15",
+    poster_path: str | None = "/abc123.jpg",
 ) -> dict:
     """Create a TMDB movie object as returned by the API."""
     genre_list = genres or ["Action", "Drama"]
@@ -33,6 +34,7 @@ def _make_tmdb_movie_response(
         "release_date": release_date,
         "vote_average": vote_average,
         "genres": [{"id": i, "name": name} for i, name in enumerate(genre_list)],
+        "poster_path": poster_path,
     }
 
 
@@ -671,6 +673,189 @@ class TestDiscoverMoviesOnNetflix:
 
         assert len(movies) == 1
         assert movies[0].certification is None
+
+    def test_extracts_description(self, mocker):
+        """Test that movie description is extracted from TMDB overview field."""
+        from platelet_movie.tmdb_client import TMDBClient
+
+        client = TMDBClient(api_key="test_key")
+
+        discover_data = _make_discover_response(
+            [{"id": 1, "title": "Test Movie", "overview": "A test movie description"}]
+        )
+
+        movie_details = _make_tmdb_movie_response(
+            1, "Test Movie", 150, overview="A test movie description"
+        )
+        providers = _make_watch_providers_response(1, has_netflix=True)
+        release_dates = _make_release_dates_response(1, "PG-13")
+
+        mock_get = mocker.patch("platelet_movie.tmdb_client.requests.get")
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.raise_for_status = MagicMock()
+        mock_get.return_value.json.side_effect = [
+            discover_data,
+            movie_details,
+            providers,
+            release_dates,
+        ]
+
+        movies = client.discover_movies_on_netflix(min_runtime_minutes=135)
+
+        assert len(movies) == 1
+        assert movies[0].description == "A test movie description"
+
+    def test_handles_missing_description(self, mocker):
+        """Test that missing description results in None."""
+        from platelet_movie.tmdb_client import TMDBClient
+
+        client = TMDBClient(api_key="test_key")
+
+        # Note: discover_data intentionally omits overview to test missing field handling
+        discover_data = _make_discover_response([{"id": 1, "title": "No Desc"}])
+
+        movie_details = {
+            "id": 1,
+            "title": "No Desc",
+            "runtime": 150,
+            "vote_average": 7.0,
+            # No overview field
+        }
+        providers = _make_watch_providers_response(1, has_netflix=True)
+        release_dates = _make_release_dates_response(1, "R")
+
+        mock_get = mocker.patch("platelet_movie.tmdb_client.requests.get")
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.raise_for_status = MagicMock()
+        mock_get.return_value.json.side_effect = [
+            discover_data,
+            movie_details,
+            providers,
+            release_dates,
+        ]
+
+        movies = client.discover_movies_on_netflix(min_runtime_minutes=135)
+
+        assert len(movies) == 1
+        assert movies[0].description is None
+
+    def test_handles_empty_description(self, mocker):
+        """Test that empty description string results in None."""
+        from platelet_movie.tmdb_client import TMDBClient
+
+        client = TMDBClient(api_key="test_key")
+
+        discover_data = _make_discover_response([{"id": 1, "title": "Empty Desc", "overview": ""}])
+
+        movie_details = _make_tmdb_movie_response(1, "Empty Desc", 150, overview="")
+        providers = _make_watch_providers_response(1, has_netflix=True)
+        release_dates = _make_release_dates_response(1, "R")
+
+        mock_get = mocker.patch("platelet_movie.tmdb_client.requests.get")
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.raise_for_status = MagicMock()
+        mock_get.return_value.json.side_effect = [
+            discover_data,
+            movie_details,
+            providers,
+            release_dates,
+        ]
+
+        movies = client.discover_movies_on_netflix(min_runtime_minutes=135)
+
+        assert len(movies) == 1
+        assert movies[0].description is None
+
+    def test_extracts_poster_url(self, mocker):
+        """Test that poster URL is constructed from TMDB poster_path."""
+        from platelet_movie.tmdb_client import TMDBClient
+
+        client = TMDBClient(api_key="test_key")
+
+        discover_data = _make_discover_response(
+            [{"id": 1, "title": "Test Movie", "overview": "A test movie"}]
+        )
+
+        movie_details = _make_tmdb_movie_response(
+            1, "Test Movie", 150, poster_path="/abc123xyz.jpg"
+        )
+        providers = _make_watch_providers_response(1, has_netflix=True)
+        release_dates = _make_release_dates_response(1, "PG-13")
+
+        mock_get = mocker.patch("platelet_movie.tmdb_client.requests.get")
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.raise_for_status = MagicMock()
+        mock_get.return_value.json.side_effect = [
+            discover_data,
+            movie_details,
+            providers,
+            release_dates,
+        ]
+
+        movies = client.discover_movies_on_netflix(min_runtime_minutes=135)
+
+        assert len(movies) == 1
+        assert movies[0].poster_url == "https://image.tmdb.org/t/p/w500/abc123xyz.jpg"
+
+    def test_handles_missing_poster_path(self, mocker):
+        """Test that missing poster_path results in None."""
+        from platelet_movie.tmdb_client import TMDBClient
+
+        client = TMDBClient(api_key="test_key")
+
+        discover_data = _make_discover_response([{"id": 1, "title": "No Poster"}])
+
+        movie_details = {
+            "id": 1,
+            "title": "No Poster",
+            "runtime": 150,
+            "vote_average": 7.0,
+            # No poster_path field
+        }
+        providers = _make_watch_providers_response(1, has_netflix=True)
+        release_dates = _make_release_dates_response(1, "R")
+
+        mock_get = mocker.patch("platelet_movie.tmdb_client.requests.get")
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.raise_for_status = MagicMock()
+        mock_get.return_value.json.side_effect = [
+            discover_data,
+            movie_details,
+            providers,
+            release_dates,
+        ]
+
+        movies = client.discover_movies_on_netflix(min_runtime_minutes=135)
+
+        assert len(movies) == 1
+        assert movies[0].poster_url is None
+
+    def test_handles_null_poster_path(self, mocker):
+        """Test that null poster_path results in None."""
+        from platelet_movie.tmdb_client import TMDBClient
+
+        client = TMDBClient(api_key="test_key")
+
+        discover_data = _make_discover_response([{"id": 1, "title": "Null Poster", "overview": ""}])
+
+        movie_details = _make_tmdb_movie_response(1, "Null Poster", 150, poster_path=None)
+        providers = _make_watch_providers_response(1, has_netflix=True)
+        release_dates = _make_release_dates_response(1, "R")
+
+        mock_get = mocker.patch("platelet_movie.tmdb_client.requests.get")
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.raise_for_status = MagicMock()
+        mock_get.return_value.json.side_effect = [
+            discover_data,
+            movie_details,
+            providers,
+            release_dates,
+        ]
+
+        movies = client.discover_movies_on_netflix(min_runtime_minutes=135)
+
+        assert len(movies) == 1
+        assert movies[0].poster_url is None
 
 
 # ---------------------------------------------------------------------------

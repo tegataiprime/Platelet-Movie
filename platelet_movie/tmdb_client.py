@@ -23,6 +23,9 @@ logger = logging.getLogger(__name__)
 
 _TMDB_BASE_URL = "https://api.themoviedb.org/3"
 
+# TMDB image base URL (w500 is a good size for thumbnails)
+_TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500"
+
 # Netflix provider ID in TMDB's watch providers system
 _NETFLIX_PROVIDER_ID = 8
 
@@ -223,6 +226,18 @@ class TMDBClient:
                 # Invalid date format - year remains None
                 pass
 
+        # Extract description (overview)
+        description = details.get("overview")
+        # Treat empty strings as None
+        if description is not None and not description.strip():
+            description = None
+
+        # Extract poster URL from poster_path
+        poster_url = None
+        poster_path = details.get("poster_path")
+        if poster_path:
+            poster_url = f"{_TMDB_IMAGE_BASE_URL}{poster_path}"
+
         return Movie(
             title=title,
             runtime_minutes=runtime,
@@ -230,6 +245,8 @@ class TMDBClient:
             rating=rating,
             certification=certification,
             year=year,
+            description=description,
+            poster_url=poster_url,
         )
 
     def _get_movie_details(self, movie_id: int) -> dict:

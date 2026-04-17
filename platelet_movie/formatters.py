@@ -12,6 +12,11 @@ from platelet_movie.models import Movie
 FormatType = Literal["markdown", "html", "csv", "json"]
 
 
+def _get_description_str(description: str | None) -> str:
+    """Get description string for display, returning 'N/A' for None values."""
+    return description if description is not None else "N/A"
+
+
 def format_movies(movies: list[Movie], format_type: FormatType) -> str:
     """Format a list of movies in the specified format.
 
@@ -44,9 +49,11 @@ def _format_markdown(movies: list[Movie]) -> str:
 
     lines = []
     lines.append(
-        f"| {'Runtime':>10} | {'Year':>6} | {'Score':>6} | {'Rated':<7} | {'Genres':<20} | Title |"
+        f"| {'Runtime':>10} | {'Year':>6} | {'Score':>6} | {'Rated':<7} | {'Genres':<20} | Title | Description |"
     )
-    lines.append(f"| {'---':>10} | {'---':>6} | {'---':>6} | {'---':<7} | {'---':<20} | --- |")
+    lines.append(
+        f"| {'---':>10} | {'---':>6} | {'---':>6} | {'---':<7} | {'---':<20} | --- | --- |"
+    )
 
     for movie in movies:
         rating_str = f"{movie.rating:.1f}" if movie.rating is not None else "N/A"
@@ -56,9 +63,10 @@ def _format_markdown(movies: list[Movie]) -> str:
         # Truncate genres if too long
         if len(genres_str) > 20:
             genres_str = genres_str[:17] + "..."
+        desc_str = _get_description_str(movie.description)
         lines.append(
             f"| {movie.runtime_minutes:>8} m | {year_str:>6} | {rating_str:>6} | {cert_str:<7} | "
-            f"{genres_str:<20} | {movie.title} |"
+            f"{genres_str:<20} | {movie.title} | {desc_str} |"
         )
 
     return "\n".join(lines)
@@ -78,6 +86,7 @@ def _format_html(movies: list[Movie]) -> str:
     html_parts.append("      <th>Rated</th>")
     html_parts.append("      <th>Genres</th>")
     html_parts.append("      <th>Title</th>")
+    html_parts.append("      <th>Description</th>")
     html_parts.append("    </tr>")
     html_parts.append("  </thead>")
     html_parts.append("  <tbody>")
@@ -87,6 +96,7 @@ def _format_html(movies: list[Movie]) -> str:
         cert_str = movie.certification if movie.certification else "NR"
         year_str = str(movie.year) if movie.year is not None else "N/A"
         genres_str = ", ".join(movie.genres) if movie.genres else "N/A"
+        desc_str = _get_description_str(movie.description)
 
         html_parts.append("    <tr>")
         html_parts.append(f"      <td>{movie.runtime_minutes} min</td>")
@@ -95,6 +105,7 @@ def _format_html(movies: list[Movie]) -> str:
         html_parts.append(f"      <td>{cert_str}</td>")
         html_parts.append(f"      <td>{genres_str}</td>")
         html_parts.append(f"      <td>{movie.title}</td>")
+        html_parts.append(f"      <td>{desc_str}</td>")
         html_parts.append("    </tr>")
 
     html_parts.append("  </tbody>")
@@ -109,7 +120,7 @@ def _format_csv(movies: list[Movie]) -> str:
     writer = csv.writer(output)
 
     # Write header
-    writer.writerow(["Runtime", "Year", "Score", "Rated", "Genres", "Title"])
+    writer.writerow(["Runtime", "Year", "Score", "Rated", "Genres", "Title", "Description"])
 
     # Write data rows
     for movie in movies:
@@ -117,6 +128,7 @@ def _format_csv(movies: list[Movie]) -> str:
         cert_str = movie.certification if movie.certification else "NR"
         year_str = str(movie.year) if movie.year is not None else "N/A"
         genres_str = ", ".join(movie.genres) if movie.genres else "N/A"
+        desc_str = _get_description_str(movie.description)
 
         writer.writerow(
             [
@@ -126,6 +138,7 @@ def _format_csv(movies: list[Movie]) -> str:
                 cert_str,
                 genres_str,
                 movie.title,
+                desc_str,
             ]
         )
 
@@ -142,6 +155,8 @@ def _format_json(movies: list[Movie]) -> str:
             "genres": movie.genres,
             "vote_average": movie.rating,
             "certification": movie.certification,
+            "description": movie.description,
+            "poster_url": movie.poster_url,
         }
         for movie in movies
     ]
