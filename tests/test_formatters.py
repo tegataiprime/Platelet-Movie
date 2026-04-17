@@ -196,6 +196,8 @@ class TestFormatters:
         rows = list(reader)
         # Should have header + 1 data row
         assert len(rows) == 2
+        # Verify Description column exists in header
+        assert 'Description' in rows[0]
         # Find the Title column dynamically and verify it's properly preserved
         title_index = rows[0].index('Title')
         assert rows[1][title_index] == 'Movie with, comma "and" quotes'

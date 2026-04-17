@@ -231,7 +231,7 @@ function renderMovies() {
             ? movie.genres.join(', ') 
             : movie.genres || 'N/A';
         
-        const description = movie.description || 'No description available';
+        const description = movie.description || 'N/A';
         
         return `
             <tr>

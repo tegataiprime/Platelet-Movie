@@ -14,7 +14,7 @@ FormatType = Literal["markdown", "html", "csv", "json"]
 
 def _get_description_str(description: str | None) -> str:
     """Get description string for display, returning 'N/A' for None values."""
-    return description if description else "N/A"
+    return description if description is not None else "N/A"
 
 
 def format_movies(movies: list[Movie], format_type: FormatType) -> str:
