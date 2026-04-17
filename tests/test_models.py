@@ -115,3 +115,25 @@ class TestMovie:
         m1 = Movie(title="Inception", runtime_minutes=148, year=2010)
         m2 = Movie(title="Inception", runtime_minutes=148, year=2011)
         assert m1 != m2
+
+    def test_creation_with_description(self):
+        m = Movie(
+            title="Inception",
+            runtime_minutes=148,
+            description="A thief who steals corporate secrets through the use of dream-sharing technology.",
+        )
+        assert m.title == "Inception"
+        assert m.runtime_minutes == 148
+        assert (
+            m.description
+            == "A thief who steals corporate secrets through the use of dream-sharing technology."
+        )
+
+    def test_default_description_is_none(self):
+        m = Movie(title="Test", runtime_minutes=100)
+        assert m.description is None
+
+    def test_inequality_different_description(self):
+        m1 = Movie(title="Inception", runtime_minutes=148, description="Description 1")
+        m2 = Movie(title="Inception", runtime_minutes=148, description="Description 2")
+        assert m1 != m2

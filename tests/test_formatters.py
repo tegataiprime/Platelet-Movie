@@ -21,6 +21,7 @@ class TestFormatters:
                 rating=8.1,
                 certification="R",
                 year=2019,
+                description="A mob hitman recalls his possible involvement with the slaying of Jimmy Hoffa.",
             ),
             Movie(
                 title="Interstellar",
@@ -29,6 +30,7 @@ class TestFormatters:
                 rating=8.5,
                 certification="PG-13",
                 year=2014,
+                description="A team of explorers travel through a wormhole in space.",
             ),
             Movie(
                 title="Basic Movie",
@@ -37,6 +39,7 @@ class TestFormatters:
                 rating=None,
                 certification=None,
                 year=None,
+                description=None,
             ),
         ]
 
@@ -193,8 +196,8 @@ class TestFormatters:
         rows = list(reader)
         # Should have header + 1 data row
         assert len(rows) == 2
-        # The title should be in the last column and properly preserved
-        assert rows[1][-1] == 'Movie with, comma "and" quotes'
+        # The title should be in the 6th column (index 5) and properly preserved
+        assert rows[1][5] == 'Movie with, comma "and" quotes'
 
     def test_json_preserves_all_fields(self):
         """Test that JSON output includes all movie fields."""
@@ -210,3 +213,47 @@ class TestFormatters:
         assert "vote_average" in first_movie
         assert "certification" in first_movie
         assert "year" in first_movie
+        assert "description" in first_movie
+
+    def test_markdown_includes_description(self):
+        """Test that markdown output includes description column."""
+        result = format_movies(self.movies, "markdown")
+        # Check header includes Description
+        assert "Description" in result
+        # Check that movie descriptions are present
+        assert "mob hitman recalls" in result
+        assert "explorers travel through" in result
+
+    def test_html_includes_description(self):
+        """Test that HTML output includes description column."""
+        result = format_movies(self.movies, "html")
+        # Check header includes Description
+        assert "<th>Description</th>" in result
+        # Check that movie descriptions are present
+        assert "mob hitman recalls" in result
+        assert "explorers travel through" in result
+
+    def test_csv_includes_description(self):
+        """Test that CSV output includes description column."""
+        result = format_movies(self.movies, "csv")
+        lines = result.strip().split("\n")
+        # Check header includes Description
+        assert "Description" in lines[0]
+        # Check that movie descriptions are present
+        assert "mob hitman recalls" in result
+        assert "explorers travel through" in result
+
+    def test_json_includes_description(self):
+        """Test that JSON output includes description field."""
+        import json
+
+        result = format_movies(self.movies, "json")
+        parsed = json.loads(result)
+        # Check first movie has description
+        assert parsed[0]["description"] == (
+            "A mob hitman recalls his possible involvement with the slaying of Jimmy Hoffa."
+        )
+        # Check second movie has description
+        assert parsed[1]["description"] == "A team of explorers travel through a wormhole in space."
+        # Check third movie with None description
+        assert parsed[2]["description"] is None

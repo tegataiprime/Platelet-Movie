@@ -223,6 +223,12 @@ class TMDBClient:
                 # Invalid date format - year remains None
                 pass
 
+        # Extract description (overview)
+        description = details.get("overview")
+        # Treat empty strings as None
+        if description is not None and not description.strip():
+            description = None
+
         return Movie(
             title=title,
             runtime_minutes=runtime,
@@ -230,6 +236,7 @@ class TMDBClient:
             rating=rating,
             certification=certification,
             year=year,
+            description=description,
         )
 
     def _get_movie_details(self, movie_id: int) -> dict:
