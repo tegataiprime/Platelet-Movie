@@ -231,9 +231,16 @@ function renderMovies() {
             ? movie.genres.join(', ') 
             : movie.genres || 'N/A';
         
+        const description = movie.description || 'No description available';
+        
         return `
             <tr>
-                <td>${escapeHtml(movie.title || 'Unknown')}</td>
+                <td>
+                    <div class="movie-title-container">
+                        <div class="movie-title">${escapeHtml(movie.title || 'Unknown')}</div>
+                        <div class="movie-description">${escapeHtml(description)}</div>
+                    </div>
+                </td>
                 <td>${movie.runtime_minutes || '?'} m</td>
                 <td>${movie.year || 'N/A'}</td>
                 <td>${movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A'}</td>

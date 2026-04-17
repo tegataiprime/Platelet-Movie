@@ -357,6 +357,23 @@ td {
     padding: 1rem;
 }
 
+.movie-title-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.movie-title {
+    font-weight: 500;
+}
+
+.movie-description {
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
 .loading-row {
     text-align: center;
     padding: 2rem;
