@@ -13,7 +13,7 @@ FormatType = Literal["markdown", "html", "csv", "json"]
 
 
 def _get_description_str(description: str | None) -> str:
-    """Get description string for display, returning 'N/A' for None or empty strings."""
+    """Get description string for display, returning 'N/A' for None values."""
     return description if description else "N/A"
 
 

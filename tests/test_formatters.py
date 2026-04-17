@@ -196,8 +196,9 @@ class TestFormatters:
         rows = list(reader)
         # Should have header + 1 data row
         assert len(rows) == 2
-        # The title should be at index 5 (6th column) and properly preserved
-        assert rows[1][5] == 'Movie with, comma "and" quotes'
+        # Find the Title column dynamically and verify it's properly preserved
+        title_index = rows[0].index('Title')
+        assert rows[1][title_index] == 'Movie with, comma "and" quotes'
 
     def test_json_preserves_all_fields(self):
         """Test that JSON output includes all movie fields."""
