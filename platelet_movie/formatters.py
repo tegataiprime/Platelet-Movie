@@ -12,6 +12,11 @@ from platelet_movie.models import Movie
 FormatType = Literal["markdown", "html", "csv", "json"]
 
 
+def _get_description_str(description: str | None) -> str:
+    """Get description string for display, returning 'N/A' for None or empty strings."""
+    return description if description else "N/A"
+
+
 def format_movies(movies: list[Movie], format_type: FormatType) -> str:
     """Format a list of movies in the specified format.
 
@@ -56,7 +61,7 @@ def _format_markdown(movies: list[Movie]) -> str:
         # Truncate genres if too long
         if len(genres_str) > 20:
             genres_str = genres_str[:17] + "..."
-        desc_str = movie.description if movie.description else "N/A"
+        desc_str = _get_description_str(movie.description)
         lines.append(
             f"| {movie.runtime_minutes:>8} m | {year_str:>6} | {rating_str:>6} | {cert_str:<7} | "
             f"{genres_str:<20} | {movie.title} | {desc_str} |"
@@ -89,7 +94,7 @@ def _format_html(movies: list[Movie]) -> str:
         cert_str = movie.certification if movie.certification else "NR"
         year_str = str(movie.year) if movie.year is not None else "N/A"
         genres_str = ", ".join(movie.genres) if movie.genres else "N/A"
-        desc_str = movie.description if movie.description else "N/A"
+        desc_str = _get_description_str(movie.description)
 
         html_parts.append("    <tr>")
         html_parts.append(f"      <td>{movie.runtime_minutes} min</td>")
@@ -121,7 +126,7 @@ def _format_csv(movies: list[Movie]) -> str:
         cert_str = movie.certification if movie.certification else "NR"
         year_str = str(movie.year) if movie.year is not None else "N/A"
         genres_str = ", ".join(movie.genres) if movie.genres else "N/A"
-        desc_str = movie.description if movie.description else "N/A"
+        desc_str = _get_description_str(movie.description)
 
         writer.writerow(
             [

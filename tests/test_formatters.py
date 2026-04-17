@@ -196,7 +196,7 @@ class TestFormatters:
         rows = list(reader)
         # Should have header + 1 data row
         assert len(rows) == 2
-        # The title should be in the 6th column (index 5) and properly preserved
+        # The title should be at index 5 (6th column) and properly preserved
         assert rows[1][5] == 'Movie with, comma "and" quotes'
 
     def test_json_preserves_all_fields(self):
