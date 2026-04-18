@@ -49,7 +49,8 @@ def _format_markdown(movies: list[Movie]) -> str:
 
     lines = []
     lines.append(
-        f"| {'Runtime':>10} | {'Year':>6} | {'Score':>6} | {'Rated':<7} | {'Genres':<20} | Title | Description |"
+        f"| {'Runtime':>10} | {'Year':>6} | {'Score':>6} | {'Rated':<7} | "
+        f"{'Genres':<20} | Title | Description |"
     )
     lines.append(
         f"| {'---':>10} | {'---':>6} | {'---':>6} | {'---':<7} | {'---':<20} | --- | --- |"

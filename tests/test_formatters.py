@@ -21,7 +21,10 @@ class TestFormatters:
                 rating=8.1,
                 certification="R",
                 year=2019,
-                description="A mob hitman recalls his possible involvement with the slaying of Jimmy Hoffa.",
+                description=(
+                    "A mob hitman recalls his possible involvement with the "
+                    "slaying of Jimmy Hoffa."
+                ),
             ),
             Movie(
                 title="Interstellar",
