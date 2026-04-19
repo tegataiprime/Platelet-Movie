@@ -171,17 +171,15 @@ function clearAllFavourites() {
     // Clear from localStorage
     localStorage.removeItem('favouriteMovies');
     
-    // If currently showing favourites only, switch back to all
-    if (favouritesFilterMode === 'favourites') {
-        favouritesFilterMode = 'all';
-        const toggleBtn = document.getElementById('toggle-favourites');
-        if (toggleBtn) {
-            toggleBtn.dataset.filterMode = 'all';
-            const buttonText = getButtonTextForRegion(false);
-            const textElement = toggleBtn.querySelector('.favourites-toggle-text');
-            if (textElement) {
-                textElement.textContent = buttonText;
-            }
+    // Switch to "show favourites only" mode
+    favouritesFilterMode = 'favourites';
+    const toggleBtn = document.getElementById('toggle-favourites');
+    if (toggleBtn) {
+        toggleBtn.dataset.filterMode = 'favourites';
+        const buttonText = getButtonTextForRegion(true);
+        const textElement = toggleBtn.querySelector('.favourites-toggle-text');
+        if (textElement) {
+            textElement.textContent = buttonText;
         }
     }
     
@@ -354,7 +352,10 @@ function renderMovies() {
         // Determine if this movie is a favourite
         const isFav = isFavourite(movie.tmdb_id);
         const dripClass = isFav ? 'is-favourite' : 'not-favourite';
-        const dripIcon = '💧'; // Always use drip emoji, color will be controlled by CSS
+        // Use SVG droplet icon instead of emoji for better color control
+        const dripIcon = `<svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+        </svg>`;
         
         // Localize aria-label based on region
         const useBritish = BRITISH_REGIONS.includes(currentRegion);
@@ -502,7 +503,7 @@ function addFavouriteIconListeners() {
                 // Update the icon without re-rendering entire table
                 const isFav = isFavourite(tmdbId);
                 console.log('Is now favourite:', isFav);
-                // Icon stays the same (💧), only class changes for color
+                // SVG icon stays the same, only class changes for color
                 icon.className = `favourite-icon ${isFav ? 'is-favourite' : 'not-favourite'}`;
                 
                 // Localize aria-label based on region

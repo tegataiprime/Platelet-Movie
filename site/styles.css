@@ -436,15 +436,21 @@ tr.expanded .movie-description.truncated::after {
     font-size: 1.5rem;
     cursor: pointer;
     user-select: none;
-    transition: transform 0.2s ease, filter 0.2s ease;
-    display: inline-block;
+    transition: transform 0.2s ease, color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 2rem;
     height: 2rem;
-    line-height: 2rem;
-    text-align: center;
     background: none;
     border: none;
     padding: 0;
+}
+
+.favourite-icon svg {
+    width: 24px;
+    height: 24px;
+    display: block;
 }
 
 .favourite-icon:hover {
@@ -458,11 +464,11 @@ tr.expanded .movie-description.truncated::after {
 }
 
 .favourite-icon.not-favourite {
-    filter: grayscale(100%) brightness(200%);
+    color: white;
 }
 
 .favourite-icon.is-favourite {
-    filter: hue-rotate(45deg) saturate(150%) brightness(110%);
+    color: var(--platelet-yellow);
 }
 
 .favourite-column {
