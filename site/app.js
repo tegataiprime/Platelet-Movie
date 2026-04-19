@@ -483,20 +483,27 @@ function updateFilterResults() {
 // Favourites Icon Listeners
 function addFavouriteIconListeners() {
     const favouriteIcons = document.querySelectorAll('.favourite-icon');
+    console.log('[Favourite Listeners] Attaching listeners to', favouriteIcons.length, 'icons');
     favouriteIcons.forEach(icon => {
         const handleClick = (e) => {
+            console.log('[Favourite Click] Button clicked', { tmdbId: icon.dataset.tmdbId, region: currentRegion });
             e.stopPropagation(); // Prevent row expansion
             e.preventDefault(); // Prevent any default button behavior
             const tmdbIdStr = icon.dataset.tmdbId;
             if (tmdbIdStr) {
                 const tmdbId = parseInt(tmdbIdStr, 10);
                 // Validate that parsing succeeded and tmdbId is positive
-                if (isNaN(tmdbId) || tmdbId <= 0) return;
+                if (isNaN(tmdbId) || tmdbId <= 0) {
+                    console.warn('[Favourite Click] Invalid TMDB ID:', tmdbId);
+                    return;
+                }
                 
+                console.log('[Favourite Click] Toggling favourite for TMDB ID:', tmdbId);
                 toggleFavourite(tmdbId);
                 
                 // Update the icon without re-rendering entire table
                 const isFav = isFavourite(tmdbId);
+                console.log('[Favourite Click] New favourite state:', isFav);
                 // SVG icon stays the same, only class changes for color
                 icon.className = `favourite-icon ${isFav ? 'is-favourite' : 'not-favourite'}`;
                 
@@ -506,11 +513,14 @@ function addFavouriteIconListeners() {
                     ? (useBritish ? 'Remove from favourites' : 'Remove from favorites')
                     : (useBritish ? 'Add to favourites' : 'Add to favorites');
                 icon.setAttribute('aria-label', ariaLabel);
+                console.log('[Favourite Click] Updated aria-label to:', ariaLabel);
                 
                 // If in favourites-only mode and this was unfavourited, refresh the view
                 if (favouritesFilterMode === 'favourites' && !isFav) {
                     applyRuntimeFilters();
                 }
+            } else {
+                console.warn('[Favourite Click] No TMDB ID found on button');
             }
         };
         
