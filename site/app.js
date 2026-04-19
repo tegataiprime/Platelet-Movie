@@ -484,8 +484,6 @@ function updateFilterResults() {
 function addFavouriteIconListeners() {
     const favouriteIcons = document.querySelectorAll('.favourite-icon');
     favouriteIcons.forEach(icon => {
-        // Use 'once' option to automatically remove listener after firing
-        // This prevents duplicate listeners without expensive DOM cloning
         const handleClick = (e) => {
             e.stopPropagation(); // Prevent row expansion
             e.preventDefault(); // Prevent any default button behavior
@@ -514,9 +512,6 @@ function addFavouriteIconListeners() {
                     applyRuntimeFilters();
                 }
             }
-            
-            // Re-attach the click listener for next interaction
-            icon.addEventListener('click', handleClick);
         };
         
         icon.addEventListener('click', handleClick);
