@@ -280,7 +280,7 @@ The project includes a static website hosted on GitHub Pages that displays the w
   - Unselected drips appear white, selected drips appear in platelet yellow (#FFD700)
   - Favourites are persisted in browser's local storage using TMDB ID as the key
   - Toggle between viewing all movies or only your favourites with the "Show Favourites Only" button
-  - "Clear All Favourites" button to remove all saved favourites with confirmation
+  - "Clear All Favourites" button to instantly remove all saved favourites
   - Reset button restores all filter settings including favourites mode
   - Favourites persist even if the movie temporarily leaves the catalog
 - **Localised Interface**: British English spelling for UK 🇬🇧 & India 🇮🇳 regions ("Favourites", "Films"), American English for US 🇺🇸 region ("Favorites", "Movies")
