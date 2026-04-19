@@ -436,7 +436,7 @@ tr.expanded .movie-description.truncated::after {
     font-size: 1.5rem;
     cursor: pointer;
     user-select: none;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, filter 0.2s ease;
     display: inline-block;
     width: 2rem;
     height: 2rem;
@@ -458,13 +458,11 @@ tr.expanded .movie-description.truncated::after {
 }
 
 .favourite-icon.not-favourite {
-    color: white;
-    filter: brightness(0) saturate(100%) invert(100%);
+    filter: grayscale(100%) brightness(200%);
 }
 
 .favourite-icon.is-favourite {
-    color: var(--platelet-yellow);
-    filter: none;
+    filter: hue-rotate(45deg) saturate(150%) brightness(110%);
 }
 
 .favourite-column {
