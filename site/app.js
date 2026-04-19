@@ -484,9 +484,14 @@ function updateFilterResults() {
 function addFavouriteIconListeners() {
     const favouriteIcons = document.querySelectorAll('.favourite-icon');
     favouriteIcons.forEach(icon => {
-        icon.addEventListener('click', (e) => {
+        // Remove any existing listeners by cloning and replacing the node
+        const newIcon = icon.cloneNode(true);
+        icon.parentNode.replaceChild(newIcon, icon);
+        
+        newIcon.addEventListener('click', (e) => {
             e.stopPropagation(); // Prevent row expansion
-            const tmdbIdStr = icon.dataset.tmdbId;
+            e.preventDefault(); // Prevent any default button behavior
+            const tmdbIdStr = newIcon.dataset.tmdbId;
             if (tmdbIdStr) {
                 const tmdbId = parseInt(tmdbIdStr, 10);
                 // Validate that parsing succeeded and tmdbId is positive
@@ -497,14 +502,14 @@ function addFavouriteIconListeners() {
                 // Update the icon without re-rendering entire table
                 const isFav = isFavourite(tmdbId);
                 // SVG icon stays the same, only class changes for color
-                icon.className = `favourite-icon ${isFav ? 'is-favourite' : 'not-favourite'}`;
+                newIcon.className = `favourite-icon ${isFav ? 'is-favourite' : 'not-favourite'}`;
                 
                 // Localize aria-label based on region
                 const useBritish = BRITISH_REGIONS.includes(currentRegion);
                 const ariaLabel = isFav 
                     ? (useBritish ? 'Remove from favourites' : 'Remove from favorites')
                     : (useBritish ? 'Add to favourites' : 'Add to favorites');
-                icon.setAttribute('aria-label', ariaLabel);
+                newIcon.setAttribute('aria-label', ariaLabel);
                 
                 // If in favourites-only mode and this was unfavourited, refresh the view
                 if (favouritesFilterMode === 'favourites' && !isFav) {
@@ -514,11 +519,11 @@ function addFavouriteIconListeners() {
         });
         
         // Add keyboard support
-        icon.addEventListener('keydown', (e) => {
+        newIcon.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 e.stopPropagation();
-                icon.click(); // Trigger the click handler
+                newIcon.click(); // Trigger the click handler
             }
         });
     });
