@@ -168,16 +168,6 @@ function getClearFavouritesButtonText() {
 }
 
 function clearAllFavourites() {
-    // Confirm before clearing
-    const useBritish = BRITISH_REGIONS.includes(currentRegion);
-    const confirmMessage = useBritish 
-        ? 'Are you sure you want to clear all favourites? This action cannot be undone.'
-        : 'Are you sure you want to clear all favorites? This action cannot be undone.';
-    
-    if (!confirm(confirmMessage)) {
-        return;
-    }
-    
     // Clear from localStorage
     localStorage.removeItem('favouriteMovies');
     
