@@ -227,7 +227,7 @@ function renderMovies() {
         return;
     }
 
-    const rows = filteredMovies.map(movie => {
+    const rows = filteredMovies.map((movie, index) => {
         const genres = Array.isArray(movie.genres) 
             ? movie.genres.join(', ') 
             : movie.genres || 'N/A';
@@ -240,7 +240,7 @@ function renderMovies() {
             : '';
         
         return `
-            <tr data-movie-id="${escapeHtml(movie.title || 'unknown')}">
+            <tr data-movie-index="${index}">
                 <td>
                     <div class="movie-title-container">
                         ${posterHtml}
@@ -399,7 +399,12 @@ function escapeHtml(unsafe) {
         .replaceAll("'", "&#039;");
 }
 
-// Initialize expandable rows with event delegation
+/**
+ * Initialize expandable rows with event delegation.
+ * Detects truncated movie descriptions and adds click/keyboard handlers
+ * to allow users to expand and collapse rows to view full descriptions.
+ * Uses AbortController to manage event listener lifecycle.
+ */
 function initializeExpandableRows() {
     const tbody = document.getElementById('movies-tbody');
     if (!tbody) return;
@@ -427,7 +432,7 @@ function initializeExpandableRows() {
             row.setAttribute('tabindex', '0');
             row.setAttribute('role', 'button');
             row.setAttribute('aria-expanded', 'false');
-            row.setAttribute('aria-label', 'Click to expand full movie description');
+            row.setAttribute('aria-describedby', 'expand-hint');
         }
     });
     
@@ -441,9 +446,6 @@ function initializeExpandableRows() {
         
         const isExpanded = row.classList.toggle('expanded');
         row.setAttribute('aria-expanded', isExpanded);
-        row.setAttribute('aria-label', isExpanded 
-            ? 'Click to collapse movie description' 
-            : 'Click to expand full movie description');
     }, { signal });
     
     tbody.addEventListener('keydown', (e) => {
@@ -454,14 +456,15 @@ function initializeExpandableRows() {
             e.preventDefault();
             const isExpanded = row.classList.toggle('expanded');
             row.setAttribute('aria-expanded', isExpanded);
-            row.setAttribute('aria-label', isExpanded 
-                ? 'Click to collapse movie description' 
-                : 'Click to expand full movie description');
         }
     }, { signal });
 }
 
-// Check if text element is truncated
+/**
+ * Check if a text element's content is visually truncated.
+ * @param {HTMLElement} element - The DOM element to check for truncation
+ * @returns {boolean} True if the element's content exceeds its visible height and is truncated
+ */
 function isTextTruncated(element) {
     // The element is truncated if its scrollHeight exceeds its clientHeight
     return element.scrollHeight > element.clientHeight;
