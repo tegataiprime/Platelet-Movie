@@ -7,6 +7,7 @@ let sortColumn = 'runtime_minutes';
 let sortDirection = 'asc';
 let currentRegion = 'us'; // Default region
 let hasSavedFilters = false;
+let expandableRowsController = null; // AbortController for event listeners
 
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
@@ -137,6 +138,12 @@ function setupEventListeners() {
             }
         });
     });
+    
+    // Add window resize listener to re-check truncation on browser resize
+    // Debounced to avoid performance issues
+    window.addEventListener('resize', debounce(() => {
+        initializeExpandableRows();
+    }, 250));
 }
 
 // Data Loading
@@ -226,7 +233,7 @@ function renderMovies() {
         return;
     }
 
-    const rows = filteredMovies.map(movie => {
+    const rows = filteredMovies.map((movie, index) => {
         const genres = Array.isArray(movie.genres) 
             ? movie.genres.join(', ') 
             : movie.genres || 'N/A';
@@ -259,7 +266,7 @@ function renderMovies() {
         const titleHtml = `<a href="${tmdbUrl}" target="_blank" rel="noopener noreferrer" class="title-link" title="View on TMDB">${movieTitle}</a>`;
         
         return `
-            <tr>
+            <tr data-movie-index="${index}">
                 <td>
                     <div class="movie-title-container">
                         ${posterHtml}
@@ -281,6 +288,9 @@ function renderMovies() {
     }).join('');
 
     tbody.innerHTML = rows;
+    
+    // After rendering, check which descriptions are truncated and add click handlers
+    initializeExpandableRows();
 }
 
 // Filtering
@@ -415,4 +425,101 @@ function escapeHtml(unsafe) {
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
+}
+
+/**
+ * Initialize expandable rows with event delegation.
+ * Detects truncated movie descriptions and adds click/keyboard handlers
+ * to allow users to expand and collapse rows to view full descriptions.
+ * Uses AbortController to manage event listener lifecycle.
+ */
+function initializeExpandableRows() {
+    const tbody = document.getElementById('movies-tbody');
+    if (!tbody) return;
+    
+    // Cancel previous event listeners if they exist
+    if (expandableRowsController) {
+        expandableRowsController.abort();
+    }
+    
+    // Create new AbortController for this set of listeners
+    expandableRowsController = new AbortController();
+    const signal = expandableRowsController.signal;
+    
+    const movieRows = tbody.querySelectorAll('tr');
+    
+    movieRows.forEach(row => {
+        const descriptionElement = row.querySelector('.movie-description');
+        if (!descriptionElement) return;
+        
+        // Clear previous truncation state
+        descriptionElement.classList.remove('truncated');
+        row.classList.remove('expanded');
+        row.removeAttribute('tabindex');
+        row.removeAttribute('role');
+        row.removeAttribute('aria-expanded');
+        row.removeAttribute('aria-describedby');
+        
+        // Check if the description is truncated
+        if (isTextTruncated(descriptionElement)) {
+            descriptionElement.classList.add('truncated');
+            
+            // Add keyboard accessibility attributes
+            row.setAttribute('tabindex', '0');
+            row.setAttribute('role', 'button');
+            row.setAttribute('aria-expanded', 'false');
+            row.setAttribute('aria-describedby', 'expand-hint');
+        }
+    });
+    
+    // Use event delegation on tbody for all click and keyboard events
+    tbody.addEventListener('click', (e) => {
+        const row = e.target.closest('tr[role="button"]');
+        if (!row) return;
+        
+        // Don't expand/collapse if clicking on a link or within a link
+        if (e.target.closest('a')) return;
+        
+        const isExpanded = row.classList.toggle('expanded');
+        row.setAttribute('aria-expanded', isExpanded);
+    }, { signal });
+    
+    tbody.addEventListener('keydown', (e) => {
+        const row = e.target.closest('tr[role="button"]');
+        if (!row) return;
+        
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const isExpanded = row.classList.toggle('expanded');
+            row.setAttribute('aria-expanded', isExpanded);
+        }
+    }, { signal });
+}
+
+/**
+ * Check if a text element's content is visually truncated.
+ * @param {HTMLElement} element - The DOM element to check for truncation
+ * @returns {boolean} True if the element's content exceeds its visible height and is truncated
+ */
+function isTextTruncated(element) {
+    // The element is truncated if its scrollHeight exceeds its clientHeight
+    return element.scrollHeight > element.clientHeight;
+}
+
+/**
+ * Debounce function to limit how often a function can be called.
+ * @param {Function} func - The function to debounce
+ * @param {number} wait - The number of milliseconds to wait
+ * @returns {Function} The debounced function
+ */
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
 }

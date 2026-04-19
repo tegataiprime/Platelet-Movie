@@ -14,6 +14,7 @@
     --button-bg: #E42424;
     --button-text: #ffffff;
     --button-hover: #c01e1e;
+    --description-line-clamp: 3;  /* Number of lines to show before truncating movie descriptions */
 }
 
 [data-theme="dark"] {
@@ -349,8 +350,16 @@ tbody tr {
     transition: background-color 0.2s ease;
 }
 
+tbody tr[role="button"] {
+    cursor: pointer;
+}
+
 tbody tr:hover {
     background-color: var(--table-hover);
+}
+
+tbody tr.expanded {
+    background-color: var(--accent-light);
 }
 
 td {
@@ -362,6 +371,7 @@ td {
     flex-direction: row;
     gap: 1rem;
     align-items: flex-start;
+    min-height: 90px; /* Fixed height to accommodate poster */
 }
 
 .movie-poster {
@@ -388,6 +398,29 @@ td {
     font-size: 0.9rem;
     color: var(--text-secondary);
     line-height: 1.4;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: var(--description-line-clamp);
+    -webkit-box-orient: vertical;
+    position: relative;
+}
+
+/* Truncation indicator (ellipsis + "more" label) */
+.movie-description.truncated::after {
+    content: "...";
+    font-weight: 600;
+    color: var(--accent);
+    font-style: normal;
+}
+
+/* Expanded state - show full description */
+tr.expanded .movie-description {
+    -webkit-line-clamp: unset;
+    display: block;
+}
+
+tr.expanded .movie-description.truncated::after {
+    content: "";
 }
 
 /* Clickable movie title link */
@@ -520,6 +553,12 @@ a:focus-visible {
 
 th.sortable:focus-visible {
     outline: 3px solid white;
+    outline-offset: -3px;
+}
+
+/* Focus indicator for expandable rows */
+tbody tr[role="button"]:focus-visible {
+    outline: 3px solid var(--accent);
     outline-offset: -3px;
 }
 
