@@ -171,20 +171,20 @@ function clearAllFavourites() {
     // Clear from localStorage
     localStorage.removeItem('favouriteMovies');
     
-    // Switch to "show favourites only" mode
-    favouritesFilterMode = 'favourites';
+    // Switch to "show all" mode to display all movies
+    favouritesFilterMode = 'all';
     const toggleBtn = document.getElementById('toggle-favourites');
     if (toggleBtn) {
-        toggleBtn.dataset.filterMode = 'favourites';
-        const buttonText = getButtonTextForRegion(true);
+        toggleBtn.dataset.filterMode = 'all';
+        const buttonText = getButtonTextForRegion(false);
         const textElement = toggleBtn.querySelector('.favourites-toggle-text');
         if (textElement) {
             textElement.textContent = buttonText;
         }
     }
     
-    // Re-render to update drip icons
-    renderMovies();
+    // Re-render to update drip icons and apply current runtime filters
+    applyRuntimeFilters();
 }
 
 // Event Listeners Setup

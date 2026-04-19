@@ -453,6 +453,19 @@ tr.expanded .movie-description.truncated::after {
     display: block;
 }
 
+/* Style for unselected droplet - white fill with yellow outline for visibility */
+.favourite-icon.not-favourite svg path {
+    fill: white;
+    stroke: var(--platelet-yellow);
+    stroke-width: 1.5;
+}
+
+/* Style for selected droplet - solid yellow */
+.favourite-icon.is-favourite svg path {
+    fill: var(--platelet-yellow);
+    stroke: none;
+}
+
 .favourite-icon:hover {
     transform: scale(1.2);
 }
@@ -464,11 +477,11 @@ tr.expanded .movie-description.truncated::after {
 }
 
 .favourite-icon.not-favourite {
-    color: white;
+    /* Color is applied via SVG path styling above */
 }
 
 .favourite-icon.is-favourite {
-    color: var(--platelet-yellow);
+    /* Color is applied via SVG path styling above */
 }
 
 .favourite-column {
