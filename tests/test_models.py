@@ -123,8 +123,7 @@ class TestMovie:
             title="Inception",
             runtime_minutes=148,
             description=(
-                "A thief who steals corporate secrets through the use of "
-                "dream-sharing technology."
+                "A thief who steals corporate secrets through the use of dream-sharing technology."
             ),
         )
         assert m.title == "Inception"

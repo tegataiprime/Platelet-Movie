@@ -857,7 +857,6 @@ class TestDiscoverMoviesOnNetflix:
         assert len(movies) == 1
         assert movies[0].poster_url is None
 
-
     def test_movie_includes_tmdb_id(self, mocker):
         """Test that Movie objects include the TMDB ID."""
         from platelet_movie.tmdb_client import TMDBClient
