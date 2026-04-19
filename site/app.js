@@ -432,6 +432,7 @@ function initializeExpandableRows() {
         
         // Clear previous truncation state
         descriptionElement.classList.remove('truncated');
+        row.classList.remove('expanded');
         row.removeAttribute('tabindex');
         row.removeAttribute('role');
         row.removeAttribute('aria-expanded');
