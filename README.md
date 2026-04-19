@@ -33,6 +33,8 @@ TMDB provides reliable watch provider data (including Netflix availability) that
 - 🌍 Supports different Netflix regions (US, GB, CA, etc.)
 - 🌙 **GitHub Pages site** with light/dark mode, runtime filter with persistence, sortable columns, movie poster thumbnails, and Lady Whistledown commentary
 - 🌏 **Multi-region support on website**: Switch between US 🇺🇸, UK 🇬🇧, and India 🇮🇳 Netflix catalogs with preference persistence
+- 💧 **Favourites feature**: Mark movies you want to watch with a platelet yellow drip icon (persisted in browser's local storage), toggle to show only your favourites, and clear all favourites
+- 🇬🇧🇺🇸 **Localised interface**: British English spelling for UK & India regions, American English for US region (favourites/favorites, films/movies)
 - 🐍 Written in Python 3.11+, managed with [Poetry](https://python-poetry.org/) and task-automated with [Poe the Poet](https://poethepoet.natn.io/)
 - 🔍 **Code quality monitoring** with SonarCloud integration and real-time feedback via SonarLint
 
@@ -273,6 +275,16 @@ The project includes a static website hosted on GitHub Pages that displays the w
 - **American Red Cross Branding**: Color scheme follows American Red Cross brand guidelines (#E42424 red)
 - **Movie Poster Thumbnails**: Each movie displays a 60px poster thumbnail from TMDB, aligned to the left of the movie title and description
 - **Runtime Filter**: Filter movies by minimum (default: 90 min) and maximum (default: 160 min) runtime with inline validation. **Filter selections are automatically saved to browser local storage and persist between visits.**
+- **Favourites Feature**: 
+  - Mark movies you want to watch by clicking the platelet yellow drip icon (💧)
+  - Unselected drips appear white, selected drips appear in platelet yellow (#FFD700)
+  - Favourites are persisted in browser's local storage using TMDB ID as the key
+  - Toggle between viewing all movies or only your favourites with the "Show Favourites Only" button
+  - "Clear All Favourites" button to instantly remove all saved favourites
+  - Reset button restores all filter settings including favourites mode
+  - Favourites persist even if the movie temporarily leaves the catalog
+- **Localised Interface**: British English spelling for UK 🇬🇧 & India 🇮🇳 regions ("Favourites", "Films"), American English for US 🇺🇸 region ("Favorites", "Movies")
+- **Multi-Region Support**: Switch between US 🇺🇸, UK 🇬🇧, and India 🇮🇳 Netflix catalogs with preference persistence
 - **Sortable Columns**: Click or use keyboard (Enter/Space) on any column header to sort (all columns sortable, including genres); visual indicators show sort state (⇅ / ▲ / ▼)
 - **Lady Whistledown Commentary**: AI-generated introduction in the style of Bridgerton
 - **Acknowledgements**: Proper attribution for TMDB data, accuracy disclaimers, and Bridgerton credits

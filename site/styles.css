@@ -10,6 +10,7 @@
     --shadow: rgba(0, 0, 0, 0.1);
     --accent: #E42424;  /* American Red Cross Red (Pantone 185 C) */
     --accent-light: #ffe5e5;
+    --platelet-yellow: #FFD700;  /* Platelet yellow for favourites */
     --table-hover: #f8f9fa;
     --button-bg: #E42424;
     --button-text: #ffffff;
@@ -28,6 +29,7 @@
     --shadow: rgba(0, 0, 0, 0.3);
     --accent: #ff6b6b;
     --accent-light: #4d2d2d;
+    --platelet-yellow: #FFD700;  /* Platelet yellow for favourites */
     --table-hover: #3a3a3a;
     --button-bg: #ff6b6b;
     --button-text: #ffffff;
@@ -311,6 +313,12 @@ th {
     position: relative;
 }
 
+th.favourites-column {
+    width: 60px;
+    text-align: center;
+    cursor: default;
+}
+
 th.sortable {
     cursor: pointer;
     user-select: none;
@@ -421,6 +429,65 @@ tr.expanded .movie-description {
 
 tr.expanded .movie-description.truncated::after {
     content: "";
+}
+
+/* Favourite Drip Icon */
+.favourite-icon {
+    font-size: 1.5rem;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s ease, color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.favourite-icon svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+    pointer-events: none; /* Ensure clicks pass through to button element */
+}
+
+/* Style for unselected droplet - white/transparent fill with darker stroke for better contrast */
+.favourite-icon.not-favourite svg path {
+    fill: var(--bg-card);
+    stroke: #B8860B;  /* DarkGoldenrod for better contrast (WCAG compliant) */
+    stroke-width: 2;
+}
+
+/* Style for selected droplet - solid yellow */
+.favourite-icon.is-favourite svg path {
+    fill: var(--platelet-yellow);
+    stroke: none;
+}
+
+.favourite-icon:hover {
+    transform: scale(1.2);
+}
+
+.favourite-icon:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.favourite-icon.not-favourite {
+    /* Color is applied via SVG path styling above */
+}
+
+.favourite-icon.is-favourite {
+    /* Color is applied via SVG path styling above */
+}
+
+.favourite-column {
+    text-align: center;
+    padding: 0.5rem;
 }
 
 .loading-row {

@@ -158,6 +158,7 @@ def _format_json(movies: list[Movie]) -> str:
             "certification": movie.certification,
             "description": movie.description,
             "poster_url": movie.poster_url,
+            "tmdb_id": movie.tmdb_id,
         }
         for movie in movies
     ]

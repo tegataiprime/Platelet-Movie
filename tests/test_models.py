@@ -122,8 +122,7 @@ class TestMovie:
             title="Inception",
             runtime_minutes=148,
             description=(
-                "A thief who steals corporate secrets through the use of "
-                "dream-sharing technology."
+                "A thief who steals corporate secrets through the use of dream-sharing technology."
             ),
         )
         assert m.title == "Inception"
@@ -159,4 +158,28 @@ class TestMovie:
     def test_inequality_different_poster_url(self):
         m1 = Movie(title="Inception", runtime_minutes=148, poster_url="url1.jpg")
         m2 = Movie(title="Inception", runtime_minutes=148, poster_url="url2.jpg")
+        assert m1 != m2
+
+    def test_creation_with_tmdb_id(self):
+        m = Movie(
+            title="Inception",
+            runtime_minutes=148,
+            tmdb_id=27205,
+        )
+        assert m.title == "Inception"
+        assert m.runtime_minutes == 148
+        assert m.tmdb_id == 27205
+
+    def test_default_tmdb_id_is_none(self):
+        m = Movie(title="Test", runtime_minutes=100)
+        assert m.tmdb_id is None
+
+    def test_inequality_different_tmdb_id(self):
+        m1 = Movie(title="Inception", runtime_minutes=148, tmdb_id=27205)
+        m2 = Movie(title="Inception", runtime_minutes=148, tmdb_id=12345)
+        assert m1 != m2
+
+    def test_inequality_tmdb_id_none_vs_value(self):
+        m1 = Movie(title="Test", runtime_minutes=100, tmdb_id=123)
+        m2 = Movie(title="Test", runtime_minutes=100, tmdb_id=None)
         assert m1 != m2
