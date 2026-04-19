@@ -14,6 +14,7 @@
     --button-bg: #E42424;
     --button-text: #ffffff;
     --button-hover: #c01e1e;
+    --description-line-clamp: 3;  /* Number of lines to show before truncating movie descriptions */
 }
 
 [data-theme="dark"] {
@@ -399,7 +400,7 @@ td {
     line-height: 1.4;
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 3; /* Limit to 3 lines */
+    -webkit-line-clamp: var(--description-line-clamp);
     -webkit-box-orient: vertical;
     position: relative;
 }
