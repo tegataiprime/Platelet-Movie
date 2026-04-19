@@ -233,9 +233,32 @@ function renderMovies() {
         
         const description = movie.description || 'N/A';
         
-        // Build poster HTML if available
-        const posterHtml = movie.poster_url 
-            ? `<img src="${escapeHtml(movie.poster_url)}" alt="${escapeHtml(movie.title || 'Unknown')} poster" class="movie-poster" loading="lazy">`
+        // Construct TMDB movie URL
+        const tmdbUrl = movie.tmdb_id 
+            ? `https://www.themoviedb.org/movie/${movie.tmdb_id}` 
+            : null;
+        
+        // Build poster HTML if available, make it clickable if tmdb_id exists
+        let posterHtml = '';
+        if (movie.poster_url) {
+            if (tmdbUrl) {
+                posterHtml = `<a href="${escapeHtml(tmdbUrl)}" target="_blank" rel="noopener noreferrer" class="poster-link" aria-label="View ${escapeHtml(movie.title || 'Unknown')} on TMDB">
+                    <img src="${escapeHtml(movie.poster_url)}" alt="${escapeHtml(movie.title || 'Unknown')} poster" class="movie-poster" loading="lazy">
+                </a>`;
+            } else {
+                posterHtml = `<img src="${escapeHtml(movie.poster_url)}" alt="${escapeHtml(movie.title || 'Unknown')} poster" class="movie-poster" loading="lazy">`;
+            }
+        }
+        
+        // Build external link icon if tmdb_id exists
+        const externalLinkHtml = tmdbUrl 
+            ? `<a href="${escapeHtml(tmdbUrl)}" target="_blank" rel="noopener noreferrer" class="external-link" aria-label="View ${escapeHtml(movie.title || 'Unknown')} on TMDB" title="View on TMDB">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+            </a>` 
             : '';
         
         return `
@@ -244,7 +267,10 @@ function renderMovies() {
                     <div class="movie-title-container">
                         ${posterHtml}
                         <div class="movie-info">
-                            <div class="movie-title">${escapeHtml(movie.title || 'Unknown')}</div>
+                            <div class="movie-title">
+                                ${escapeHtml(movie.title || 'Unknown')}
+                                ${externalLinkHtml}
+                            </div>
                             <div class="movie-description">${escapeHtml(description)}</div>
                         </div>
                     </div>

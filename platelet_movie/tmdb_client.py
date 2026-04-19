@@ -247,6 +247,7 @@ class TMDBClient:
             year=year,
             description=description,
             poster_url=poster_url,
+            tmdb_id=movie_id,
         )
 
     def _get_movie_details(self, movie_id: int) -> dict:
