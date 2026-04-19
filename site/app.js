@@ -245,7 +245,7 @@ function renderMovies() {
                         ${posterHtml}
                         <div class="movie-info">
                             <div class="movie-title">${escapeHtml(movie.title || 'Unknown')}</div>
-                            <div class="movie-description" data-full-text="${escapeHtml(description)}">${escapeHtml(description)}</div>
+                            <div class="movie-description">${escapeHtml(description)}</div>
                         </div>
                     </div>
                 </td>
@@ -398,9 +398,16 @@ function escapeHtml(unsafe) {
         .replaceAll("'", "&#039;");
 }
 
-// Initialize expandable rows
+// Initialize expandable rows with event delegation
 function initializeExpandableRows() {
-    const movieRows = document.querySelectorAll('#movies-tbody tr');
+    const tbody = document.getElementById('movies-tbody');
+    if (!tbody) return;
+    
+    // Remove any existing event listeners by cloning and replacing
+    const newTbody = tbody.cloneNode(true);
+    tbody.parentNode.replaceChild(newTbody, tbody);
+    
+    const movieRows = newTbody.querySelectorAll('tr');
     
     movieRows.forEach(row => {
         const descriptionElement = row.querySelector('.movie-description');
@@ -410,26 +417,33 @@ function initializeExpandableRows() {
         if (isTextTruncated(descriptionElement)) {
             descriptionElement.classList.add('truncated');
             
-            // Add click handler to toggle expanded state
-            row.addEventListener('click', (e) => {
-                // Don't expand/collapse if clicking on a link
-                if (e.target.tagName === 'A') return;
-                
-                row.classList.toggle('expanded');
-            });
-            
-            // Add keyboard accessibility
+            // Add keyboard accessibility attributes
             row.setAttribute('tabindex', '0');
             row.setAttribute('role', 'button');
             row.setAttribute('aria-expanded', 'false');
-            
-            row.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    row.classList.toggle('expanded');
-                    row.setAttribute('aria-expanded', row.classList.contains('expanded'));
-                }
-            });
+        }
+    });
+    
+    // Use event delegation on tbody for all click and keyboard events
+    newTbody.addEventListener('click', (e) => {
+        const row = e.target.closest('tr[role="button"]');
+        if (!row) return;
+        
+        // Don't expand/collapse if clicking on a link
+        if (e.target.tagName === 'A') return;
+        
+        row.classList.toggle('expanded');
+        row.setAttribute('aria-expanded', row.classList.contains('expanded'));
+    });
+    
+    newTbody.addEventListener('keydown', (e) => {
+        const row = e.target.closest('tr[role="button"]');
+        if (!row) return;
+        
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            row.classList.toggle('expanded');
+            row.setAttribute('aria-expanded', row.classList.contains('expanded'));
         }
     });
 }
