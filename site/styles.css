@@ -380,7 +380,7 @@ td {
 }
 
 .movie-title {
-    font-weight: 500;
+    /* Title styling - font-weight is on .title-link */
 }
 
 .movie-description {
@@ -390,26 +390,24 @@ td {
     line-height: 1.4;
 }
 
-/* External link icon next to movie title */
-.external-link {
-    display: inline-flex;
-    align-items: center;
-    margin-left: 0.5rem;
+/* Clickable movie title link */
+.title-link {
     color: var(--text-link);
     text-decoration: none;
-    transition: color 0.2s ease, transform 0.2s ease;
-    vertical-align: middle;
+    transition: color 0.2s ease;
+    font-weight: 500;
 }
 
-.external-link:hover,
-.external-link:focus {
+.title-link:hover,
+.title-link:focus {
     color: var(--accent);
-    transform: translateY(-1px);
+    text-decoration: underline;
 }
 
-.external-link svg {
-    width: 16px;
-    height: 16px;
+.title-link:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
 }
 
 /* Clickable poster link */
