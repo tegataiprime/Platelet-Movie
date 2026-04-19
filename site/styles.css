@@ -451,6 +451,7 @@ tr.expanded .movie-description.truncated::after {
     width: 24px;
     height: 24px;
     display: block;
+    pointer-events: none; /* Ensure clicks pass through to button in Chrome */
 }
 
 /* Style for unselected droplet - white fill with yellow outline for visibility */
