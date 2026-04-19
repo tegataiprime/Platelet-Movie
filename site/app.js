@@ -250,8 +250,8 @@ function setupEventListeners() {
 // Data Loading
 async function loadData() {
     try {
-        // Construct the data file name based on current region
-        const dataFile = `data-${currentRegion}.json`;
+        // Construct the data file name based on current region with cache-busting parameter
+        const dataFile = `data-${currentRegion}.json?t=${Date.now()}`;
         const response = await fetch(dataFile);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
