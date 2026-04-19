@@ -233,8 +233,8 @@ function renderMovies() {
         
         const description = movie.description || 'N/A';
         
-        // Construct TMDB movie URL
-        const tmdbUrl = movie.tmdb_id 
+        // Construct TMDB movie URL - validate that tmdb_id is a valid number
+        const tmdbUrl = (movie.tmdb_id && typeof movie.tmdb_id === 'number' && movie.tmdb_id > 0)
             ? `https://www.themoviedb.org/movie/${movie.tmdb_id}` 
             : null;
         
@@ -242,7 +242,7 @@ function renderMovies() {
         let posterHtml = '';
         if (movie.poster_url) {
             if (tmdbUrl) {
-                posterHtml = `<a href="${escapeHtml(tmdbUrl)}" target="_blank" rel="noopener noreferrer" class="poster-link" aria-label="View ${escapeHtml(movie.title || 'Unknown')} on TMDB">
+                posterHtml = `<a href="${tmdbUrl}" target="_blank" rel="noopener noreferrer" class="poster-link" aria-label="View ${escapeHtml(movie.title || 'Unknown')} on TMDB">
                     <img src="${escapeHtml(movie.poster_url)}" alt="${escapeHtml(movie.title || 'Unknown')} poster" class="movie-poster" loading="lazy">
                 </a>`;
             } else {
@@ -252,7 +252,7 @@ function renderMovies() {
         
         // Build external link icon if tmdb_id exists
         const externalLinkHtml = tmdbUrl 
-            ? `<a href="${escapeHtml(tmdbUrl)}" target="_blank" rel="noopener noreferrer" class="external-link" aria-label="View ${escapeHtml(movie.title || 'Unknown')} on TMDB" title="View on TMDB">
+            ? `<a href="${tmdbUrl}" target="_blank" rel="noopener noreferrer" class="external-link" aria-label="View ${escapeHtml(movie.title || 'Unknown')} on TMDB" title="View on TMDB">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
                     <polyline points="15 3 21 3 21 9"></polyline>
