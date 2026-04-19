@@ -138,6 +138,12 @@ function setupEventListeners() {
             }
         });
     });
+    
+    // Add window resize listener to re-check truncation on browser resize
+    // Debounced to avoid performance issues
+    window.addEventListener('resize', debounce(() => {
+        initializeExpandableRows();
+    }, 250));
 }
 
 // Data Loading
@@ -424,6 +430,13 @@ function initializeExpandableRows() {
         const descriptionElement = row.querySelector('.movie-description');
         if (!descriptionElement) return;
         
+        // Clear previous truncation state
+        descriptionElement.classList.remove('truncated');
+        row.removeAttribute('tabindex');
+        row.removeAttribute('role');
+        row.removeAttribute('aria-expanded');
+        row.removeAttribute('aria-describedby');
+        
         // Check if the description is truncated
         if (isTextTruncated(descriptionElement)) {
             descriptionElement.classList.add('truncated');
@@ -468,4 +481,22 @@ function initializeExpandableRows() {
 function isTextTruncated(element) {
     // The element is truncated if its scrollHeight exceeds its clientHeight
     return element.scrollHeight > element.clientHeight;
+}
+
+/**
+ * Debounce function to limit how often a function can be called.
+ * @param {Function} func - The function to debounce
+ * @param {number} wait - The number of milliseconds to wait
+ * @returns {Function} The debounced function
+ */
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
 }
