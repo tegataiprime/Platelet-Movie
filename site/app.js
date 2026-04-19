@@ -308,7 +308,13 @@ function renderMovies() {
         const isFav = isFavourite(movie.tmdb_id);
         const heartClass = isFav ? 'is-favourite' : 'not-favourite';
         const heartIcon = isFav ? '❤️' : '🤍';
-        const ariaLabel = isFav ? 'Remove from favourites' : 'Add to favourites';
+        
+        // Localize aria-label based on region
+        const britishRegions = ['gb', 'in'];
+        const useBritish = britishRegions.includes(currentRegion);
+        const ariaLabel = isFav 
+            ? (useBritish ? 'Remove from favourites' : 'Remove from favorites')
+            : (useBritish ? 'Add to favourites' : 'Add to favorites');
         
         return `
             <tr data-movie-index="${index}">
@@ -421,15 +427,23 @@ function addFavouriteIconListeners() {
     favouriteIcons.forEach(icon => {
         icon.addEventListener('click', (e) => {
             e.stopPropagation(); // Prevent row expansion
-            const tmdbId = icon.dataset.tmdbId;
-            if (tmdbId) {
-                toggleFavourite(parseInt(tmdbId));
+            const tmdbIdStr = icon.dataset.tmdbId;
+            if (tmdbIdStr) {
+                const tmdbId = parseInt(tmdbIdStr);
+                toggleFavourite(tmdbId);
                 
                 // Update the icon without re-rendering entire table
-                const isFav = isFavourite(parseInt(tmdbId));
+                const isFav = isFavourite(tmdbId);
                 icon.textContent = isFav ? '❤️' : '🤍';
                 icon.className = `favourite-icon ${isFav ? 'is-favourite' : 'not-favourite'}`;
-                icon.setAttribute('aria-label', isFav ? 'Remove from favourites' : 'Add to favourites');
+                
+                // Localize aria-label based on region
+                const britishRegions = ['gb', 'in'];
+                const useBritish = britishRegions.includes(currentRegion);
+                const ariaLabel = isFav 
+                    ? (useBritish ? 'Remove from favourites' : 'Remove from favorites')
+                    : (useBritish ? 'Add to favourites' : 'Add to favorites');
+                icon.setAttribute('aria-label', ariaLabel);
                 
                 // If in favourites-only mode and this was unfavourited, refresh the view
                 if (favouritesFilterMode === 'favourites' && !isFav) {
