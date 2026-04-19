@@ -132,6 +132,40 @@ class TestFormatters:
         assert parsed[0]["year"] == 2019
         assert "Crime" in parsed[0]["genres"]
 
+    def test_format_json_includes_tmdb_id(self):
+        """Test that JSON formatting includes tmdb_id field."""
+        import json
+
+        movies = [
+            Movie(
+                title="Inception",
+                runtime_minutes=148,
+                tmdb_id=27205,
+            )
+        ]
+
+        result = format_movies(movies, "json")
+        parsed = json.loads(result)
+        assert len(parsed) == 1
+        assert parsed[0]["tmdb_id"] == 27205
+
+    def test_format_json_includes_tmdb_id_none(self):
+        """Test that JSON formatting includes tmdb_id field even when None."""
+        import json
+
+        movies = [
+            Movie(
+                title="Test Movie",
+                runtime_minutes=100,
+                tmdb_id=None,
+            )
+        ]
+
+        result = format_movies(movies, "json")
+        parsed = json.loads(result)
+        assert len(parsed) == 1
+        assert parsed[0]["tmdb_id"] is None
+
     def test_format_handles_none_values(self):
         """Test that formatters handle None values gracefully."""
         movies = [Movie(title="Test", runtime_minutes=100, rating=None, certification=None)]

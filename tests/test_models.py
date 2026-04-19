@@ -15,6 +15,7 @@ class TestMovie:
         assert m.certification is None
         assert m.year is None
         assert m.poster_url is None
+        assert m.tmdb_id is None
 
     def test_creation_with_all_fields(self):
         m = Movie(
@@ -159,4 +160,23 @@ class TestMovie:
     def test_inequality_different_poster_url(self):
         m1 = Movie(title="Inception", runtime_minutes=148, poster_url="url1.jpg")
         m2 = Movie(title="Inception", runtime_minutes=148, poster_url="url2.jpg")
+        assert m1 != m2
+
+    def test_creation_with_tmdb_id(self):
+        m = Movie(
+            title="Inception",
+            runtime_minutes=148,
+            tmdb_id=27205,
+        )
+        assert m.title == "Inception"
+        assert m.runtime_minutes == 148
+        assert m.tmdb_id == 27205
+
+    def test_default_tmdb_id_is_none(self):
+        m = Movie(title="Test", runtime_minutes=100)
+        assert m.tmdb_id is None
+
+    def test_inequality_different_tmdb_id(self):
+        m1 = Movie(title="Inception", runtime_minutes=148, tmdb_id=27205)
+        m2 = Movie(title="Inception", runtime_minutes=148, tmdb_id=12345)
         assert m1 != m2
