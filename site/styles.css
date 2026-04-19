@@ -10,6 +10,7 @@
     --shadow: rgba(0, 0, 0, 0.1);
     --accent: #E42424;  /* American Red Cross Red (Pantone 185 C) */
     --accent-light: #ffe5e5;
+    --platelet-yellow: #FFD700;  /* Platelet yellow for favourites */
     --table-hover: #f8f9fa;
     --button-bg: #E42424;
     --button-text: #ffffff;
@@ -28,6 +29,7 @@
     --shadow: rgba(0, 0, 0, 0.3);
     --accent: #ff6b6b;
     --accent-light: #4d2d2d;
+    --platelet-yellow: #FFD700;  /* Platelet yellow for favourites */
     --table-hover: #3a3a3a;
     --button-bg: #ff6b6b;
     --button-text: #ffffff;
@@ -429,7 +431,7 @@ tr.expanded .movie-description.truncated::after {
     content: "";
 }
 
-/* Favourite Heart Icon */
+/* Favourite Drip Icon */
 .favourite-icon {
     font-size: 1.5rem;
     cursor: pointer;
@@ -456,11 +458,13 @@ tr.expanded .movie-description.truncated::after {
 }
 
 .favourite-icon.not-favourite {
-    color: var(--text-secondary);
+    color: white;
+    filter: brightness(0) saturate(100%) invert(100%);
 }
 
 .favourite-icon.is-favourite {
-    color: #E42424; /* American Red Cross Red */
+    color: var(--platelet-yellow);
+    filter: none;
 }
 
 .favourite-column {

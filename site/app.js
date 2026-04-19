@@ -64,6 +64,16 @@ function updateFavouritesButtonText() {
     if (textElement) {
         textElement.textContent = buttonText;
     }
+    
+    // Also update clear favourites button text
+    const clearBtn = document.getElementById('clear-favourites');
+    if (clearBtn) {
+        const clearText = getClearFavouritesButtonText();
+        const clearTextElement = clearBtn.querySelector('.clear-favourites-text');
+        if (clearTextElement) {
+            clearTextElement.textContent = clearText;
+        }
+    }
 }
 
 // Theme Management
@@ -151,6 +161,44 @@ function getButtonTextForRegion(showFavouritesOnly) {
     }
 }
 
+function getClearFavouritesButtonText() {
+    // British English for UK and India, American English for US
+    const useBritish = BRITISH_REGIONS.includes(currentRegion);
+    return useBritish ? 'Clear All Favourites' : 'Clear All Favorites';
+}
+
+function clearAllFavourites() {
+    // Confirm before clearing
+    const useBritish = BRITISH_REGIONS.includes(currentRegion);
+    const confirmMessage = useBritish 
+        ? 'Are you sure you want to clear all favourites? This action cannot be undone.'
+        : 'Are you sure you want to clear all favorites? This action cannot be undone.';
+    
+    if (!confirm(confirmMessage)) {
+        return;
+    }
+    
+    // Clear from localStorage
+    localStorage.removeItem('favouriteMovies');
+    
+    // If currently showing favourites only, switch back to all
+    if (favouritesFilterMode === 'favourites') {
+        favouritesFilterMode = 'all';
+        const toggleBtn = document.getElementById('toggle-favourites');
+        if (toggleBtn) {
+            toggleBtn.dataset.filterMode = 'all';
+            const buttonText = getButtonTextForRegion(false);
+            const textElement = toggleBtn.querySelector('.favourites-toggle-text');
+            if (textElement) {
+                textElement.textContent = buttonText;
+            }
+        }
+    }
+    
+    // Re-render to update heart icons
+    renderMovies();
+}
+
 // Event Listeners Setup
 function setupEventListeners() {
     const themeToggle = document.getElementById('theme-toggle');
@@ -178,6 +226,11 @@ function setupEventListeners() {
     const toggleFavouritesBtn = document.getElementById('toggle-favourites');
     if (toggleFavouritesBtn) {
         toggleFavouritesBtn.addEventListener('click', handleToggleFavouritesFilter);
+    }
+
+    const clearFavouritesBtn = document.getElementById('clear-favourites');
+    if (clearFavouritesBtn) {
+        clearFavouritesBtn.addEventListener('click', clearAllFavourites);
     }
 
     // Add sorting listeners to table headers with keyboard support
@@ -310,8 +363,8 @@ function renderMovies() {
         
         // Determine if this movie is a favourite
         const isFav = isFavourite(movie.tmdb_id);
-        const heartClass = isFav ? 'is-favourite' : 'not-favourite';
-        const heartIcon = isFav ? '❤️' : '🤍';
+        const dripClass = isFav ? 'is-favourite' : 'not-favourite';
+        const dripIcon = '💧'; // Always use drip emoji, color will be controlled by CSS
         
         // Localize aria-label based on region
         const useBritish = BRITISH_REGIONS.includes(currentRegion);
@@ -323,11 +376,11 @@ function renderMovies() {
             <tr data-movie-index="${index}">
                 <td class="favourite-column">
                     <button 
-                        class="favourite-icon ${heartClass}" 
+                        class="favourite-icon ${dripClass}" 
                         data-tmdb-id="${movie.tmdb_id || ''}"
                         aria-label="${ariaLabel}"
                         tabindex="0"
-                    >${heartIcon}</button>
+                    >${dripIcon}</button>
                 </td>
                 <td>
                     <div class="movie-title-container">
@@ -411,6 +464,18 @@ function resetFilters() {
         errorElement.classList.remove('show');
     }
     
+    // Reset favourites filter mode to "all"
+    favouritesFilterMode = 'all';
+    const toggleBtn = document.getElementById('toggle-favourites');
+    if (toggleBtn) {
+        toggleBtn.dataset.filterMode = 'all';
+        const buttonText = getButtonTextForRegion(false); // false = not showing favourites only
+        const textElement = toggleBtn.querySelector('.favourites-toggle-text');
+        if (textElement) {
+            textElement.textContent = buttonText;
+        }
+    }
+    
     filteredMovies = [...allMovies];
     sortMovies();
     renderMovies();
@@ -440,7 +505,7 @@ function addFavouriteIconListeners() {
                 
                 // Update the icon without re-rendering entire table
                 const isFav = isFavourite(tmdbId);
-                icon.textContent = isFav ? '❤️' : '🤍';
+                // Icon stays the same (💧), only class changes for color
                 icon.className = `favourite-icon ${isFav ? 'is-favourite' : 'not-favourite'}`;
                 
                 // Localize aria-label based on region
