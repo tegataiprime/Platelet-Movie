@@ -483,26 +483,19 @@ function updateFilterResults() {
 // Favourites Icon Listeners
 function addFavouriteIconListeners() {
     const favouriteIcons = document.querySelectorAll('.favourite-icon');
-    console.log(`Adding listeners to ${favouriteIcons.length} favourite icons`);
     favouriteIcons.forEach(icon => {
         icon.addEventListener('click', (e) => {
             e.stopPropagation(); // Prevent row expansion
             const tmdbIdStr = icon.dataset.tmdbId;
-            console.log('Favourite icon clicked, tmdbId:', tmdbIdStr);
             if (tmdbIdStr) {
                 const tmdbId = parseInt(tmdbIdStr, 10);
                 // Validate that parsing succeeded and tmdbId is positive
-                if (isNaN(tmdbId) || tmdbId <= 0) {
-                    console.log('Invalid tmdbId:', tmdbId);
-                    return;
-                }
+                if (isNaN(tmdbId) || tmdbId <= 0) return;
                 
-                console.log('Toggling favourite for tmdbId:', tmdbId);
                 toggleFavourite(tmdbId);
                 
                 // Update the icon without re-rendering entire table
                 const isFav = isFavourite(tmdbId);
-                console.log('Is now favourite:', isFav);
                 // SVG icon stays the same, only class changes for color
                 icon.className = `favourite-icon ${isFav ? 'is-favourite' : 'not-favourite'}`;
                 
@@ -517,8 +510,6 @@ function addFavouriteIconListeners() {
                 if (favouritesFilterMode === 'favourites' && !isFav) {
                     applyRuntimeFilters();
                 }
-            } else {
-                console.log('No tmdbId found on icon');
             }
         });
         
