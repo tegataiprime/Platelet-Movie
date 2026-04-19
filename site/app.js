@@ -8,12 +8,14 @@ let sortDirection = 'asc';
 let currentRegion = 'us'; // Default region
 let hasSavedFilters = false;
 let expandableRowsController = null; // AbortController for event listeners
+let favouritesFilterMode = 'all'; // 'all' or 'favourites'
 
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initRegion();
     hasSavedFilters = initFilters();
+    updateFavouritesButtonText(); // Set initial button text
     loadData();
     setupEventListeners();
 });
@@ -43,8 +45,22 @@ function changeRegion(region) {
     localStorage.setItem('region', region);
     currentRegion = region;
     
+    // Update favourites button text based on new region
+    updateFavouritesButtonText();
+    
     // Reload data for new region
     loadData();
+}
+
+function updateFavouritesButtonText() {
+    const toggleBtn = document.getElementById('toggle-favourites');
+    if (!toggleBtn) return;
+    
+    const buttonText = getButtonTextForRegion(favouritesFilterMode === 'favourites');
+    const textElement = toggleBtn.querySelector('.favourites-toggle-text');
+    if (textElement) {
+        textElement.textContent = buttonText;
+    }
 }
 
 // Theme Management
@@ -96,6 +112,43 @@ function clearSavedFilters() {
     localStorage.removeItem('maxRuntime');
 }
 
+// Favourites Management
+function getFavourites() {
+    const favourites = localStorage.getItem('favouriteMovies');
+    return favourites ? JSON.parse(favourites) : {};
+}
+
+function isFavourite(tmdbId) {
+    if (!tmdbId) return false;
+    const favourites = getFavourites();
+    return favourites[tmdbId] === true;
+}
+
+function toggleFavourite(tmdbId) {
+    if (!tmdbId) return;
+    const favourites = getFavourites();
+    
+    if (favourites[tmdbId]) {
+        delete favourites[tmdbId];
+    } else {
+        favourites[tmdbId] = true;
+    }
+    
+    localStorage.setItem('favouriteMovies', JSON.stringify(favourites));
+}
+
+function getButtonTextForRegion(showFavouritesOnly) {
+    // British English for UK and India, American English for US
+    const britishRegions = ['gb', 'in'];
+    const useBritish = britishRegions.includes(currentRegion);
+    
+    if (showFavouritesOnly) {
+        return useBritish ? 'Show All Films' : 'Show All Movies';
+    } else {
+        return useBritish ? 'Show Favourites Only' : 'Show Favorites Only';
+    }
+}
+
 // Event Listeners Setup
 function setupEventListeners() {
     const themeToggle = document.getElementById('theme-toggle');
@@ -118,6 +171,11 @@ function setupEventListeners() {
     const resetFiltersBtn = document.getElementById('reset-filters');
     if (resetFiltersBtn) {
         resetFiltersBtn.addEventListener('click', resetFilters);
+    }
+
+    const toggleFavouritesBtn = document.getElementById('toggle-favourites');
+    if (toggleFavouritesBtn) {
+        toggleFavouritesBtn.addEventListener('click', handleToggleFavouritesFilter);
     }
 
     // Add sorting listeners to table headers with keyboard support
@@ -229,7 +287,8 @@ function renderMovies() {
     if (!tbody) return;
 
     if (filteredMovies.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="loading-row">No movies found matching the filter criteria.</td></tr>';
+        const colspan = 7; // Updated to include favourites column
+        tbody.innerHTML = `<tr><td colspan="${colspan}" class="loading-row">No movies found matching the filter criteria.</td></tr>`;
         return;
     }
 
@@ -245,8 +304,22 @@ function renderMovies() {
             ? `<img src="${escapeHtml(movie.poster_url)}" alt="${escapeHtml(movie.title || 'Unknown')} poster" class="movie-poster" loading="lazy">`
             : '';
         
+        // Determine if this movie is a favourite
+        const isFav = isFavourite(movie.tmdb_id);
+        const heartClass = isFav ? 'is-favourite' : 'not-favourite';
+        const heartIcon = isFav ? '❤️' : '🤍';
+        const ariaLabel = isFav ? 'Remove from favourites' : 'Add to favourites';
+        
         return `
             <tr data-movie-index="${index}">
+                <td class="favourite-column">
+                    <button 
+                        class="favourite-icon ${heartClass}" 
+                        data-tmdb-id="${movie.tmdb_id || ''}"
+                        aria-label="${ariaLabel}"
+                        tabindex="0"
+                    >${heartIcon}</button>
+                </td>
                 <td>
                     <div class="movie-title-container">
                         ${posterHtml}
@@ -269,6 +342,9 @@ function renderMovies() {
     
     // After rendering, check which descriptions are truncated and add click handlers
     initializeExpandableRows();
+    
+    // Add click handlers for favourite icons
+    addFavouriteIconListeners();
 }
 
 // Filtering
@@ -297,7 +373,14 @@ function applyRuntimeFilters() {
 
     filteredMovies = allMovies.filter(movie => {
         const runtime = movie.runtime_minutes || 0;
-        return runtime >= minRuntime && runtime <= maxRuntime;
+        const runtimeMatch = runtime >= minRuntime && runtime <= maxRuntime;
+        
+        // If in favourites mode, also filter by favourite status
+        if (favouritesFilterMode === 'favourites') {
+            return runtimeMatch && isFavourite(movie.tmdb_id);
+        }
+        
+        return runtimeMatch;
     });
 
     sortMovies();
@@ -330,6 +413,53 @@ function updateFilterResults() {
     if (element) {
         element.textContent = `Showing ${filteredMovies.length} of ${allMovies.length} movies`;
     }
+}
+
+// Favourites Icon Listeners
+function addFavouriteIconListeners() {
+    const favouriteIcons = document.querySelectorAll('.favourite-icon');
+    favouriteIcons.forEach(icon => {
+        icon.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent row expansion
+            const tmdbId = icon.dataset.tmdbId;
+            if (tmdbId) {
+                toggleFavourite(parseInt(tmdbId));
+                
+                // Update the icon without re-rendering entire table
+                const isFav = isFavourite(parseInt(tmdbId));
+                icon.textContent = isFav ? '❤️' : '🤍';
+                icon.className = `favourite-icon ${isFav ? 'is-favourite' : 'not-favourite'}`;
+                icon.setAttribute('aria-label', isFav ? 'Remove from favourites' : 'Add to favourites');
+                
+                // If in favourites-only mode and this was unfavourited, refresh the view
+                if (favouritesFilterMode === 'favourites' && !isFav) {
+                    applyRuntimeFilters();
+                }
+            }
+        });
+    });
+}
+
+// Favourites Filter Toggle
+function handleToggleFavouritesFilter() {
+    const toggleBtn = document.getElementById('toggle-favourites');
+    if (!toggleBtn) return;
+    
+    // Toggle the mode
+    favouritesFilterMode = favouritesFilterMode === 'all' ? 'favourites' : 'all';
+    
+    // Update button text based on region
+    const buttonText = getButtonTextForRegion(favouritesFilterMode === 'favourites');
+    const textElement = toggleBtn.querySelector('.favourites-toggle-text');
+    if (textElement) {
+        textElement.textContent = buttonText;
+    }
+    
+    // Update button state
+    toggleBtn.dataset.filterMode = favouritesFilterMode;
+    
+    // Apply the filter
+    applyRuntimeFilters();
 }
 
 // Sorting

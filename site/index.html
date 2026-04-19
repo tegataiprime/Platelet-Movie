@@ -57,6 +57,9 @@
                     </div>
                     <button id="apply-filters" class="btn-primary">Apply Filters</button>
                     <button id="reset-filters" class="btn-secondary">Reset</button>
+                    <button id="toggle-favourites" class="btn-secondary" data-filter-mode="all">
+                        <span class="favourites-toggle-text">Show Favourites Only</span>
+                    </button>
                 </div>
                 <p class="filter-error" id="filter-error" role="alert" aria-live="assertive"></p>
                 <output class="filter-results" id="filter-results" aria-live="polite"></output>
@@ -72,6 +75,7 @@
                         <caption class="visually-hidden">Netflix movies suitable for platelet donation (sorted by runtime)</caption>
                         <thead>
                             <tr>
+                                <th class="favourites-column" aria-label="Favourite">❤️</th>
                                 <th data-sort="title" class="sortable" tabindex="0" aria-sort="none">Title <span class="sort-arrow"></span></th>
                                 <th data-sort="runtime_minutes" class="sortable" tabindex="0" aria-sort="none">Runtime <span class="sort-arrow"></span></th>
                                 <th data-sort="year" class="sortable" tabindex="0" aria-sort="none">Year <span class="sort-arrow"></span></th>

@@ -311,6 +311,12 @@ th {
     position: relative;
 }
 
+th.favourites-column {
+    width: 60px;
+    text-align: center;
+    cursor: default;
+}
+
 th.sortable {
     cursor: pointer;
     user-select: none;
@@ -421,6 +427,45 @@ tr.expanded .movie-description {
 
 tr.expanded .movie-description.truncated::after {
     content: "";
+}
+
+/* Favourite Heart Icon */
+.favourite-icon {
+    font-size: 1.5rem;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s ease;
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    text-align: center;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.favourite-icon:hover {
+    transform: scale(1.2);
+}
+
+.favourite-icon:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.favourite-icon.not-favourite {
+    color: var(--text-secondary);
+}
+
+.favourite-icon.is-favourite {
+    color: #E42424; /* American Red Cross Red */
+}
+
+.favourite-column {
+    text-align: center;
+    padding: 0.5rem;
 }
 
 .loading-row {
