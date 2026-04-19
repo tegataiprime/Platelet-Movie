@@ -7,6 +7,7 @@ let sortColumn = 'runtime_minutes';
 let sortDirection = 'asc';
 let currentRegion = 'us'; // Default region
 let hasSavedFilters = false;
+let expandableRowsController = null; // AbortController for event listeners
 
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
@@ -403,11 +404,16 @@ function initializeExpandableRows() {
     const tbody = document.getElementById('movies-tbody');
     if (!tbody) return;
     
-    // Remove any existing event listeners by cloning and replacing
-    const newTbody = tbody.cloneNode(true);
-    tbody.parentNode.replaceChild(newTbody, tbody);
+    // Cancel previous event listeners if they exist
+    if (expandableRowsController) {
+        expandableRowsController.abort();
+    }
     
-    const movieRows = newTbody.querySelectorAll('tr');
+    // Create new AbortController for this set of listeners
+    expandableRowsController = new AbortController();
+    const signal = expandableRowsController.signal;
+    
+    const movieRows = tbody.querySelectorAll('tr');
     
     movieRows.forEach(row => {
         const descriptionElement = row.querySelector('.movie-description');
@@ -421,31 +427,38 @@ function initializeExpandableRows() {
             row.setAttribute('tabindex', '0');
             row.setAttribute('role', 'button');
             row.setAttribute('aria-expanded', 'false');
+            row.setAttribute('aria-label', 'Click to expand full movie description');
         }
     });
     
     // Use event delegation on tbody for all click and keyboard events
-    newTbody.addEventListener('click', (e) => {
+    tbody.addEventListener('click', (e) => {
         const row = e.target.closest('tr[role="button"]');
         if (!row) return;
         
-        // Don't expand/collapse if clicking on a link
-        if (e.target.tagName === 'A') return;
+        // Don't expand/collapse if clicking on a link or within a link
+        if (e.target.closest('a')) return;
         
-        row.classList.toggle('expanded');
-        row.setAttribute('aria-expanded', row.classList.contains('expanded'));
-    });
+        const isExpanded = row.classList.toggle('expanded');
+        row.setAttribute('aria-expanded', isExpanded);
+        row.setAttribute('aria-label', isExpanded 
+            ? 'Click to collapse movie description' 
+            : 'Click to expand full movie description');
+    }, { signal });
     
-    newTbody.addEventListener('keydown', (e) => {
+    tbody.addEventListener('keydown', (e) => {
         const row = e.target.closest('tr[role="button"]');
         if (!row) return;
         
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            row.classList.toggle('expanded');
-            row.setAttribute('aria-expanded', row.classList.contains('expanded'));
+            const isExpanded = row.classList.toggle('expanded');
+            row.setAttribute('aria-expanded', isExpanded);
+            row.setAttribute('aria-label', isExpanded 
+                ? 'Click to collapse movie description' 
+                : 'Click to expand full movie description');
         }
-    });
+    }, { signal });
 }
 
 // Check if text element is truncated

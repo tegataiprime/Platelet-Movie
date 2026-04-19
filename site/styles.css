@@ -406,7 +406,7 @@ td {
 
 /* Truncation indicator (ellipsis + "more" label) */
 .movie-description.truncated::after {
-    content: "... (click to read more)";
+    content: "...";
     font-weight: 600;
     color: var(--accent);
     font-style: normal;
@@ -419,10 +419,7 @@ tr.expanded .movie-description {
 }
 
 tr.expanded .movie-description.truncated::after {
-    content: " (click to collapse)";
-    font-weight: 600;
-    color: var(--accent);
-    font-style: normal;
+    content: "";
 }
 
 .loading-row {
