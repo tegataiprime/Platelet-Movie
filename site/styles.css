@@ -347,6 +347,9 @@ th.sorted-desc .sort-arrow::after {
 tbody tr {
     border-bottom: 1px solid var(--border-color);
     transition: background-color 0.2s ease;
+}
+
+tbody tr[role="button"] {
     cursor: pointer;
 }
 
@@ -513,6 +516,12 @@ a:focus-visible {
 
 th.sortable:focus-visible {
     outline: 3px solid white;
+    outline-offset: -3px;
+}
+
+/* Focus indicator for expandable rows */
+tbody tr[role="button"]:focus-visible {
+    outline: 3px solid var(--accent);
     outline-offset: -3px;
 }
 
