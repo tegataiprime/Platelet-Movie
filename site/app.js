@@ -239,13 +239,13 @@ function renderMovies() {
             : '';
         
         return `
-            <tr>
+            <tr data-movie-id="${escapeHtml(movie.title || 'unknown')}">
                 <td>
                     <div class="movie-title-container">
                         ${posterHtml}
                         <div class="movie-info">
                             <div class="movie-title">${escapeHtml(movie.title || 'Unknown')}</div>
-                            <div class="movie-description">${escapeHtml(description)}</div>
+                            <div class="movie-description" data-full-text="${escapeHtml(description)}">${escapeHtml(description)}</div>
                         </div>
                     </div>
                 </td>
@@ -259,6 +259,9 @@ function renderMovies() {
     }).join('');
 
     tbody.innerHTML = rows;
+    
+    // After rendering, check which descriptions are truncated and add click handlers
+    initializeExpandableRows();
 }
 
 // Filtering
@@ -393,4 +396,46 @@ function escapeHtml(unsafe) {
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
+}
+
+// Initialize expandable rows
+function initializeExpandableRows() {
+    const movieRows = document.querySelectorAll('#movies-tbody tr');
+    
+    movieRows.forEach(row => {
+        const descriptionElement = row.querySelector('.movie-description');
+        if (!descriptionElement) return;
+        
+        // Check if the description is truncated
+        if (isTextTruncated(descriptionElement)) {
+            descriptionElement.classList.add('truncated');
+            
+            // Add click handler to toggle expanded state
+            row.addEventListener('click', (e) => {
+                // Don't expand/collapse if clicking on a link
+                if (e.target.tagName === 'A') return;
+                
+                row.classList.toggle('expanded');
+            });
+            
+            // Add keyboard accessibility
+            row.setAttribute('tabindex', '0');
+            row.setAttribute('role', 'button');
+            row.setAttribute('aria-expanded', 'false');
+            
+            row.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    row.classList.toggle('expanded');
+                    row.setAttribute('aria-expanded', row.classList.contains('expanded'));
+                }
+            });
+        }
+    });
+}
+
+// Check if text element is truncated
+function isTextTruncated(element) {
+    // The element is truncated if its scrollHeight exceeds its clientHeight
+    return element.scrollHeight > element.clientHeight;
 }
