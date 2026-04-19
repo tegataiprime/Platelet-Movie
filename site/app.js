@@ -10,6 +10,9 @@ let hasSavedFilters = false;
 let expandableRowsController = null; // AbortController for event listeners
 let favouritesFilterMode = 'all'; // 'all' or 'favourites'
 
+// Constants
+const BRITISH_REGIONS = ['gb', 'in'];
+
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
@@ -139,8 +142,7 @@ function toggleFavourite(tmdbId) {
 
 function getButtonTextForRegion(showFavouritesOnly) {
     // British English for UK and India, American English for US
-    const britishRegions = ['gb', 'in'];
-    const useBritish = britishRegions.includes(currentRegion);
+    const useBritish = BRITISH_REGIONS.includes(currentRegion);
     
     if (showFavouritesOnly) {
         return useBritish ? 'Show All Films' : 'Show All Movies';
@@ -287,7 +289,9 @@ function renderMovies() {
     if (!tbody) return;
 
     if (filteredMovies.length === 0) {
-        const colspan = 7; // Updated to include favourites column
+        // Calculate colspan dynamically based on number of columns
+        const headerCells = document.querySelectorAll('thead th');
+        const colspan = headerCells.length || 7; // Fallback to 7 if not found
         tbody.innerHTML = `<tr><td colspan="${colspan}" class="loading-row">No movies found matching the filter criteria.</td></tr>`;
         return;
     }
@@ -310,8 +314,7 @@ function renderMovies() {
         const heartIcon = isFav ? '❤️' : '🤍';
         
         // Localize aria-label based on region
-        const britishRegions = ['gb', 'in'];
-        const useBritish = britishRegions.includes(currentRegion);
+        const useBritish = BRITISH_REGIONS.includes(currentRegion);
         const ariaLabel = isFav 
             ? (useBritish ? 'Remove from favourites' : 'Remove from favorites')
             : (useBritish ? 'Add to favourites' : 'Add to favorites');
@@ -429,7 +432,10 @@ function addFavouriteIconListeners() {
             e.stopPropagation(); // Prevent row expansion
             const tmdbIdStr = icon.dataset.tmdbId;
             if (tmdbIdStr) {
-                const tmdbId = parseInt(tmdbIdStr);
+                const tmdbId = parseInt(tmdbIdStr, 10);
+                // Validate that parsing succeeded
+                if (isNaN(tmdbId)) return;
+                
                 toggleFavourite(tmdbId);
                 
                 // Update the icon without re-rendering entire table
@@ -438,8 +444,7 @@ function addFavouriteIconListeners() {
                 icon.className = `favourite-icon ${isFav ? 'is-favourite' : 'not-favourite'}`;
                 
                 // Localize aria-label based on region
-                const britishRegions = ['gb', 'in'];
-                const useBritish = britishRegions.includes(currentRegion);
+                const useBritish = BRITISH_REGIONS.includes(currentRegion);
                 const ariaLabel = isFav 
                     ? (useBritish ? 'Remove from favourites' : 'Remove from favorites')
                     : (useBritish ? 'Add to favourites' : 'Add to favorites');
