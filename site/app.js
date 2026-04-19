@@ -11,7 +11,7 @@ let expandableRowsController = null; // AbortController for event listeners
 let favouritesFilterMode = 'all'; // 'all' or 'favourites'
 
 // Constants
-const BRITISH_REGIONS = ['gb', 'in'];
+const BRITISH_REGIONS = new Set(['gb', 'in']);
 
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
@@ -128,7 +128,18 @@ function clearSavedFilters() {
 // Favourites Management
 function getFavourites() {
     const favourites = localStorage.getItem('favouriteMovies');
-    return favourites ? JSON.parse(favourites) : {};
+    if (!favourites) {
+        return {};
+    }
+
+    try {
+        return JSON.parse(favourites);
+    } catch (error) {
+        // Handle corrupted localStorage data
+        console.error('Failed to parse favourites from localStorage:', error);
+        localStorage.removeItem('favouriteMovies');
+        return {};
+    }
 }
 
 function isFavourite(tmdbId) {
@@ -152,7 +163,7 @@ function toggleFavourite(tmdbId) {
 
 function getButtonTextForRegion(showFavouritesOnly) {
     // British English for UK and India, American English for US
-    const useBritish = BRITISH_REGIONS.includes(currentRegion);
+    const useBritish = BRITISH_REGIONS.has(currentRegion);
     
     if (showFavouritesOnly) {
         return useBritish ? 'Show All Films' : 'Show All Movies';
@@ -163,8 +174,41 @@ function getButtonTextForRegion(showFavouritesOnly) {
 
 function getClearFavouritesButtonText() {
     // British English for UK and India, American English for US
-    const useBritish = BRITISH_REGIONS.includes(currentRegion);
+    const useBritish = BRITISH_REGIONS.has(currentRegion);
     return useBritish ? 'Clear All Favourites' : 'Clear All Favorites';
+}
+
+function getFavouriteAriaLabel(isFav) {
+    // British English for UK and India, American English for US
+    const useBritish = BRITISH_REGIONS.has(currentRegion);
+    if (isFav) {
+        return useBritish ? 'Remove from favourites' : 'Remove from favorites';
+    } else {
+        return useBritish ? 'Add to favourites' : 'Add to favorites';
+    }
+}
+
+function validateAndParseTmdbId(tmdbIdStr) {
+    if (!tmdbIdStr) return null;
+    
+    const tmdbId = Number.parseInt(tmdbIdStr, 10);
+    // Validate that parsing succeeded and tmdbId is positive
+    if (Number.isNaN(tmdbId) || tmdbId <= 0) {
+        return null;
+    }
+    
+    return tmdbId;
+}
+
+function updateFavouriteIcon(icon, tmdbId) {
+    // Update the icon without re-rendering entire table
+    const isFav = isFavourite(tmdbId);
+    // SVG icon stays the same, only class changes for color
+    icon.className = `favourite-icon ${isFav ? 'is-favourite' : 'not-favourite'}`;
+    
+    // Localize aria-label based on region
+    const ariaLabel = getFavouriteAriaLabel(isFav);
+    icon.setAttribute('aria-label', ariaLabel);
 }
 
 function clearAllFavourites() {
@@ -266,8 +310,8 @@ async function loadData() {
         allMovies = data.movies || [];
         filteredMovies = [...allMovies];
         
-        // Apply saved filters if they exist
-        if (hasSavedFilters) {
+        // Apply saved filters or favourites filter if they exist
+        if (hasSavedFilters || favouritesFilterMode === 'favourites') {
             applyRuntimeFilters();
         }
         
@@ -311,6 +355,12 @@ function displayGeneratedAt(timestamp) {
     }
 }
 
+function getColumnCount() {
+    // Calculate colspan dynamically based on number of columns
+    const headerCells = document.querySelectorAll('thead th');
+    return headerCells.length || 7; // Fallback to 7 if not found
+}
+
 // Error Display
 function displayError(message) {
     const commentaryElement = document.getElementById('commentary');
@@ -320,7 +370,8 @@ function displayError(message) {
     
     const tbody = document.getElementById('movies-tbody');
     if (tbody) {
-        tbody.innerHTML = `<tr><td colspan="6" class="loading-row">${escapeHtml(message)}</td></tr>`;
+        const colspan = getColumnCount();
+        tbody.innerHTML = `<tr><td colspan="${colspan}" class="loading-row">${escapeHtml(message)}</td></tr>`;
     }
 }
 
@@ -330,9 +381,7 @@ function renderMovies() {
     if (!tbody) return;
 
     if (filteredMovies.length === 0) {
-        // Calculate colspan dynamically based on number of columns
-        const headerCells = document.querySelectorAll('thead th');
-        const colspan = headerCells.length || 7; // Fallback to 7 if not found
+        const colspan = getColumnCount();
         tbody.innerHTML = `<tr><td colspan="${colspan}" class="loading-row">No movies found matching the filter criteria.</td></tr>`;
         return;
     }
@@ -358,10 +407,7 @@ function renderMovies() {
         </svg>`;
         
         // Localize aria-label based on region
-        const useBritish = BRITISH_REGIONS.includes(currentRegion);
-        const ariaLabel = isFav 
-            ? (useBritish ? 'Remove from favourites' : 'Remove from favorites')
-            : (useBritish ? 'Add to favourites' : 'Add to favorites');
+        const ariaLabel = getFavouriteAriaLabel(isFav);
         
         return `
             <tr data-movie-index="${index}">
@@ -384,7 +430,7 @@ function renderMovies() {
                 </td>
                 <td>${movie.runtime_minutes || '?'} m</td>
                 <td>${movie.year || 'N/A'}</td>
-                <td>${movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A'}</td>
+                <td>${movie.vote_average === null || movie.vote_average === undefined ? 'N/A' : movie.vote_average.toFixed(1)}</td>
                 <td>${escapeHtml(movie.certification || 'N/A')}</td>
                 <td>${escapeHtml(genres)}</td>
             </tr>
@@ -487,32 +533,17 @@ function addFavouriteIconListeners() {
         const handleClick = (e) => {
             e.stopPropagation(); // Prevent row expansion
             e.preventDefault(); // Prevent any default button behavior
-            const tmdbIdStr = icon.dataset.tmdbId;
-            if (tmdbIdStr) {
-                const tmdbId = parseInt(tmdbIdStr, 10);
-                // Validate that parsing succeeded and tmdbId is positive
-                if (isNaN(tmdbId) || tmdbId <= 0) {
-                    return;
-                }
-                
-                toggleFavourite(tmdbId);
-                
-                // Update the icon without re-rendering entire table
-                const isFav = isFavourite(tmdbId);
-                // SVG icon stays the same, only class changes for color
-                icon.className = `favourite-icon ${isFav ? 'is-favourite' : 'not-favourite'}`;
-                
-                // Localize aria-label based on region
-                const useBritish = BRITISH_REGIONS.includes(currentRegion);
-                const ariaLabel = isFav 
-                    ? (useBritish ? 'Remove from favourites' : 'Remove from favorites')
-                    : (useBritish ? 'Add to favourites' : 'Add to favorites');
-                icon.setAttribute('aria-label', ariaLabel);
-                
-                // If in favourites-only mode and this was unfavourited, refresh the view
-                if (favouritesFilterMode === 'favourites' && !isFav) {
-                    applyRuntimeFilters();
-                }
+            
+            const tmdbId = validateAndParseTmdbId(icon.dataset.tmdbId);
+            if (!tmdbId) return;
+            
+            toggleFavourite(tmdbId);
+            updateFavouriteIcon(icon, tmdbId);
+            
+            // If in favourites-only mode and this was unfavourited, refresh the view
+            const isFav = isFavourite(tmdbId);
+            if (favouritesFilterMode === 'favourites' && !isFav) {
+                applyRuntimeFilters();
             }
         };
         

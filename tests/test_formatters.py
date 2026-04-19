@@ -248,6 +248,7 @@ class TestFormatters:
         assert "certification" in first_movie
         assert "year" in first_movie
         assert "description" in first_movie
+        assert "tmdb_id" in first_movie
 
     def test_markdown_includes_description(self):
         """Test that markdown output includes description column."""
@@ -291,3 +292,28 @@ class TestFormatters:
         assert parsed[1]["description"] == "A team of explorers travel through a wormhole in space."
         # Check third movie with None description
         assert parsed[2]["description"] is None
+
+    def test_json_includes_tmdb_id(self):
+        """Test that JSON formatter includes tmdb_id field."""
+        import json
+
+        movies = [
+            Movie(
+                title="Test Movie with ID",
+                runtime_minutes=150,
+                tmdb_id=12345,
+            ),
+            Movie(
+                title="Test Movie without ID",
+                runtime_minutes=160,
+                tmdb_id=None,
+            ),
+        ]
+        result = format_movies(movies, "json")
+        parsed = json.loads(result)
+        # Check that tmdb_id is present in output
+        assert "tmdb_id" in parsed[0]
+        assert parsed[0]["tmdb_id"] == 12345
+        # Check that None tmdb_id is handled correctly
+        assert "tmdb_id" in parsed[1]
+        assert parsed[1]["tmdb_id"] is None

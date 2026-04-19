@@ -454,11 +454,11 @@ tr.expanded .movie-description.truncated::after {
     pointer-events: none; /* Ensure clicks pass through to button element */
 }
 
-/* Style for unselected droplet - white fill with yellow outline for visibility */
+/* Style for unselected droplet - white/transparent fill with darker stroke for better contrast */
 .favourite-icon.not-favourite svg path {
-    fill: white;
-    stroke: var(--platelet-yellow);
-    stroke-width: 1.5;
+    fill: var(--bg-card);
+    stroke: #B8860B;  /* DarkGoldenrod for better contrast (WCAG compliant) */
+    stroke-width: 2;
 }
 
 /* Style for selected droplet - solid yellow */

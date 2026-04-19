@@ -857,6 +857,46 @@ class TestDiscoverMoviesOnNetflix:
         assert len(movies) == 1
         assert movies[0].poster_url is None
 
+    def test_extracts_tmdb_id(self, mocker):
+        """Test that TMDB ID is correctly extracted and stored in Movie objects."""
+        from platelet_movie.tmdb_client import TMDBClient
+
+        client = TMDBClient(api_key="test_key")
+
+        discover_data = _make_discover_response(
+            [
+                {"id": 12345, "title": "Movie with ID", "overview": "A test movie"},
+                {"id": 67890, "title": "Another Movie", "overview": "Another test"},
+            ]
+        )
+
+        movie_details_1 = _make_tmdb_movie_response(12345, "Movie with ID", 150)
+        providers_1 = _make_watch_providers_response(12345, has_netflix=True)
+        release_dates_1 = _make_release_dates_response(12345, "PG-13")
+
+        movie_details_2 = _make_tmdb_movie_response(67890, "Another Movie", 160)
+        providers_2 = _make_watch_providers_response(67890, has_netflix=True)
+        release_dates_2 = _make_release_dates_response(67890, "R")
+
+        mock_get = mocker.patch("platelet_movie.tmdb_client.requests.get")
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.raise_for_status = MagicMock()
+        mock_get.return_value.json.side_effect = [
+            discover_data,
+            movie_details_1,
+            providers_1,
+            release_dates_1,
+            movie_details_2,
+            providers_2,
+            release_dates_2,
+        ]
+
+        movies = client.discover_movies_on_netflix(min_runtime_minutes=135)
+
+        assert len(movies) == 2
+        assert movies[0].tmdb_id == 12345
+        assert movies[1].tmdb_id == 67890
+
 
 # ---------------------------------------------------------------------------
 # TMDBClient error handling
