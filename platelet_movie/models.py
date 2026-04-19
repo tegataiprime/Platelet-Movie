@@ -17,6 +17,7 @@ class Movie:
     year: int | None = None  # Release year
     description: str | None = None  # Movie description/overview from TMDB
     poster_url: str | None = None  # URL to movie poster image from TMDB
+    tmdb_id: int | None = None  # The Movie Database (TMDB) ID
 
     def __lt__(self, other: object) -> bool:
         if not isinstance(other, Movie):
@@ -38,6 +39,7 @@ class Movie:
             and self.year == other.year
             and self.description == other.description
             and self.poster_url == other.poster_url
+            and self.tmdb_id == other.tmdb_id
         )
 
     def __repr__(self) -> str:  # pragma: no cover
@@ -45,5 +47,6 @@ class Movie:
             f"Movie(title={self.title!r}, runtime_minutes={self.runtime_minutes}, "
             f"genres={self.genres!r}, rating={self.rating}, "
             f"certification={self.certification!r}, year={self.year}, "
-            f"description={self.description!r}, poster_url={self.poster_url!r})"
+            f"description={self.description!r}, poster_url={self.poster_url!r}, "
+            f"tmdb_id={self.tmdb_id})"
         )
