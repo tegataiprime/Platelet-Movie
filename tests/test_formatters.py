@@ -22,8 +22,7 @@ class TestFormatters:
                 certification="R",
                 year=2019,
                 description=(
-                    "A mob hitman recalls his possible involvement with the "
-                    "slaying of Jimmy Hoffa."
+                    "A mob hitman recalls his possible involvement with the slaying of Jimmy Hoffa."
                 ),
             ),
             Movie(
