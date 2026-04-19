@@ -195,7 +195,7 @@ function clearAllFavourites() {
         }
     }
     
-    // Re-render to update heart icons
+    // Re-render to update drip icons
     renderMovies();
 }
 
@@ -498,8 +498,8 @@ function addFavouriteIconListeners() {
             const tmdbIdStr = icon.dataset.tmdbId;
             if (tmdbIdStr) {
                 const tmdbId = parseInt(tmdbIdStr, 10);
-                // Validate that parsing succeeded
-                if (isNaN(tmdbId)) return;
+                // Validate that parsing succeeded and tmdbId is positive
+                if (isNaN(tmdbId) || tmdbId <= 0) return;
                 
                 toggleFavourite(tmdbId);
                 
