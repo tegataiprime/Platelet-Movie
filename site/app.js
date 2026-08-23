@@ -9,6 +9,7 @@ let currentRegion = 'us'; // Default region
 let hasSavedFilters = false;
 let expandableRowsController = null; // AbortController for event listeners
 let favouritesFilterMode = 'all'; // 'all' or 'favourites'
+let runtimeDisplayMode = 'hours_minutes'; // 'hours_minutes' or 'minutes'
 
 // Constants
 const BRITISH_REGIONS = new Set(['gb', 'in']);
@@ -17,6 +18,7 @@ const BRITISH_REGIONS = new Set(['gb', 'in']);
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initRegion();
+    initRuntimeDisplayMode();
     hasSavedFilters = initFilters();
     updateFavouritesButtonText(); // Set initial button text
     loadData();
@@ -96,6 +98,49 @@ function updateThemeIcon(theme) {
     if (icon) {
         icon.textContent = theme === 'light' ? '🌙' : '☀️';
     }
+}
+
+// Runtime Display Mode Management
+function initRuntimeDisplayMode() {
+    const saved = localStorage.getItem('runtimeDisplayMode');
+    runtimeDisplayMode = saved === 'minutes' ? 'minutes' : 'hours_minutes';
+    updateRuntimeToggleButton();
+}
+
+function toggleRuntimeDisplayMode() {
+    runtimeDisplayMode = runtimeDisplayMode === 'hours_minutes' ? 'minutes' : 'hours_minutes';
+    localStorage.setItem('runtimeDisplayMode', runtimeDisplayMode);
+    updateRuntimeToggleButton();
+    renderMovies();
+}
+
+function updateRuntimeToggleButton() {
+    const btn = document.getElementById('runtime-format-toggle');
+    if (!btn) return;
+    if (runtimeDisplayMode === 'hours_minutes') {
+        btn.textContent = 'Show Runtime in Minutes';
+        btn.setAttribute('aria-pressed', 'false');
+    } else {
+        btn.textContent = 'Show Runtime in Hrs & Mins';
+        btn.setAttribute('aria-pressed', 'true');
+    }
+}
+
+/**
+ * Format a runtime value for display.
+ * @param {number} minutes - Runtime in minutes
+ * @returns {string} Formatted runtime string
+ */
+function formatRuntime(minutes) {
+    if (!minutes && minutes !== 0) return '?';
+    if (runtimeDisplayMode === 'minutes') {
+        return `${minutes} m`;
+    }
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    if (h === 0) return `${m} m`;
+    if (m === 0) return `${h} h`;
+    return `${h} h ${m} m`;
 }
 
 // Filter Persistence Management
@@ -265,6 +310,11 @@ function setupEventListeners() {
         clearFavouritesBtn.addEventListener('click', clearAllFavourites);
     }
 
+    const runtimeFormatToggleBtn = document.getElementById('runtime-format-toggle');
+    if (runtimeFormatToggleBtn) {
+        runtimeFormatToggleBtn.addEventListener('click', toggleRuntimeDisplayMode);
+    }
+
     // Add sorting listeners to table headers with keyboard support
     const sortableHeaders = document.querySelectorAll('th.sortable');
     sortableHeaders.forEach(header => {
@@ -428,7 +478,7 @@ function renderMovies() {
                         </div>
                     </div>
                 </td>
-                <td>${movie.runtime_minutes || '?'} m</td>
+                <td>${formatRuntime(movie.runtime_minutes)}</td>
                 <td>${movie.year || 'N/A'}</td>
                 <td>${movie.vote_average === null || movie.vote_average === undefined ? 'N/A' : movie.vote_average.toFixed(1)}</td>
                 <td>${escapeHtml(movie.certification || 'N/A')}</td>
