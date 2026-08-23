@@ -119,10 +119,8 @@ function updateRuntimeToggleButton() {
     if (!btn) return;
     if (runtimeDisplayMode === 'hours_minutes') {
         btn.textContent = 'Show Runtime in Minutes';
-        btn.setAttribute('aria-pressed', 'false');
     } else {
         btn.textContent = 'Show Runtime in Hrs & Mins';
-        btn.setAttribute('aria-pressed', 'true');
     }
 }
 
