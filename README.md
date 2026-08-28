@@ -271,6 +271,7 @@ The project includes a static website hosted on GitHub Pages that displays the w
   - Keyboard navigation support (Enter/Space on table headers, skip-to-content link)
   - Touch target compliance (minimum 48×48px on mobile)
   - Focus indicators for keyboard users
+- **Runtime Display Format**: Toggle movie run-times between **hours & minutes** (default, e.g. "2 h 15 m") and **minutes only** (e.g. "135 m") with the "Show Runtime in Minutes" / "Show Runtime in Hrs & Mins" button. **Preference is saved to browser local storage and persists between visits.**
 - **Light/Dark Mode**: Toggle between themes with persistent preference storage
 - **American Red Cross Branding**: Color scheme follows American Red Cross brand guidelines (#E42424 red)
 - **Movie Poster Thumbnails**: Each movie displays a 60px poster thumbnail from TMDB, aligned to the left of the movie title and description
