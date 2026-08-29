@@ -533,6 +533,7 @@ function applyRuntimeFilters() {
     sortMovies();
     renderMovies();
     updateFilterResults();
+    telemetry.trackDurationFilterChange(minRuntime, maxRuntime);
 }
 
 function resetFilters() {
@@ -590,6 +591,7 @@ function addFavouriteIconListeners() {
             
             // If in favourites-only mode and this was unfavourited, refresh the view
             const isFav = isFavourite(tmdbId);
+            telemetry.trackFavoriteToggled(isFav ? 'on' : 'off');
             if (favouritesFilterMode === 'favourites' && !isFav) {
                 applyRuntimeFilters();
             }
@@ -646,6 +648,7 @@ function handleSort(column) {
     sortMovies();
     renderMovies();
     updateSortIndicators();
+    telemetry.trackSortChange(sortColumn, sortDirection);
 }
 
 function sortMovies() {
