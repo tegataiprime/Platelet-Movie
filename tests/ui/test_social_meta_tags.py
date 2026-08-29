@@ -57,6 +57,13 @@ def test_og_image_dimensions(site_page):
     assert height == "941"
 
 
+def test_og_image_alt(site_page):
+    """og:image:alt must describe the social preview image."""
+    value = site_page.get_attribute('meta[property="og:image:alt"]', "content")
+    assert value is not None
+    assert len(value) > 0
+
+
 # ---------------------------------------------------------------------------
 # Twitter Card meta tags
 # ---------------------------------------------------------------------------
@@ -65,6 +72,12 @@ def test_twitter_card(site_page):
     """twitter:card must be 'summary_large_image'."""
     value = site_page.get_attribute('meta[name="twitter:card"]', "content")
     assert value == "summary_large_image"
+
+
+def test_twitter_url(site_page):
+    """twitter:url must be the canonical GitHub Pages URL."""
+    value = site_page.get_attribute('meta[name="twitter:url"]', "content")
+    assert value == CANONICAL_URL
 
 
 def test_twitter_title(site_page):
@@ -85,6 +98,13 @@ def test_twitter_image(site_page):
     """twitter:image must be the canonical preview image URL."""
     value = site_page.get_attribute('meta[name="twitter:image"]', "content")
     assert value == CANONICAL_IMAGE
+
+
+def test_twitter_image_alt(site_page):
+    """twitter:image:alt must describe the social preview image."""
+    value = site_page.get_attribute('meta[name="twitter:image:alt"]', "content")
+    assert value is not None
+    assert len(value) > 0
 
 
 # ---------------------------------------------------------------------------

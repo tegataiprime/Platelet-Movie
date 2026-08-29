@@ -33,3 +33,15 @@ def test_truncated_description_row_expands_in_theater_theme(site_page):
     expect(row).to_have_css("background-color", "rgb(44, 32, 56)")
     expect(row).to_have_css("color", "rgb(245, 236, 223)")
     expect(row.locator(".movie-description")).to_have_css("-webkit-line-clamp", "none")
+
+
+def test_late_font_layout_check_preserves_expanded_row(site_page):
+    """Rechecking truncation after fonts load does not collapse an open row."""
+    row = site_page.locator('#movies-tbody tr[role="button"]').first
+    row.click()
+    expect(row).to_have_attribute("aria-expanded", "true")
+
+    site_page.evaluate("initializeExpandableRows()")
+
+    expect(row).to_have_class(re.compile(r"\bexpanded\b"))
+    expect(row).to_have_attribute("aria-expanded", "true")

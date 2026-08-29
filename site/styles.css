@@ -425,7 +425,6 @@ section h2::after {
     font-weight: 600;
     color: var(--text-muted);
 }
-}
 
 .filter-error {
     margin-top: 1rem;

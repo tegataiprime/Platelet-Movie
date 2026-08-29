@@ -897,8 +897,9 @@ function initializeExpandableRows() {
     movieRows.forEach(row => {
         const descriptionElement = row.querySelector('.movie-description');
         if (!descriptionElement) return;
+        const wasExpanded = row.classList.contains('expanded');
         
-        // Clear previous truncation state
+        // Temporarily restore the clamped state so truncation can be measured.
         descriptionElement.classList.remove('truncated');
         row.classList.remove('expanded');
         row.removeAttribute('tabindex');
@@ -913,8 +914,9 @@ function initializeExpandableRows() {
             // Add keyboard accessibility attributes
             row.setAttribute('tabindex', '0');
             row.setAttribute('role', 'button');
-            row.setAttribute('aria-expanded', 'false');
+            row.setAttribute('aria-expanded', String(wasExpanded));
             row.setAttribute('aria-describedby', 'expand-hint');
+            row.classList.toggle('expanded', wasExpanded);
         }
     });
     
