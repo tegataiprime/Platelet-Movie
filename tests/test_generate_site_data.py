@@ -18,6 +18,7 @@ from generate_site_data import (  # noqa: E402
     generate_site_data,
     get_commentary,
     get_movie_data,
+    prepare_telemetry_config,
     run_command,
 )
 
@@ -58,6 +59,27 @@ class TestRunCommand:
 
         assert "Error running command" in mock_stderr.getvalue()
         assert "command failed" in mock_stderr.getvalue()
+
+
+class TestPrepareTelemetryConfig:
+    """Tests for static-site telemetry configuration."""
+
+    def test_disabled_config_omits_umami_settings(self):
+        """Telemetry is disabled unless explicitly enabled."""
+        assert prepare_telemetry_config(enabled=False) == {"enabled": False}
+
+    def test_enabled_config_uses_default_umami_script_url(self):
+        """Enabled telemetry includes only public Umami client settings."""
+        assert prepare_telemetry_config(enabled=True, website_id="website-id") == {
+            "enabled": True,
+            "websiteId": "website-id",
+            "scriptUrl": "https://cloud.umami.is/script.js",
+        }
+
+    def test_enabled_config_requires_website_id(self):
+        """Enabled telemetry cannot generate a non-functional script configuration."""
+        with pytest.raises(ValueError, match="UMAMI_WEBSITE_ID"):
+            prepare_telemetry_config(enabled=True)
 
 
 class TestGetMovieData:

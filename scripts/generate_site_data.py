@@ -3,10 +3,51 @@
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+
+DEFAULT_UMAMI_SCRIPT_URL = "https://cloud.umami.is/script.js"
+TELEMETRY_CONFIG_FILENAME = "telemetry-config.js"
+
+
+def prepare_telemetry_config(
+    enabled: bool, website_id: str = "", script_url: str = DEFAULT_UMAMI_SCRIPT_URL
+) -> dict:
+    """Prepare the public, browser-safe Umami telemetry configuration."""
+    if not enabled:
+        return {"enabled": False}
+    if not website_id:
+        raise ValueError("UMAMI_WEBSITE_ID must be set when ENABLE_TELEMETRY is true")
+
+    return {
+        "enabled": True,
+        "websiteId": website_id,
+        "scriptUrl": script_url,
+    }
+
+
+def save_telemetry_config(config: dict) -> Path:
+    """Write browser-safe telemetry configuration for the static site."""
+    output_path = Path(__file__).parent.parent / "site" / TELEMETRY_CONFIG_FILENAME
+    output_path.write_text(
+        f"window.TELEMETRY_CONFIG = {json.dumps(config, separators=(',', ':'))};\n",
+        encoding="utf-8",
+    )
+    return output_path
+
+
+def generate_telemetry_config() -> Path:
+    """Generate telemetry configuration from deployment environment variables."""
+    enabled = os.environ.get("ENABLE_TELEMETRY", "").lower() == "true"
+    config = prepare_telemetry_config(
+        enabled=enabled,
+        website_id=os.environ.get("UMAMI_WEBSITE_ID", ""),
+        script_url=os.environ.get("UMAMI_SCRIPT_URL", DEFAULT_UMAMI_SCRIPT_URL),
+    )
+    return save_telemetry_config(config)
 
 
 def run_command(cmd: list[str]) -> str:
@@ -210,6 +251,8 @@ def generate_site_data(max_pages: int = 50, region: str | None = None) -> None:
         region: Netflix region code (e.g., US, GB, IN). If None, generates
             for all supported regions.
     """
+    generate_telemetry_config()
+
     # Define supported regions
     supported_regions = ["US", "GB", "IN"]
     regions_to_generate = [region.upper()] if region is not None else supported_regions

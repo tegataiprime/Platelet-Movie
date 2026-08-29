@@ -32,6 +32,7 @@ TMDB provides reliable watch provider data (including Netflix availability) that
 - 📄 **Multiple output formats**: Markdown (default), HTML, CSV, and JSON
 - 🌍 Supports different Netflix regions (US, GB, CA, etc.)
 - 🌙 **GitHub Pages site** with light/dark mode, runtime filter with persistence, sortable columns, movie poster thumbnails, and Lady Whistledown commentary
+- 📈 **Optional anonymous analytics** via Umami Cloud, tracking aggregate pageviews and filter, sort, and favourite interactions
 - 🌏 **Multi-region support on website**: Switch between US 🇺🇸, UK 🇬🇧, and India 🇮🇳 Netflix catalogs with preference persistence
 - 💧 **Favourites feature**: Mark movies you want to watch with a platelet yellow drip icon (persisted in browser's local storage), toggle to show only your favourites, and clear all favourites
 - 🇬🇧🇺🇸 **Localised interface**: British English spelling for UK & India regions, American English for US region (favourites/favorites, films/movies)
@@ -90,6 +91,9 @@ Platelet-Movie follows the [12-Factor App](https://12factor.net/config) methodol
 | `TMDB_API_KEY` | ✅ | – | Your TMDB API key (v3 auth) |
 | `TMDB_REGION` | ❌ | `US` | Netflix region code (ISO 3166-1 alpha-2, e.g., US, GB, CA) |
 | `TMDB_MAX_PAGES` | ❌ | `10` | Maximum number of TMDB result pages to fetch (20 movies per page) |
+| `ENABLE_TELEMETRY` | ❌ | `false` | Enable anonymous Umami analytics when generating the GitHub Pages site |
+| `UMAMI_WEBSITE_ID` | Required when telemetry enabled | – | Public Umami website identifier |
+| `UMAMI_SCRIPT_URL` | ❌ | `https://cloud.umami.is/script.js` | Umami browser script URL |
 
 ### Development Configuration
 
@@ -287,6 +291,7 @@ The project includes a static website hosted on GitHub Pages that displays the w
 - **Localised Interface**: British English spelling for UK 🇬🇧 & India 🇮🇳 regions ("Favourites", "Films"), American English for US 🇺🇸 region ("Favorites", "Movies")
 - **Multi-Region Support**: Switch between US 🇺🇸, UK 🇬🇧, and India 🇮🇳 Netflix catalogs with preference persistence
 - **Sortable Columns**: Click or use keyboard (Enter/Space) on any column header to sort (all columns sortable, including genres); visual indicators show sort state (⇅ / ▲ / ▼)
+- **Anonymous Usage Telemetry**: When enabled by the site operator, Umami collects aggregate page views, broad provider-reported geography, and interactions with runtime filters, sorting, and favourites. The site does not send user IDs, movie titles, freeform input, or precise location.
 - **Lady Whistledown Commentary**: AI-generated introduction in the style of Bridgerton
 - **Acknowledgements**: Proper attribution for TMDB data, accuracy disclaimers, and Bridgerton credits
 
@@ -299,6 +304,18 @@ The workflow:
 2. Creates Lady Whistledown commentary using OpenAI
 3. Builds a `data.json` file with all content
 4. Deploys the static site to GitHub Pages
+
+### Enabling Umami telemetry
+
+Create the site in Umami Cloud, then configure these GitHub Actions **repository variables**:
+
+| Variable | Value |
+|----------|-------|
+| `ENABLE_TELEMETRY` | `true` |
+| `UMAMI_WEBSITE_ID` | The public website ID from Umami |
+| `UMAMI_SCRIPT_URL` | Optional; defaults to `https://cloud.umami.is/script.js` |
+
+No Umami API token is needed. `UMAMI_WEBSITE_ID` is intentionally a public browser identifier, not a secret. The free Umami Cloud Hobby tier includes one website, 100K monthly events, six months of data retention, and community support. Review an upgrade or self-hosted deployment if sustained telemetry exceeds 80K events per month or longer retention is needed.
 
 ### Manual Deployment
 
