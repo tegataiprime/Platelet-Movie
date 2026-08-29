@@ -1,5 +1,6 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
+const path = require('node:path');
 const test = require('node:test');
 const vm = require('node:vm');
 
@@ -40,7 +41,7 @@ function loadApp(savedValues = {}) {
             },
         },
     });
-    vm.runInContext(fs.readFileSync('site/app.js', 'utf8'), context);
+    vm.runInContext(fs.readFileSync(path.resolve(__dirname, '../site/app.js'), 'utf8'), context);
     return { context, elements, storage };
 }
 

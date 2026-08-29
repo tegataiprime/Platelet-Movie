@@ -279,8 +279,8 @@ function formatRuntime(minutes) {
 
 // Filter Persistence Management
 function initFilters() {
-    // Saved filter values are always stored as canonical minutes, regardless
-    // of which display mode was active when they were saved.
+    // Saved filter values are stored as canonical minutes regardless of display mode;
+    // an empty maxRuntime value is the sentinel for an unbounded maximum.
     const savedMinRuntime = localStorage.getItem('minRuntime');
     const savedMaxRuntime = localStorage.getItem('maxRuntime');
     
