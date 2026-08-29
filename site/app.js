@@ -55,6 +55,7 @@ function changeRegion(region) {
     
     // Reload data for new region
     loadData();
+    trackTelemetry('trackRegionChanged', region);
 }
 
 function updateFavouritesButtonText() {
@@ -96,6 +97,7 @@ function toggleTheme() {
     document.documentElement.dataset.theme = newTheme;
     localStorage.setItem('theme', newTheme);
     updateThemeIcon(newTheme);
+    trackTelemetry('trackThemeChanged', newTheme);
 }
 
 function updateThemeIcon(theme) {
@@ -128,6 +130,7 @@ function toggleRuntimeDisplayMode() {
     setMaxRuntimeInputs(maxMinutesRaw);
 
     renderMovies();
+    trackTelemetry('trackRuntimeDisplayChanged', runtimeDisplayMode);
 }
 
 /**
@@ -416,6 +419,7 @@ function clearAllFavourites() {
     
     // Re-render to update drip icons and apply current runtime filters
     applyRuntimeFilters();
+    trackTelemetry('trackFavoritesCleared');
 }
 
 function trackTelemetry(methodName, ...args) {
@@ -464,6 +468,8 @@ function setupEventListeners() {
     if (runtimeFormatToggleBtn) {
         runtimeFormatToggleBtn.addEventListener('click', toggleRuntimeDisplayMode);
     }
+
+    document.addEventListener('click', handleOutboundLinkClick);
 
     // Add sorting listeners to table headers with keyboard support
     const sortableHeaders = document.querySelectorAll('th.sortable');
@@ -731,6 +737,7 @@ function resetFilters() {
     sortMovies();
     renderMovies();
     updateFilterResults();
+    trackTelemetry('trackFiltersReset');
 }
 
 function updateFilterResults() {
@@ -797,6 +804,10 @@ function handleToggleFavouritesFilter() {
     
     // Apply the filter
     applyRuntimeFilters();
+    trackTelemetry(
+        'trackFavoritesFilterChanged',
+        favouritesFilterMode === 'favourites' ? 'favorites' : 'all'
+    );
 }
 
 // Sorting
@@ -928,8 +939,7 @@ function initializeExpandableRows() {
         // Don't expand/collapse if clicking on a link or within a link
         if (e.target.closest('a')) return;
         
-        const isExpanded = row.classList.toggle('expanded');
-        row.setAttribute('aria-expanded', isExpanded);
+        toggleExpandableRow(row);
     }, { signal });
     
     tbody.addEventListener('keydown', (e) => {
@@ -938,10 +948,22 @@ function initializeExpandableRows() {
         
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            const isExpanded = row.classList.toggle('expanded');
-            row.setAttribute('aria-expanded', isExpanded);
+            toggleExpandableRow(row);
         }
     }, { signal });
+}
+
+function toggleExpandableRow(row) {
+    const isExpanded = row.classList.toggle('expanded');
+    row.setAttribute('aria-expanded', isExpanded);
+    trackTelemetry('trackDescriptionToggled', isExpanded ? 'expanded' : 'collapsed');
+}
+
+function handleOutboundLinkClick(event) {
+    if (typeof event.target?.closest !== 'function') return;
+    const link = event.target.closest('a[data-telemetry-destination]');
+    if (!link) return;
+    trackTelemetry('trackOutboundLink', link.dataset.telemetryDestination);
 }
 
 /**

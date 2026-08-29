@@ -32,7 +32,7 @@ TMDB provides reliable watch provider data (including Netflix availability) that
 - 📄 **Multiple output formats**: Markdown (default), HTML, CSV, and JSON
 - 🌍 Supports different Netflix regions (US, GB, CA, etc.)
 - 🎭 **Regency-inspired GitHub Pages site** with parchment/theater themes, a plum-and-gold palette, period typography and ornaments, persistent runtime filters, sortable columns, movie poster thumbnails, and Lady Whistledown commentary
-- 📈 **Optional anonymous analytics** via Umami Cloud, tracking aggregate pageviews and filter, sort, and favourite interactions
+- 📈 **Optional anonymous analytics** via Umami Cloud, tracking aggregate pageviews and privacy-safe UI interactions
 - ⏰ **Runtime filter format follows the display toggle**: switching the website's runtime display between "minutes" and "hours & minutes" also switches the minimum/maximum runtime filter inputs to match, with validation to ensure the maximum is never less than the minimum
 - 🌏 **Multi-region support on website**: Switch between US 🇺🇸, UK 🇬🇧, and India 🇮🇳 Netflix catalogs with preference persistence
 - 💧 **Favourites feature**: Mark movies you want to watch with a platelet yellow drip icon (persisted in browser's local storage), toggle to show only your favourites, and clear all favourites
@@ -292,7 +292,7 @@ The project includes a static website hosted on GitHub Pages that displays the w
 - **Localised Interface**: British English spelling for UK 🇬🇧 & India 🇮🇳 regions ("Favourites", "Films"), American English for US 🇺🇸 region ("Favorites", "Movies")
 - **Multi-Region Support**: Switch between US 🇺🇸, UK 🇬🇧, and India 🇮🇳 Netflix catalogs with preference persistence
 - **Sortable Columns**: Click or use keyboard (Enter/Space) on any column header to sort (all columns sortable, including genres); visual indicators show sort state (⇅ / ▲ / ▼)
-- **Anonymous Usage Telemetry**: When enabled by the site operator, Umami collects aggregate page views, broad provider-reported geography, and interactions with runtime filters, sorting, and favourites. The site does not send user IDs, movie titles, freeform input, or precise location.
+- **Anonymous Usage Telemetry**: When enabled by the site operator, Umami collects aggregate page views, broad provider-reported geography, and privacy-safe interactions with filters, sorting, favourites, display preferences, movie-description expansion, region selection, and categorized outbound links. The site does not send user IDs, movie titles, TMDB IDs, freeform input, full outbound URLs, or precise location.
 - **Lady Whistledown Commentary**: AI-generated introduction in the style of Bridgerton
 - **Acknowledgements**: Proper attribution for TMDB data, accuracy disclaimers, and Bridgerton credits
 
@@ -317,6 +317,26 @@ Create the site in Umami Cloud, then configure these GitHub Actions **repository
 | `UMAMI_SCRIPT_URL` | Optional; defaults to `https://cloud.umami.is/script.js` |
 
 No Umami API token is needed. `UMAMI_WEBSITE_ID` is intentionally a public browser identifier, not a secret. The free Umami Cloud Hobby tier includes one website, 100K monthly events, six months of data retention, and community support. Review an upgrade or self-hosted deployment if sustained telemetry exceeds 80K events per month or longer retention is needed.
+
+The Umami tracker is loaded once by the site's root `index.html` and records pageviews
+automatically. The application does not manually emit pageviews and does not use client-side or
+hash-based routing.
+
+Custom events use fixed names and allowlisted, low-cardinality properties:
+
+| Event | Interaction |
+|-------|-------------|
+| `filter_duration_changed` | Apply a valid runtime range, reported as broad runtime buckets |
+| `sort_changed` | Sort a column, including the allowlisted column and direction |
+| `favorite_toggled` | Add or remove an individual favourite |
+| `favorites_filter_changed` | Show favourites only or return to all movies |
+| `favorites_cleared` | Clear all favourites |
+| `filters_reset` | Reset filters |
+| `theme_changed` | Switch between light and theater themes |
+| `runtime_display_changed` | Switch between minutes and hours/minutes |
+| `region_changed` | Select the US, UK, or India catalog |
+| `description_toggled` | Expand or collapse a truncated movie description |
+| `outbound_link_clicked` | Open a categorized TMDB, Red Cross, or GitHub link |
 
 ### Social Media Previews
 
