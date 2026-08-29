@@ -224,6 +224,13 @@ section h2 {
     gap: 0.5rem;
 }
 
+/* Must win over `.filter-group { display: flex }` above (equal specificity,
+   later rule would otherwise override the [hidden] attribute) so toggling
+   the runtime display mode actually hides the inactive filter input group. */
+.filter-group[hidden] {
+    display: none;
+}
+
 .filter-group label {
     font-weight: 600;
     color: var(--text-secondary);
