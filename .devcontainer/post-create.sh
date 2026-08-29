@@ -19,7 +19,7 @@ echo "Installing GitHub CLI Agentic Workflows extension..."
 gh extension install github/gh-aw
 
 echo "Installing Poetry..."
-curl -sSL https://install.python-poetry.org | python3 -
+curl -sSL https://install.python-poetry.org | python3 - --version 2.4.1
 
 # Add Poetry to PATH
 export PATH="/home/vscode/.local/bin:$PATH"
