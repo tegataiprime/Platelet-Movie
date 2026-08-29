@@ -319,7 +319,9 @@ section h2::after {
     opacity: 0.7;
 }
 
-.filters-section h2::before {
+.filters-section h2::before,
+.movies-section h2::before,
+.acknowledgements-section h2::before {
     content: "❧";
     display: inline-block;
     margin-right: 0.4rem;

@@ -3,11 +3,10 @@
 from __future__ import annotations
 
 
-def test_filter_heading_uses_mirrored_leading_ornament(site_page):
-    """Filter Movies uses matching ornaments instead of the target emoji."""
-    heading = site_page.locator(".filters-section h2")
+def assert_balanced_heading_ornaments(heading, expected_text):
+    """Assert a heading has mirrored, evenly spaced decorative ornaments."""
+    assert heading.inner_text() == expected_text
 
-    assert heading.inner_text() == "Filter Movies"
     leading = heading.evaluate(
         "(element) => getComputedStyle(element, '::before').content"
     )
@@ -24,3 +23,27 @@ def test_filter_heading_uses_mirrored_leading_ornament(site_page):
     assert transform.startswith("matrix(-1")
     assert margin_right == "6.4px"
     assert margin_left == margin_right
+
+
+def test_filter_heading_uses_mirrored_leading_ornament(site_page):
+    """Filter Movies uses matching ornaments instead of the target emoji."""
+    assert_balanced_heading_ornaments(
+        site_page.locator(".filters-section h2"),
+        "Filter Movies",
+    )
+
+
+def test_movie_list_heading_uses_mirrored_leading_ornament(site_page):
+    """Movie List uses the same balanced ornament treatment."""
+    assert_balanced_heading_ornaments(
+        site_page.locator(".movies-section h2"),
+        "Movie List",
+    )
+
+
+def test_acknowledgements_heading_uses_mirrored_leading_ornament(site_page):
+    """Acknowledgements uses the same balanced ornament treatment."""
+    assert_balanced_heading_ornaments(
+        site_page.locator(".acknowledgements-section h2"),
+        "Acknowledgements & Disclaimers",
+    )
