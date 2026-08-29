@@ -51,7 +51,7 @@
     --row-expanded-bg:    var(--plum-100);
 
     /* ── Typography ── */
-    --font-heading: Baskerville, "Libre Baskerville", Georgia, serif;
+    --font-heading: "AC Society", Baskerville, "Libre Baskerville", Georgia, serif;
     --font-body:    "Lora", "Source Serif 4", Georgia, serif;
 
     /* ── Legacy aliases (keep for JS-toggled drip icon, TMDB logo etc.) ── */
