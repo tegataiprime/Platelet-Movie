@@ -34,6 +34,7 @@ def prepare_telemetry_config(
 def save_telemetry_config(config: dict) -> Path:
     """Write browser-safe telemetry configuration for the static site."""
     output_path = Path(__file__).parent.parent / "site" / TELEMETRY_CONFIG_FILENAME
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
         f"window.TELEMETRY_CONFIG = {json.dumps(config, separators=(',', ':'))};\n",
         encoding="utf-8",
@@ -253,7 +254,11 @@ def generate_site_data(max_pages: int = 50, region: str | None = None) -> None:
         region: Netflix region code (e.g., US, GB, IN). If None, generates
             for all supported regions.
     """
-    generate_telemetry_config()
+    try:
+        generate_telemetry_config()
+    except ValueError as error:
+        print(f"Error: Invalid telemetry configuration: {error}", file=sys.stderr)
+        sys.exit(1)
 
     # Define supported regions
     supported_regions = ["US", "GB", "IN"]

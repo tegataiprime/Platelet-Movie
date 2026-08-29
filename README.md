@@ -93,7 +93,7 @@ Platelet-Movie follows the [12-Factor App](https://12factor.net/config) methodol
 | `TMDB_REGION` | ❌ | `US` | Netflix region code (ISO 3166-1 alpha-2, e.g., US, GB, CA) |
 | `TMDB_MAX_PAGES` | ❌ | `10` | Maximum number of TMDB result pages to fetch (20 movies per page) |
 | `ENABLE_TELEMETRY` | ❌ | `false` | Enable anonymous Umami analytics when generating the GitHub Pages site |
-| `UMAMI_WEBSITE_ID` | Required when telemetry enabled | – | Public Umami website identifier |
+| `UMAMI_WEBSITE_ID` | ❌ | – | Public Umami website identifier (required when `ENABLE_TELEMETRY=true`) |
 | `UMAMI_SCRIPT_URL` | ❌ | `https://cloud.umami.is/script.js` | Umami browser script URL |
 
 ### Development Configuration

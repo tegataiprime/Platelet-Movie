@@ -20,6 +20,7 @@ from generate_site_data import (  # noqa: E402
     get_movie_data,
     prepare_telemetry_config,
     run_command,
+    save_telemetry_config,
 )
 
 
@@ -89,6 +90,18 @@ class TestPrepareTelemetryConfig:
                 website_id="website-id",
                 script_url="http://example.com/script.js",
             )
+
+
+class TestSaveTelemetryConfig:
+    """Tests for telemetry config file generation."""
+
+    @patch("pathlib.Path.write_text")
+    @patch("pathlib.Path.mkdir")
+    def test_creates_site_directory_before_writing(self, mock_mkdir, mock_write_text):
+        """Telemetry config writer creates the site directory when needed."""
+        save_telemetry_config({"enabled": False})
+        mock_mkdir.assert_called_once_with(parents=True, exist_ok=True)
+        mock_write_text.assert_called_once()
 
 
 class TestGetMovieData:
@@ -387,8 +400,8 @@ class TestGenerateSiteData:
             assert "- The Matrix (136m, 1999)" in commentary_arg
             assert "- Inception (148m, 2010)" in commentary_arg
 
-        # Verify directory creation (once for each region)
-        assert mock_mkdir.call_count == 3
+        # Verify directory creation (telemetry config + once for each region)
+        assert mock_mkdir.call_count == 4
         mock_mkdir.assert_called_with(parents=True, exist_ok=True)
 
         # Verify file writing (3 files, one for each region)
@@ -500,6 +513,20 @@ class TestGenerateSiteData:
         site_data = json.loads(written_data)
 
         assert site_data["movies"] == mock_movies
+
+    @patch("generate_site_data.generate_telemetry_config")
+    @patch("sys.stderr", new_callable=StringIO)
+    def test_telemetry_config_error_exits_cleanly(self, mock_stderr, mock_generate_telemetry):
+        """Telemetry config errors are reported without traceback."""
+        mock_generate_telemetry.side_effect = ValueError("UMAMI_WEBSITE_ID missing")
+
+        with pytest.raises(SystemExit) as exc_info:
+            generate_site_data()
+
+        assert exc_info.value.code == 1
+        assert "Error: Invalid telemetry configuration: UMAMI_WEBSITE_ID missing" in (
+            mock_stderr.getvalue()
+        )
 
 
 class TestMainEntryPoint:

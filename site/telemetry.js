@@ -50,7 +50,6 @@ const telemetry = (() => {
         }
 
         const script = document.createElement("script");
-        script.defer = true;
         script.src = config.scriptUrl;
         script.dataset.websiteId = config.websiteId;
         script.addEventListener("load", flushQueue);

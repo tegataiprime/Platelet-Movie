@@ -413,6 +413,14 @@ function clearAllFavourites() {
     applyRuntimeFilters();
 }
 
+function trackTelemetry(methodName, ...args) {
+    if (typeof telemetry === 'undefined') return;
+    const method = telemetry[methodName];
+    if (typeof method === 'function') {
+        method(...args);
+    }
+}
+
 // Event Listeners Setup
 function setupEventListeners() {
     const themeToggle = document.getElementById('theme-toggle');
@@ -429,7 +437,7 @@ function setupEventListeners() {
 
     const applyFiltersBtn = document.getElementById('apply-filters');
     if (applyFiltersBtn) {
-        applyFiltersBtn.addEventListener('click', applyRuntimeFilters);
+        applyFiltersBtn.addEventListener('click', () => applyRuntimeFilters(true));
     }
 
     const resetFiltersBtn = document.getElementById('reset-filters');
@@ -634,7 +642,7 @@ function renderMovies() {
 }
 
 // Filtering
-function applyRuntimeFilters() {
+function applyRuntimeFilters(trackDurationChange = false) {
     const minRuntime = getMinRuntimeMinutes();
     const maxRuntime = getMaxRuntimeMinutes();
     const errorElement = document.getElementById('filter-error');
@@ -672,7 +680,9 @@ function applyRuntimeFilters() {
     sortMovies();
     renderMovies();
     updateFilterResults();
-    telemetry.trackDurationFilterChange(minRuntime, maxRuntime);
+    if (trackDurationChange) {
+        trackTelemetry('trackDurationFilterChange', minRuntime, maxRuntime);
+    }
 }
 
 function resetFilters() {
@@ -730,7 +740,7 @@ function addFavouriteIconListeners() {
             
             // If in favourites-only mode and this was unfavourited, refresh the view
             const isFav = isFavourite(tmdbId);
-            telemetry.trackFavoriteToggled(isFav ? 'on' : 'off');
+            trackTelemetry('trackFavoriteToggled', isFav ? 'on' : 'off');
             if (favouritesFilterMode === 'favourites' && !isFav) {
                 applyRuntimeFilters();
             }
@@ -787,7 +797,7 @@ function handleSort(column) {
     sortMovies();
     renderMovies();
     updateSortIndicators();
-    telemetry.trackSortChange(sortColumn, sortDirection);
+    trackTelemetry('trackSortChange', sortColumn, sortDirection);
 }
 
 function sortMovies() {
