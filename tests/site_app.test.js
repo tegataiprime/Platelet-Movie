@@ -83,3 +83,36 @@ test('unbounded maximum runtime persists and reloads as empty inputs', () => {
     vm.runInContext('saveFilterValues(90, Infinity)', context);
     assert.equal(storage.get('maxRuntime'), '');
 });
+
+test('applyRuntimeFilters only tracks duration changes when explicitly requested', () => {
+    const { context, elements } = loadApp();
+    elements['min-runtime'].value = '90';
+    elements['max-runtime'].value = '160';
+
+    vm.runInContext(
+        `
+runtimeDisplayMode = 'minutes';
+allMovies = [{ tmdb_id: 1, runtime_minutes: 120 }];
+filteredMovies = [...allMovies];
+sortMovies = () => {};
+renderMovies = () => {};
+updateFilterResults = () => {};
+telemetry = { trackDurationFilterChange: (...args) => globalThis.__tracked.push(args) };
+globalThis.__tracked = [];
+`,
+        context
+    );
+
+    vm.runInContext('applyRuntimeFilters()', context);
+    assert.equal(JSON.stringify(context.__tracked), JSON.stringify([]));
+
+    vm.runInContext('applyRuntimeFilters(true)', context);
+    assert.equal(JSON.stringify(context.__tracked), JSON.stringify([[90, 160]]));
+});
+
+test('trackTelemetry is a no-op when telemetry is unavailable', () => {
+    const { context } = loadApp();
+    assert.doesNotThrow(() =>
+        vm.runInContext("trackTelemetry('trackSortChange', 'runtime_minutes', 'asc')", context)
+    );
+});

@@ -45,6 +45,9 @@ jobs:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
           TMDB_REGION: ${{ vars.TMDB_REGION || 'US' }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ENABLE_TELEMETRY: ${{ vars.ENABLE_TELEMETRY || 'false' }}
+          UMAMI_WEBSITE_ID: ${{ vars.UMAMI_WEBSITE_ID }}
+          UMAMI_SCRIPT_URL: ${{ vars.UMAMI_SCRIPT_URL || 'https://cloud.umami.is/script.js' }}
         run: poetry run python scripts/generate_site_data.py
 
       - name: Upload pages artifact
