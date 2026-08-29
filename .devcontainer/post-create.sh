@@ -19,7 +19,20 @@ echo "Installing GitHub CLI Agentic Workflows extension..."
 gh extension install github/gh-aw
 
 echo "Installing Poetry..."
-curl -sSL https://install.python-poetry.org | python3 - --version 2.4.1
+# Pin the installer script itself to a specific commit SHA of the
+# upstream python-poetry/install.python-poetry.org repo (with a
+# checksum check) rather than the mutable install.python-poetry.org
+# endpoint, consistent with how GitHub Actions are pinned by commit SHA
+# elsewhere in this repo.
+POETRY_INSTALLER_SHA="de1ef28b5fe8d5b6dd1353827d06c14f796fd230"
+POETRY_INSTALLER_SHA256="75745ca71373a7b22fa150953543f03d826a52f8e4bc4350328a33bddd668026"
+POETRY_INSTALLER_PATH="$(mktemp)"
+curl -sSL --retry 3 \
+  "https://raw.githubusercontent.com/python-poetry/install.python-poetry.org/${POETRY_INSTALLER_SHA}/install-poetry.py" \
+  -o "${POETRY_INSTALLER_PATH}"
+echo "${POETRY_INSTALLER_SHA256}  ${POETRY_INSTALLER_PATH}" | sha256sum -c -
+python3 "${POETRY_INSTALLER_PATH}" --version 2.4.1
+rm -f "${POETRY_INSTALLER_PATH}"
 
 # Add Poetry to PATH
 export PATH="/home/vscode/.local/bin:$PATH"
