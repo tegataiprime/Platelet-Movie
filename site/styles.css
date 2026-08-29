@@ -16,6 +16,7 @@
     --button-text: #ffffff;
     --button-hover: #c01e1e;
     --description-line-clamp: 3;  /* Number of lines to show before truncating movie descriptions */
+    --container-padding: 20px;
 }
 
 [data-theme="dark"] {
@@ -84,7 +85,7 @@ body {
 .container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 var(--container-padding);
 }
 
 /* Header */
@@ -93,8 +94,8 @@ header {
     border-bottom: 2px solid var(--accent);
     padding: 0 0 2rem 0;
     margin-bottom: 2rem;
-    margin-left: -20px;
-    margin-right: -20px;
+    margin-left: calc(-1 * var(--container-padding));
+    margin-right: calc(-1 * var(--container-padding));
     overflow: hidden;
     box-shadow: 0 2px 4px var(--shadow);
 }
@@ -117,7 +118,7 @@ header {
     align-items: center;
     flex-wrap: wrap;
     gap: 1rem;
-    padding: 1.5rem 20px 0 20px;
+    padding: 1.5rem var(--container-padding) 0 var(--container-padding);
 }
 
 .header-content h1 {

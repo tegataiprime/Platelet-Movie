@@ -10,6 +10,10 @@ from __future__ import annotations
 from playwright.sync_api import expect
 
 
+CANONICAL_URL = "https://tegataiprime.github.io/Platelet-Movie/"
+CANONICAL_IMAGE = f"{CANONICAL_URL}preview.png"
+
+
 # ---------------------------------------------------------------------------
 # Open Graph meta tags
 # ---------------------------------------------------------------------------
@@ -21,10 +25,9 @@ def test_og_type(site_page):
 
 
 def test_og_url(site_page):
-    """og:url must be set."""
+    """og:url must be the canonical GitHub Pages URL."""
     value = site_page.get_attribute('meta[property="og:url"]', "content")
-    assert value is not None
-    assert len(value) > 0
+    assert value == CANONICAL_URL
 
 
 def test_og_title(site_page):
@@ -42,10 +45,9 @@ def test_og_description(site_page):
 
 
 def test_og_image(site_page):
-    """og:image must point to preview.png."""
+    """og:image must be the canonical preview image URL."""
     value = site_page.get_attribute('meta[property="og:image"]', "content")
-    assert value is not None
-    assert "preview.png" in value
+    assert value == CANONICAL_IMAGE
 
 
 def test_og_image_dimensions(site_page):
@@ -81,10 +83,9 @@ def test_twitter_description(site_page):
 
 
 def test_twitter_image(site_page):
-    """twitter:image must point to preview.png."""
+    """twitter:image must be the canonical preview image URL."""
     value = site_page.get_attribute('meta[name="twitter:image"]', "content")
-    assert value is not None
-    assert "preview.png" in value
+    assert value == CANONICAL_IMAGE
 
 
 # ---------------------------------------------------------------------------
