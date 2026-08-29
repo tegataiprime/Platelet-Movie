@@ -31,7 +31,7 @@ TMDB provides reliable watch provider data (including Netflix availability) that
 - 📋 Returns results **sorted ascending** by runtime, then by title
 - 📄 **Multiple output formats**: Markdown (default), HTML, CSV, and JSON
 - 🌍 Supports different Netflix regions (US, GB, CA, etc.)
-- 🌙 **GitHub Pages site** with light/dark mode, runtime filter with persistence, sortable columns, movie poster thumbnails, and Lady Whistledown commentary
+- 🎭 **Regency-inspired GitHub Pages site** with parchment/theater themes, a plum-and-gold palette, period typography and ornaments, persistent runtime filters, sortable columns, movie poster thumbnails, and Lady Whistledown commentary
 - 📈 **Optional anonymous analytics** via Umami Cloud, tracking aggregate pageviews and privacy-safe UI interactions
 - ⏰ **Runtime filter format follows the display toggle**: switching the website's runtime display between "minutes" and "hours & minutes" also switches the minimum/maximum runtime filter inputs to match, with validation to ensure the maximum is never less than the minimum
 - 🌏 **Multi-region support on website**: Switch between US 🇺🇸, UK 🇬🇧, and India 🇮🇳 Netflix catalogs with preference persistence
@@ -277,8 +277,8 @@ The project includes a static website hosted on GitHub Pages that displays the w
   - Touch target compliance (minimum 48×48px on mobile)
   - Focus indicators for keyboard users
 - **Runtime Display Format**: Toggle movie run-times between **hours & minutes** (default, e.g. "2 h 15 m") and **minutes only** (e.g. "135 m") with the "Show Runtime in Minutes" / "Show Runtime in Hrs & Mins" button. **Preference is saved to browser local storage and persists between visits.**
-- **Light/Dark Mode**: Toggle between themes with persistent preference storage
-- **American Red Cross Branding**: Color scheme follows American Red Cross brand guidelines (#E42424 red)
+- **Parchment/Theater Themes**: Toggle between the light parchment theme and dark theater theme, with the preference saved in browser local storage
+- **Regency-Inspired Design**: Plum, parchment, and gold palette; Libre Baskerville headings; Lora body text; mirrored floral ornaments; and a responsive illustrated banner
 - **Movie Poster Thumbnails**: Each movie displays a 60px poster thumbnail from TMDB, aligned to the left of the movie title and description
 - **Runtime Filter**: Filter movies by minimum (default: 90 min) and maximum (default: 160 min) runtime with inline validation. **Filter selections are automatically saved to browser local storage and persist between visits.**
 - **Favourites Feature**: 
@@ -303,7 +303,7 @@ The site is automatically updated every **Friday at 8:00 PM UTC** (same schedule
 The workflow:
 1. Generates fresh movie data using the `platelet-movie` CLI
 2. Creates Lady Whistledown commentary using OpenAI
-3. Builds a `data.json` file with all content
+3. Builds region-specific `data-us.json`, `data-gb.json`, and `data-in.json` files
 4. Deploys the static site to GitHub Pages
 
 ### Enabling Umami telemetry
@@ -421,7 +421,7 @@ All common developer tasks are available via [Poe the Poet](https://poethepoet.n
 | `poe lint` | Lint source code and tests with Ruff |
 | `poe format` | Auto-format source code and tests with Ruff |
 | `poe run` | Run the CLI (`platelet-movie`) |
-| `poe generate` | Regenerate `site/data.json` with fresh movie data and Lady Whistledown commentary (fetches 50 pages by default) |
+| `poe generate` | Regenerate the region-specific `site/data-*.json` files with fresh movie data and Lady Whistledown commentary (fetches 50 pages per region by default) |
 | `poe site` | Serve the static website locally for preview (port 8000) |
 
 ### Examples
@@ -593,16 +593,9 @@ The project uses GitHub Actions to ensure code quality:
 **GitHub Pages Deployment** (`deploy-github-pages.yml`):
 - Automatically generates and deploys the static website
 - Runs every Friday at 8:00 PM UTC (same schedule as the weekly email)
-- Generates movie data, Lady Whistledown commentary, and builds `data.json`
+- Generates movie data and Lady Whistledown commentary for the US, UK, and India region files
 - Deploys to GitHub Pages for public viewing
 - Can be triggered manually from the Actions tab
-
-**Multi-Device Docs Tester** (`.github/aw/multi-device-docs-tester.md`):
-- GitHub Agentic Workflow for automated UI testing across devices
-- Tests the static site on mobile, tablet, and desktop viewports
-- Validates responsive design, accessibility, and interactive elements
-- Runs daily on schedule or can be triggered manually
-- Creates GitHub issues when problems are found
 
 **Note:** To block PRs from being merged when tests fail, configure branch protection rules in repository settings to require the "Test Pull Request" workflow to pass before merging.
 
@@ -627,9 +620,12 @@ Platelet-Movie/
 │   └── mcp.md                            # MCP server documentation
 ├── site/                                 # GitHub Pages static site
 │   ├── index.html                        # Main HTML page
-│   ├── styles.css                        # Styles with light/dark mode
-│   ├── app.js                            # JavaScript for sorting & theme
-│   └── data.json                         # Generated movie data
+│   ├── styles.css                        # Regency palette, typography, and themes
+│   ├── app.js                            # Filtering, sorting, favourites, and themes
+│   ├── telemetry.js                      # Privacy-conscious Umami event tracking
+│   ├── telemetry-config.js               # Generated telemetry configuration
+│   ├── preview.png                       # Header banner and social preview image
+│   └── data-{us,gb,in}.json              # Generated regional movie data
 ├── platelet_movie/
 │   ├── __init__.py       # Package metadata
 │   ├── cli.py            # Click-based CLI entry point
@@ -643,12 +639,19 @@ Platelet-Movie/
 │   ├── test_tmdb_client.py
 │   ├── test_config.py
 │   ├── test_models.py
+│   ├── test_generate_site_data.py
 │   ├── test_lady_whistledown.py
+│   ├── test_telemetry.py
 │   └── ui/                 # Playwright browser UI tests for site/
 │       ├── conftest.py
-│       └── test_runtime_filter_toggle.py
+│       ├── test_regency_typography.py
+│       ├── test_runtime_filter_toggle.py
+│       ├── test_section_ornaments.py
+│       ├── test_social_meta_tags.py
+│       └── test_theater_theme.py
 ├── scripts/
-│   └── lady_whistledown.py  # OpenAI-powered commentary generator
+│   ├── generate_site_data.py # Regional site data and telemetry config generator
+│   └── lady_whistledown.py   # OpenAI-powered commentary generator
 ├── pyproject.toml        # Poetry + Poe tasks + Ruff config
 ├── poetry.lock
 └── README.md
@@ -718,7 +721,7 @@ Platelet donation typically takes 2-3 hours and helps cancer patients, trauma vi
 
 ### ⚠️ Red Cross Disclaimer
 
-This project is not affiliated with, endorsed by, or connected to the American Red Cross or any other Red Cross organization. The use of the American Red Cross brand colors and references to platelet donation are for informational purposes only. All trademarks and brand elements belong to their respective owners.
+This project is not affiliated with, endorsed by, or connected to the American Red Cross or any other Red Cross organization. References and links related to platelet donation are provided for informational purposes only. All trademarks belong to their respective owners.
 
 ---
 
