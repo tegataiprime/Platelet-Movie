@@ -353,6 +353,7 @@ class TestGenerateSiteData:
 
     @patch("generate_site_data.get_movie_data")
     @patch("generate_site_data.get_commentary")
+    @patch("generate_site_data.generate_telemetry_config")
     @patch("builtins.open", new_callable=mock_open)
     @patch("pathlib.Path.mkdir")
     @patch("sys.stderr", new_callable=StringIO)
@@ -363,6 +364,7 @@ class TestGenerateSiteData:
         mock_stderr,
         mock_mkdir,
         mock_file,
+        mock_generate_telemetry_config,
         mock_get_commentary,
         mock_get_movie_data,
     ):
@@ -400,8 +402,8 @@ class TestGenerateSiteData:
             assert "- The Matrix (136m, 1999)" in commentary_arg
             assert "- Inception (148m, 2010)" in commentary_arg
 
-        # Verify directory creation (telemetry config + once for each region)
-        assert mock_mkdir.call_count == 4
+        # Verify directory creation (once for each region)
+        assert mock_mkdir.call_count == 3
         mock_mkdir.assert_called_with(parents=True, exist_ok=True)
 
         # Verify file writing (3 files, one for each region)
