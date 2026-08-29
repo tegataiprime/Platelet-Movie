@@ -26,14 +26,14 @@ dev = [
 ]
 
 [tool.poe.tasks]
-test            = "pytest --cov=platelet_movie --cov=scripts --cov-report=term-missing --cov-fail-under=80 --ignore=tests/ui"
-test-ui         = "pytest tests/ui"
+test             = "pytest --cov=platelet_movie --cov=scripts --cov-report=term-missing --cov-fail-under=80 --ignore=tests/ui"
+test-ui          = "pytest tests/ui"
 install-browsers = "playwright install --with-deps chromium"
-lint       = "ruff check platelet_movie tests"
-format     = "ruff format platelet_movie tests"
-run        = "platelet-movie"
-generate   = "python scripts/generate_site_data.py"
-site       = "python -m http.server 8000 --directory site --bind 0.0.0.0"
+lint             = "ruff check platelet_movie tests"
+format           = "ruff format platelet_movie tests"
+run              = "platelet-movie"
+generate         = "python scripts/generate_site_data.py"
+site             = "python -m http.server 8000 --directory site --bind 0.0.0.0"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

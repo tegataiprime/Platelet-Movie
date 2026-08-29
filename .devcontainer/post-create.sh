@@ -19,11 +19,15 @@ echo "Installing GitHub CLI Agentic Workflows extension..."
 gh extension install github/gh-aw
 
 echo "Installing Poetry..."
-# Pin the installer script itself to a specific commit SHA of the
+# Pin the installer *script* itself to a specific commit SHA of the
 # upstream python-poetry/install.python-poetry.org repo (with a
 # checksum check) rather than the mutable install.python-poetry.org
 # endpoint, consistent with how GitHub Actions are pinned by commit SHA
-# elsewhere in this repo.
+# elsewhere in this repo. POETRY_INSTALLER_SHA pins the installer
+# script; the --version flag below pins the Poetry package version it
+# installs (kept in sync with the CI workflows' `version:` input for
+# snok/install-poetry, which should match the Poetry version that last
+# generated poetry.lock).
 POETRY_INSTALLER_SHA="de1ef28b5fe8d5b6dd1353827d06c14f796fd230"
 POETRY_INSTALLER_SHA256="75745ca71373a7b22fa150953543f03d826a52f8e4bc4350328a33bddd668026"
 POETRY_INSTALLER_PATH="$(mktemp)"
