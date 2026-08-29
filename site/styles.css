@@ -93,13 +93,14 @@ header {
     border-bottom: 2px solid var(--accent);
     padding: 0 0 2rem 0;
     margin-bottom: 2rem;
+    margin-left: -20px;
+    margin-right: -20px;
+    overflow: hidden;
     box-shadow: 0 2px 4px var(--shadow);
 }
 
 .header-banner {
-    width: calc(100% + 40px);
-    margin-left: -20px;
-    margin-right: -20px;
+    width: 100%;
     line-height: 0;
     padding-top: 1rem;
 }
@@ -116,7 +117,7 @@ header {
     align-items: center;
     flex-wrap: wrap;
     gap: 1rem;
-    padding: 1.5rem 0 0 0;
+    padding: 1.5rem 20px 0 20px;
 }
 
 .header-content h1 {
