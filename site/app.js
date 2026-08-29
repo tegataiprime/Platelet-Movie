@@ -639,8 +639,19 @@ function renderMovies() {
 
     tbody.innerHTML = rows;
     
-    // After rendering, check which descriptions are truncated and add click handlers
-    initializeExpandableRows();
+    // Wait for the browser to lay out the clamped descriptions before measuring
+    // scrollHeight/clientHeight. Measuring synchronously after innerHTML is set can
+    // report equal heights and leave truncated rows without expansion controls.
+    requestAnimationFrame(() => {
+        initializeExpandableRows();
+    });
+
+    // Web fonts can change line wrapping after the first layout pass.
+    if (document.fonts?.ready) {
+        document.fonts.ready.then(() => {
+            initializeExpandableRows();
+        });
+    }
     
     // Add click handlers for favourite icons
     addFavouriteIconListeners();

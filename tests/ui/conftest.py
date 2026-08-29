@@ -36,7 +36,17 @@ MOCK_SITE_DATA = {
             "rating": 7.1,
             "vote_average": 7.1,
             "certification": "PG-13",
-            "description": "A short film.",
+            "description": (
+                "A donor settles in for a long and eventful journey filled with "
+                "unexpected turns, memorable companions, and enough detail to "
+                "require the movie row description to be expanded before every "
+                "chapter of this deliberately lengthy synopsis can be read. "
+                "Along the way, an ensemble of unlikely allies crosses distant "
+                "landscapes, solves an old mystery, and discovers why patience "
+                "and courage matter when the final act arrives. Their adventure "
+                "continues through several more twists so this fixture reliably "
+                "exceeds three lines even on a wide desktop viewport."
+            ),
         },
         {
             "tmdb_id": 2,

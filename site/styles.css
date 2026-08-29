@@ -45,6 +45,10 @@
 
     --focus-ring:  #7d57a1;
     --shadow-soft: 0 6px 24px rgba(47, 31, 59, 0.12);
+    --muted-surface:      var(--parchment-100);
+    --secondary-hover-bg: var(--parchment-200);
+    --row-hover-bg:       var(--parchment-100);
+    --row-expanded-bg:    var(--plum-100);
 
     /* ── Typography ── */
     --font-heading: "Playfair Display", "Cormorant Garamond", Georgia, serif;
@@ -92,6 +96,10 @@
 
     --focus-ring:  #d2b06c;
     --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.35);
+    --muted-surface:      var(--surface-elevated);
+    --secondary-hover-bg: var(--surface-elevated);
+    --row-hover-bg:       var(--surface-elevated);
+    --row-expanded-bg:    var(--surface-elevated);
 
     /* legacy aliases */
     --bg-primary:   var(--bg);
@@ -323,7 +331,7 @@ section h2::after {
     font-style: italic;
     line-height: 1.9;
     padding: 1.5rem;
-    background-color: var(--parchment-100);
+    background-color: var(--muted-surface);
     border-left: 4px solid var(--accent);
     border-radius: 4px;
     margin-bottom: 1rem;
@@ -454,7 +462,7 @@ section h2::after {
 }
 
 .btn-secondary:hover {
-    background-color: var(--parchment-200);
+    background-color: var(--secondary-hover-bg);
     border-color: var(--accent);
 }
 
@@ -531,11 +539,12 @@ tbody tr[role="button"] {
 }
 
 tbody tr:hover {
-    background-color: var(--parchment-100);
+    background-color: var(--row-hover-bg);
 }
 
 tbody tr.expanded {
-    background-color: var(--plum-100);
+    background-color: var(--row-expanded-bg);
+    color: var(--text);
 }
 
 td {
@@ -673,7 +682,7 @@ tr.expanded .movie-description.truncated::after {
 
 .acknowledgement-item {
     padding: 1.5rem 1.5rem 1.5rem 1.25rem;
-    background-color: var(--parchment-100);
+    background-color: var(--muted-surface);
     border-radius: 8px;
     border-left: 3px solid var(--accent);
     box-shadow: var(--shadow-soft);
