@@ -120,9 +120,7 @@ function toggleRuntimeDisplayMode() {
     updateFilterInputsVisibility();
 
     setMinRuntimeInputs(minMinutes);
-    if (Number.isFinite(maxMinutesRaw)) {
-        setMaxRuntimeInputs(maxMinutesRaw);
-    }
+    setMaxRuntimeInputs(maxMinutesRaw);
 
     renderMovies();
 }
@@ -192,11 +190,19 @@ function setMinRuntimeInputs(totalMinutes) {
  */
 function setMaxRuntimeInputs(totalMinutes) {
     const minutesInput = document.getElementById('max-runtime');
+    const hoursInput = document.getElementById('max-runtime-hours');
+    const minutesInputHM = document.getElementById('max-runtime-minutes');
+
+    if (!Number.isFinite(totalMinutes)) {
+        if (minutesInput) minutesInput.value = '';
+        if (hoursInput) hoursInput.value = '';
+        if (minutesInputHM) minutesInputHM.value = '';
+        return;
+    }
+
     if (minutesInput) minutesInput.value = totalMinutes;
 
     const { hours, minutes } = minutesToHoursAndMinutes(totalMinutes);
-    const hoursInput = document.getElementById('max-runtime-hours');
-    const minutesInputHM = document.getElementById('max-runtime-minutes');
     if (hoursInput) hoursInput.value = hours;
     if (minutesInputHM) minutesInputHM.value = minutes;
 }
@@ -283,7 +289,8 @@ function initFilters() {
     }
     
     if (savedMaxRuntime !== null) {
-        setMaxRuntimeInputs(Number.parseInt(savedMaxRuntime, 10) || 0);
+        const parsedMaxRuntime = Number.parseInt(savedMaxRuntime, 10);
+        setMaxRuntimeInputs(Number.isNaN(parsedMaxRuntime) ? Infinity : parsedMaxRuntime);
     }
     
     // Return true if saved filters exist
@@ -292,7 +299,7 @@ function initFilters() {
 
 function saveFilterValues(minRuntime, maxRuntime) {
     localStorage.setItem('minRuntime', minRuntime);
-    localStorage.setItem('maxRuntime', maxRuntime);
+    localStorage.setItem('maxRuntime', Number.isFinite(maxRuntime) ? maxRuntime : '');
 }
 
 function clearSavedFilters() {
