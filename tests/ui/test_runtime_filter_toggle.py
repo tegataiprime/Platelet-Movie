@@ -58,20 +58,39 @@ def test_only_one_filter_input_format_visible_at_a_time(site_page):
     rather than only checking a single before/after snapshot.
     """
     page = site_page
+    min_hm_group = page.locator("#min-runtime-hm-group")
+    min_minutes_group = page.locator("#min-runtime-group")
+    max_hm_group = page.locator("#max-runtime-hm-group")
+    max_minutes_group = page.locator("#max-runtime-group")
+
+    # Start in the known default state (hours+minutes visible) so each
+    # iteration below can wait for a specific, deterministic state rather
+    # than racing the click handler.
+    expect(min_hm_group).to_be_visible()
 
     for _ in range(4):
-        hm_visible = page.locator("#min-runtime-hm-group").is_visible()
-        minutes_visible = page.locator("#min-runtime-group").is_visible()
+        hm_visible = min_hm_group.is_visible()
+        minutes_visible = min_minutes_group.is_visible()
         assert hm_visible != minutes_visible, (
             "Exactly one of the minute-only / hours+minutes filter groups "
             "should be visible at a time, never both or neither."
         )
-        max_hm_visible = page.locator("#max-runtime-hm-group").is_visible()
-        max_minutes_visible = page.locator("#max-runtime-group").is_visible()
+        max_hm_visible = max_hm_group.is_visible()
+        max_minutes_visible = max_minutes_group.is_visible()
         assert max_hm_visible != max_minutes_visible
         assert hm_visible == max_hm_visible
 
         page.click("#runtime-format-toggle")
+
+        # Wait for the toggle to actually flip the visible group before the
+        # next iteration reads state, so the assertions above never race
+        # the click handler on slower CI runners.
+        if hm_visible:
+            expect(min_minutes_group).to_be_visible()
+            expect(min_hm_group).to_be_hidden()
+        else:
+            expect(min_hm_group).to_be_visible()
+            expect(min_minutes_group).to_be_hidden()
 
 
 def test_default_values_convert_correctly_between_modes(site_page):

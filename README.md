@@ -406,7 +406,6 @@ poe test-ui
 
 # Lint
 poe lint
-poe lint
 
 # Format code
 poe format
