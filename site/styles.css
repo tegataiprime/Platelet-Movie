@@ -220,7 +220,8 @@ header {
 .header-content h1 {
     font-family: var(--font-heading);
     font-size: 2.5rem;
-    font-weight: 900;
+    font-optical-sizing: auto;
+    font-weight: 700;
     color: var(--heading);
     margin: 0;
     letter-spacing: -0.01em;
@@ -307,6 +308,7 @@ section {
 
 section h2 {
     font-family: var(--font-heading);
+    font-optical-sizing: auto;
     font-weight: 700;
     color: var(--heading);
     margin-bottom: 1rem;
@@ -690,6 +692,7 @@ tr.expanded .movie-description.truncated::after {
 
 .acknowledgement-item h3 {
     font-family: var(--font-heading);
+    font-optical-sizing: auto;
     color: var(--heading);
     margin-bottom: 0.5rem;
     font-size: 1.1rem;

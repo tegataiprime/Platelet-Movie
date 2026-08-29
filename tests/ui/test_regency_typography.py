@@ -11,11 +11,21 @@ def test_page_and_section_titles_use_libre_baskerville(site_page):
         "font-family",
         '"Libre Baskerville", Baskerville, Georgia, serif',
     )
+    expect(site_page.locator("h1")).to_have_css("font-weight", "700")
+    expect(site_page.locator("h1")).to_have_css("font-optical-sizing", "auto")
     expect(site_page.locator("section h2").first).to_have_css(
         "font-family",
         '"Libre Baskerville", Baskerville, Georgia, serif',
     )
+    expect(site_page.locator("section h2").first).to_have_css(
+        "font-optical-sizing",
+        "auto",
+    )
     expect(site_page.locator(".acknowledgement-item h3").first).to_have_css(
         "font-family",
         '"Libre Baskerville", Baskerville, Georgia, serif',
+    )
+    expect(site_page.locator(".acknowledgement-item h3").first).to_have_css(
+        "font-optical-sizing",
+        "auto",
     )
