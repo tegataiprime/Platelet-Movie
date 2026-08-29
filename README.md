@@ -462,8 +462,10 @@ The script generates region-specific data files in the `site/` directory:
 ### Running Tests Manually
 
 ```bash
-pytest tests/ -v --cov=platelet_movie --cov-report=term-missing
+pytest tests/ --ignore=tests/ui -v --cov=platelet_movie --cov-report=term-missing
 ```
+
+**Note:** `tests/ui` is excluded above because it requires Playwright's Chromium browser (`poe install-browsers`) and exercises the static website rather than the `platelet_movie` package. Running `pytest tests/` without `--ignore=tests/ui` will also collect it and can fail if the browser isn't installed. See "UI Browser Tests (Playwright)" below to run it separately with `poe test-ui`.
 
 ### UI Browser Tests (Playwright)
 
