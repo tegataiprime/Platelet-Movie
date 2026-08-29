@@ -309,7 +309,9 @@ section h2 {
 }
 
 section h2::after {
-    content: " ❧";
+    content: "❧";
+    display: inline-block;
+    margin-left: 0.4rem;
     color: var(--accent);
     font-style: normal;
     font-weight: 400;
@@ -318,8 +320,9 @@ section h2::after {
 }
 
 .filters-section h2::before {
-    content: "❧ ";
+    content: "❧";
     display: inline-block;
+    margin-right: 0.4rem;
     color: var(--accent);
     font-style: normal;
     font-weight: 400;

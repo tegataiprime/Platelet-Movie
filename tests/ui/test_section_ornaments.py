@@ -14,5 +14,13 @@ def test_filter_heading_uses_mirrored_leading_ornament(site_page):
     transform = heading.evaluate(
         "(element) => getComputedStyle(element, '::before').transform"
     )
+    margin_right = heading.evaluate(
+        "(element) => getComputedStyle(element, '::before').marginRight"
+    )
+    margin_left = heading.evaluate(
+        "(element) => getComputedStyle(element, '::after').marginLeft"
+    )
     assert "❧" in leading
     assert transform.startswith("matrix(-1")
+    assert margin_right == "6.4px"
+    assert margin_left == margin_right
