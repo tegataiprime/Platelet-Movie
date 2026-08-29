@@ -484,7 +484,7 @@ poe test-ui
 The tests serve `site/` over a local HTTP server and mock the `data-{region}.json` network responses (via Playwright route interception), so they run deterministically without depending on or mutating the real generated site data files. They are excluded from `poe test` / the coverage requirement since they exercise the static website rather than the `platelet_movie` package, and are run as a separate step in CI.
 
 **Coverage includes:**
-- The runtime display toggle ("Show Runtime in Minutes" / "Show Runtime in Hrs & Mins") correctly shows only the matching filter input format (minutes-only vs. hours+minutes) — a regression test for a CSS specificity bug (see PR #85)
+- The runtime display toggle ("Show Runtime in Minutes" / "Show Runtime in Hrs & Mins") correctly shows only the matching filter input format (minutes-only vs. hours+minutes) — a regression test for a CSS specificity bug where `.filter-group { display: flex }` silently overrode the `hidden` attribute
 - Runtime value conversion between the two filter input formats
 - Filter validation (maximum runtime must be ≥ minimum runtime)
 - Reset-to-defaults behavior

@@ -7,7 +7,8 @@ user-agent stylesheet at equal specificity, the `display: flex` rule silently
 overrode the `hidden` attribute that app.js was setting, so both the
 minutes-only and hours+minutes filter input groups rendered simultaneously
 regardless of the "Show Runtime in Minutes" / "Show Runtime in Hrs & Mins"
-toggle state. See PR #85 for the fix.
+toggle state. The fix adds a more-specific `.filter-group[hidden]` CSS
+rule that overrides the `display: flex` rule for the inactive group.
 """
 
 from __future__ import annotations
