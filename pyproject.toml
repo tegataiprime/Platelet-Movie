@@ -22,10 +22,13 @@ dev = [
     "pytest-mock>=3.14.0",
     "poethepoet>=0.32.2",
     "ruff>=0.9.0",
+    "pytest-playwright>=0.5.2",
 ]
 
 [tool.poe.tasks]
-test       = "pytest --cov=platelet_movie --cov=scripts --cov-report=term-missing --cov-fail-under=80"
+test            = "pytest --cov=platelet_movie --cov=scripts --cov-report=term-missing --cov-fail-under=80 --ignore=tests/ui"
+test-ui         = "pytest tests/ui"
+install-browsers = "playwright install --with-deps chromium"
 lint       = "ruff check platelet_movie tests"
 format     = "ruff format platelet_movie tests"
 run        = "platelet-movie"

@@ -41,8 +41,14 @@ jobs:
       - name: Install dependencies
         run: poetry install --all-extras
 
+      - name: Install Playwright browsers
+        run: poetry run poe install-browsers
+
       - name: Run linter
         run: poetry run poe lint
 
       - name: Run tests with coverage
         run: poetry run poe test
+
+      - name: Run UI browser tests
+        run: poetry run poe test-ui
