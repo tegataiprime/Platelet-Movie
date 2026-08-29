@@ -24,6 +24,7 @@ function loadApp(savedValues = {}) {
     const context = vm.createContext({
         console,
         document: {
+            documentElement: { dataset: { theme: 'light' } },
             addEventListener() {},
             getElementById(id) {
                 return elements[id] || null;
@@ -115,4 +116,112 @@ test('trackTelemetry is a no-op when telemetry is unavailable', () => {
     assert.doesNotThrow(() =>
         vm.runInContext("trackTelemetry('trackSortChange', 'runtime_minutes', 'asc')", context)
     );
+});
+
+test('meaningful controls track their completed outcomes', () => {
+    const { context, elements } = loadApp();
+    elements['min-runtime'].value = '90';
+    elements['max-runtime'].value = '160';
+
+    vm.runInContext(
+        `
+globalThis.__tracked = [];
+telemetry = new Proxy({}, {
+    get: (_, method) => (...args) => globalThis.__tracked.push([method, ...args]),
+});
+updateThemeIcon = () => {};
+updateFavouritesButtonText = () => {};
+loadData = () => {};
+renderMovies = () => {};
+sortMovies = () => {};
+updateFilterResults = () => {};
+updateSortIndicators = () => {};
+clearSavedFilters = () => {};
+setMinRuntimeInputs = () => {};
+setMaxRuntimeInputs = () => {};
+allMovies = [];
+filteredMovies = [];
+`,
+        context
+    );
+
+    vm.runInContext(`
+        toggleTheme();
+        changeRegion("gb");
+        runtimeDisplayMode = "hours_minutes";
+        toggleRuntimeDisplayMode();
+        resetFilters();
+        clearAllFavourites();
+        handleSort("title");
+    `, context);
+
+    assert.deepEqual(JSON.parse(JSON.stringify(context.__tracked)), [
+        ['trackThemeChanged', 'theater'],
+        ['trackRegionChanged', 'gb'],
+        ['trackRuntimeDisplayChanged', 'minutes'],
+        ['trackFiltersReset'],
+        ['trackFavoritesCleared'],
+        ['trackSortChange', 'title', 'asc'],
+    ]);
+});
+
+test('invalid actions and passive filter applications are not tracked', () => {
+    const { context, elements } = loadApp();
+    elements['min-runtime'].value = '200';
+    elements['max-runtime'].value = '100';
+
+    vm.runInContext(
+        `
+globalThis.__tracked = [];
+telemetry = new Proxy({}, {
+    get: (_, method) => (...args) => globalThis.__tracked.push([method, ...args]),
+});
+allMovies = [];
+changeRegion("invalid");
+runtimeDisplayMode = "minutes";
+applyRuntimeFilters(true);
+`,
+        context
+    );
+
+    assert.deepEqual(JSON.parse(JSON.stringify(context.__tracked)), []);
+});
+
+test('favourites filter, description toggles, and categorized links are tracked', () => {
+    const { context } = loadApp();
+
+    vm.runInContext(
+        `
+globalThis.__tracked = [];
+telemetry = new Proxy({}, {
+    get: (_, method) => (...args) => globalThis.__tracked.push([method, ...args]),
+});
+const toggleButton = {
+    dataset: { filterMode: "all" },
+    querySelector: () => ({ textContent: "" }),
+};
+document.getElementById = id => id === "toggle-favourites" ? toggleButton : null;
+applyRuntimeFilters = () => {};
+handleToggleFavouritesFilter();
+
+const row = {
+    classList: { toggle: () => true },
+    setAttribute() {},
+};
+toggleExpandableRow(row);
+
+handleOutboundLinkClick({
+    target: {
+        closest: () => ({ dataset: { telemetryDestination: "red_cross" } }),
+    },
+});
+`,
+        context
+    );
+
+    assert.deepEqual(JSON.parse(JSON.stringify(context.__tracked)), [
+        ['trackFavoritesFilterChanged', 'favorites'],
+        ['trackDescriptionToggled', 'expanded'],
+        ['trackOutboundLink', 'red_cross'],
+    ]);
 });

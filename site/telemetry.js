@@ -10,6 +10,12 @@ const telemetry = (() => {
         "certification",
         "genres",
     ]);
+    const validThemes = new Set(["light", "theater"]);
+    const validRegions = new Set(["us", "gb", "in"]);
+    const validRuntimeFormats = new Set(["hours_minutes", "minutes"]);
+    const validFavoritesFilterModes = new Set(["all", "favorites"]);
+    const validDescriptionStates = new Set(["expanded", "collapsed"]);
+    const validOutboundDestinations = new Set(["tmdb", "red_cross", "github"]);
 
     function runtimeBucket(runtime) {
         if (runtime < 90) return "under-90";
@@ -60,6 +66,17 @@ const telemetry = (() => {
 
     return {
         trackDurationFilterChange(minimum, maximum) {
+            if (
+                typeof minimum !== "number"
+                || typeof maximum !== "number"
+                || !Number.isFinite(minimum)
+                || (maximum !== Infinity && !Number.isFinite(maximum))
+                || minimum < 0
+                || maximum < 0
+                || maximum < minimum
+            ) {
+                return;
+            }
             send("filter_duration_changed", {
                 minimum: runtimeBucket(minimum),
                 maximum: runtimeBucket(maximum),
@@ -73,6 +90,42 @@ const telemetry = (() => {
         trackFavoriteToggled(state) {
             if (["on", "off"].includes(state)) {
                 send("favorite_toggled", { state });
+            }
+        },
+        trackThemeChanged(theme) {
+            if (validThemes.has(theme)) {
+                send("theme_changed", { theme });
+            }
+        },
+        trackRegionChanged(region) {
+            if (validRegions.has(region)) {
+                send("region_changed", { region });
+            }
+        },
+        trackRuntimeDisplayChanged(format) {
+            if (validRuntimeFormats.has(format)) {
+                send("runtime_display_changed", { format });
+            }
+        },
+        trackFiltersReset() {
+            send("filters_reset", {});
+        },
+        trackFavoritesFilterChanged(mode) {
+            if (validFavoritesFilterModes.has(mode)) {
+                send("favorites_filter_changed", { mode });
+            }
+        },
+        trackFavoritesCleared() {
+            send("favorites_cleared", {});
+        },
+        trackDescriptionToggled(state) {
+            if (validDescriptionStates.has(state)) {
+                send("description_toggled", { state });
+            }
+        },
+        trackOutboundLink(destination) {
+            if (validOutboundDestinations.has(destination)) {
+                send("outbound_link_clicked", { destination });
             }
         },
     };
