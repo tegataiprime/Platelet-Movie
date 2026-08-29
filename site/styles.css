@@ -240,6 +240,33 @@ section h2 {
     width: 150px;
 }
 
+.filter-group-legend {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.hm-inputs {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.hm-inputs input[type="number"] {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 1rem;
+    width: 70px;
+}
+
+.hm-inputs .hm-unit {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
 .filter-results {
     margin-top: 1rem;
     font-weight: 600;
@@ -612,6 +639,12 @@ tbody tr[role="button"]:focus-visible {
 
     /* Increase touch targets for WCAG 2.1 Level AA (2.5.5 Target Size) */
     .filter-group input[type="number"] {
+        width: 100%;
+        padding: 0.75rem;
+        min-height: 48px;
+    }
+
+    .hm-inputs input[type="number"] {
         width: 100%;
         padding: 0.75rem;
         min-height: 48px;

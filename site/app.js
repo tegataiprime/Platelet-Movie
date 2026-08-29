@@ -105,13 +105,149 @@ function initRuntimeDisplayMode() {
     const saved = localStorage.getItem('runtimeDisplayMode');
     runtimeDisplayMode = saved === 'minutes' ? 'minutes' : 'hours_minutes';
     updateRuntimeToggleButton();
+    updateFilterInputsVisibility();
 }
 
 function toggleRuntimeDisplayMode() {
+    // Capture the currently entered filter values (as canonical minutes) before
+    // switching modes so the new input representation shows equivalent values.
+    const minMinutes = getMinRuntimeMinutes();
+    const maxMinutesRaw = getMaxRuntimeMinutes();
+
     runtimeDisplayMode = runtimeDisplayMode === 'hours_minutes' ? 'minutes' : 'hours_minutes';
     localStorage.setItem('runtimeDisplayMode', runtimeDisplayMode);
     updateRuntimeToggleButton();
+    updateFilterInputsVisibility();
+
+    setMinRuntimeInputs(minMinutes);
+    setMaxRuntimeInputs(maxMinutesRaw);
+
     renderMovies();
+}
+
+/**
+ * Show/hide the minute-only vs hours+minutes filter input groups based on
+ * the current runtime display mode.
+ */
+function updateFilterInputsVisibility() {
+    const showHM = runtimeDisplayMode === 'hours_minutes';
+    const minMinutesGroup = document.getElementById('min-runtime-group');
+    const maxMinutesGroup = document.getElementById('max-runtime-group');
+    const minHMGroup = document.getElementById('min-runtime-hm-group');
+    const maxHMGroup = document.getElementById('max-runtime-hm-group');
+
+    if (minMinutesGroup) minMinutesGroup.hidden = showHM;
+    if (maxMinutesGroup) maxMinutesGroup.hidden = showHM;
+    if (minHMGroup) minHMGroup.hidden = !showHM;
+    if (maxHMGroup) maxHMGroup.hidden = !showHM;
+}
+
+/**
+ * Convert a total number of minutes into an { hours, minutes } pair.
+ * @param {number} totalMinutes - Runtime in minutes
+ * @returns {{hours: number, minutes: number}}
+ */
+function minutesToHoursAndMinutes(totalMinutes) {
+    const safeMinutes = Number.isFinite(totalMinutes) ? Math.max(0, totalMinutes) : 0;
+    return {
+        hours: Math.floor(safeMinutes / 60),
+        minutes: safeMinutes % 60,
+    };
+}
+
+/**
+ * Convert separate hours and minutes values into a total minutes value.
+ * @param {number|string} hours
+ * @param {number|string} minutes
+ * @returns {number}
+ */
+function hoursAndMinutesToMinutes(hours, minutes) {
+    const h = Number.parseInt(hours, 10) || 0;
+    const m = Number.parseInt(minutes, 10) || 0;
+    return h * 60 + m;
+}
+
+/**
+ * Write a canonical minutes value into the minimum runtime filter inputs
+ * (both the minutes-only input and the hours+minutes inputs).
+ * @param {number} totalMinutes
+ */
+function setMinRuntimeInputs(totalMinutes) {
+    const minutesInput = document.getElementById('min-runtime');
+    if (minutesInput) minutesInput.value = totalMinutes;
+
+    const { hours, minutes } = minutesToHoursAndMinutes(totalMinutes);
+    const hoursInput = document.getElementById('min-runtime-hours');
+    const minutesInputHM = document.getElementById('min-runtime-minutes');
+    if (hoursInput) hoursInput.value = hours;
+    if (minutesInputHM) minutesInputHM.value = minutes;
+}
+
+/**
+ * Write a canonical minutes value into the maximum runtime filter inputs
+ * (both the minutes-only input and the hours+minutes inputs).
+ * @param {number} totalMinutes
+ */
+function setMaxRuntimeInputs(totalMinutes) {
+    const minutesInput = document.getElementById('max-runtime');
+    const hoursInput = document.getElementById('max-runtime-hours');
+    const minutesInputHM = document.getElementById('max-runtime-minutes');
+
+    if (!Number.isFinite(totalMinutes)) {
+        if (minutesInput) minutesInput.value = '';
+        if (hoursInput) hoursInput.value = '';
+        if (minutesInputHM) minutesInputHM.value = '';
+        return;
+    }
+
+    if (minutesInput) minutesInput.value = totalMinutes;
+
+    const { hours, minutes } = minutesToHoursAndMinutes(totalMinutes);
+    if (hoursInput) hoursInput.value = hours;
+    if (minutesInputHM) minutesInputHM.value = minutes;
+}
+
+/**
+ * Read the current minimum runtime filter value (in minutes), from whichever
+ * input representation is currently active.
+ * @returns {number}
+ */
+function getMinRuntimeMinutes() {
+    if (runtimeDisplayMode === 'minutes') {
+        const input = document.getElementById('min-runtime');
+        return Number.parseInt(input && input.value, 10) || 0;
+    }
+    const hoursInput = document.getElementById('min-runtime-hours');
+    const minutesInput = document.getElementById('min-runtime-minutes');
+    return hoursAndMinutesToMinutes(
+        hoursInput && hoursInput.value,
+        minutesInput && minutesInput.value
+    );
+}
+
+/**
+ * Read the current maximum runtime filter value (in minutes), from whichever
+ * input representation is currently active. Returns Infinity when the field(s)
+ * are empty, matching the "no upper bound" behaviour.
+ * @returns {number}
+ */
+function getMaxRuntimeMinutes() {
+    if (runtimeDisplayMode === 'minutes') {
+        const input = document.getElementById('max-runtime');
+        const value = input && input.value;
+        if (value === '' || value === null || value === undefined) return Infinity;
+        const parsed = Number.parseInt(value, 10);
+        return Number.isNaN(parsed) ? Infinity : parsed;
+    }
+    const hoursInput = document.getElementById('max-runtime-hours');
+    const minutesInput = document.getElementById('max-runtime-minutes');
+    const hoursVal = hoursInput && hoursInput.value;
+    const minutesVal = minutesInput && minutesInput.value;
+    const bothEmpty =
+        (hoursVal === '' || hoursVal === null || hoursVal === undefined) &&
+        (minutesVal === '' || minutesVal === null || minutesVal === undefined);
+    if (bothEmpty) return Infinity;
+    return hoursAndMinutesToMinutes(hoursVal, minutesVal);
 }
 
 function updateRuntimeToggleButton() {
@@ -143,15 +279,18 @@ function formatRuntime(minutes) {
 
 // Filter Persistence Management
 function initFilters() {
+    // Saved filter values are stored as canonical minutes regardless of display mode;
+    // an empty maxRuntime value is the sentinel for an unbounded maximum.
     const savedMinRuntime = localStorage.getItem('minRuntime');
     const savedMaxRuntime = localStorage.getItem('maxRuntime');
     
     if (savedMinRuntime !== null) {
-        document.getElementById('min-runtime').value = savedMinRuntime;
+        setMinRuntimeInputs(Number.parseInt(savedMinRuntime, 10) || 0);
     }
     
     if (savedMaxRuntime !== null) {
-        document.getElementById('max-runtime').value = savedMaxRuntime;
+        const parsedMaxRuntime = Number.parseInt(savedMaxRuntime, 10);
+        setMaxRuntimeInputs(Number.isNaN(parsedMaxRuntime) ? Infinity : parsedMaxRuntime);
     }
     
     // Return true if saved filters exist
@@ -160,7 +299,7 @@ function initFilters() {
 
 function saveFilterValues(minRuntime, maxRuntime) {
     localStorage.setItem('minRuntime', minRuntime);
-    localStorage.setItem('maxRuntime', maxRuntime);
+    localStorage.setItem('maxRuntime', Number.isFinite(maxRuntime) ? maxRuntime : '');
 }
 
 function clearSavedFilters() {
@@ -496,8 +635,8 @@ function renderMovies() {
 
 // Filtering
 function applyRuntimeFilters() {
-    const minRuntime = Number.parseInt(document.getElementById('min-runtime').value) || 0;
-    const maxRuntime = Number.parseInt(document.getElementById('max-runtime').value) || Infinity;
+    const minRuntime = getMinRuntimeMinutes();
+    const maxRuntime = getMaxRuntimeMinutes();
     const errorElement = document.getElementById('filter-error');
 
     // Clear any previous error
@@ -536,8 +675,8 @@ function applyRuntimeFilters() {
 }
 
 function resetFilters() {
-    document.getElementById('min-runtime').value = 90;
-    document.getElementById('max-runtime').value = 160;
+    setMinRuntimeInputs(90);
+    setMaxRuntimeInputs(160);
     
     // Clear saved filter values from localStorage
     clearSavedFilters();
