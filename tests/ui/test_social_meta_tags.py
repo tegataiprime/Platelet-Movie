@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from playwright.sync_api import expect
 
-
 CANONICAL_URL = "https://tegataiprime.github.io/Platelet-Movie/"
 CANONICAL_IMAGE = f"{CANONICAL_URL}preview.png"
 
