@@ -5,6 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Platelet-Movie | Netflix Movies for Platelet Donation</title>
     <meta name="description" content="Discover Netflix movies long enough for a Platelet Donation (≥ 135 minutes). Updated weekly with curated selections.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://tegataiprime.github.io/Platelet-Movie/" />
+    <meta property="og:title" content="Platelet-Movie | Netflix Movies for Platelet Donation" />
+    <meta property="og:description" content="Discover Netflix movies long enough for a Platelet Donation (≥ 135 minutes). Updated weekly with curated selections." />
+    <meta property="og:image" content="https://tegataiprime.github.io/Platelet-Movie/preview.png" />
+    <meta property="og:image:width" content="1672" />
+    <meta property="og:image:height" content="941" />
+    <meta property="og:image:alt" content="Platelet-Movie — Netflix movies for platelet donors" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://tegataiprime.github.io/Platelet-Movie/" />
+    <meta name="twitter:title" content="Platelet-Movie | Netflix Movies for Platelet Donation" />
+    <meta name="twitter:description" content="Discover Netflix movies long enough for a Platelet Donation (≥ 135 minutes). Updated weekly with curated selections." />
+    <meta name="twitter:image" content="https://tegataiprime.github.io/Platelet-Movie/preview.png" />
+    <meta name="twitter:image:alt" content="Platelet-Movie — Netflix movies for platelet donors" />
+
+    <!-- Google Fonts: Libre Baskerville (heading fallback) + Lora (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400..700;1,400..700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap">
     <link rel="stylesheet" href="styles.css">
     <script defer src="telemetry-config.js"></script>
     <script defer src="telemetry.js"></script>
@@ -16,8 +39,11 @@
         <a href="#main-content" class="skip-link">Skip to main content</a>
         
         <header>
+            <h1 class="visually-hidden">Platelet-Movie</h1>
+            <div class="header-banner">
+                <img src="preview.png" alt="Platelet-Movie — Netflix movies for platelet donors" class="header-banner-img" width="1672" height="941" />
+            </div>
             <div class="header-content">
-                <h1>🎬 Platelet-Movie</h1>
                 <p class="subtitle">Netflix Movies for Platelet Donation</p>
                 <div class="header-controls">
                     <div class="region-selector">
@@ -47,7 +73,7 @@
 
             <!-- Filters Section -->
             <section class="filters-section">
-                <h2>🎯 Filter Movies</h2>
+                <h2>Filter Movies</h2>
                 <div class="filters">
                     <div class="filter-group" id="min-runtime-group" hidden>
                         <label for="min-runtime">Minimum Runtime (minutes):</label>
@@ -97,7 +123,7 @@
 
             <!-- Movies Table Section -->
             <section class="movies-section">
-                <h2>📋 Movie List</h2>
+                <h2>Movie List</h2>
                 <!-- Visually hidden hint for screen readers -->
                 <span id="expand-hint" class="visually-hidden">Press Enter or Space to expand and view full description</span>
                 <div class="table-container">
@@ -129,7 +155,7 @@
 
             <!-- Acknowledgements Section -->
             <section class="acknowledgements-section">
-                <h2>ℹ️ Acknowledgements & Disclaimers</h2>
+                <h2>Acknowledgements & Disclaimers</h2>
                 <div class="acknowledgements">
                     <div class="acknowledgement-item">
                         <h3>📊 Data Source</h3>

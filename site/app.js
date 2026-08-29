@@ -80,14 +80,19 @@ function updateFavouritesButtonText() {
 
 // Theme Management
 function initTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
+    let savedTheme = localStorage.getItem('theme') || 'light';
+    // Migrate legacy 'dark' value to new 'theater' theme name
+    if (savedTheme === 'dark') {
+        savedTheme = 'theater';
+        localStorage.setItem('theme', savedTheme);
+    }
     document.documentElement.dataset.theme = savedTheme;
     updateThemeIcon(savedTheme);
 }
 
 function toggleTheme() {
     const currentTheme = document.documentElement.dataset.theme;
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    const newTheme = currentTheme === 'light' ? 'theater' : 'light';
     document.documentElement.dataset.theme = newTheme;
     localStorage.setItem('theme', newTheme);
     updateThemeIcon(newTheme);
@@ -634,8 +639,19 @@ function renderMovies() {
 
     tbody.innerHTML = rows;
     
-    // After rendering, check which descriptions are truncated and add click handlers
-    initializeExpandableRows();
+    // Wait for the browser to lay out the clamped descriptions before measuring
+    // scrollHeight/clientHeight. Measuring synchronously after innerHTML is set can
+    // report equal heights and leave truncated rows without expansion controls.
+    requestAnimationFrame(() => {
+        initializeExpandableRows();
+    });
+
+    // Web fonts can change line wrapping after the first layout pass.
+    if ("fonts" in document) {
+        document.fonts.ready.then(() => {
+            initializeExpandableRows();
+        });
+    }
     
     // Add click handlers for favourite icons
     addFavouriteIconListeners();
@@ -881,8 +897,9 @@ function initializeExpandableRows() {
     movieRows.forEach(row => {
         const descriptionElement = row.querySelector('.movie-description');
         if (!descriptionElement) return;
+        const wasExpanded = row.classList.contains('expanded');
         
-        // Clear previous truncation state
+        // Temporarily restore the clamped state so truncation can be measured.
         descriptionElement.classList.remove('truncated');
         row.classList.remove('expanded');
         row.removeAttribute('tabindex');
@@ -897,8 +914,9 @@ function initializeExpandableRows() {
             // Add keyboard accessibility attributes
             row.setAttribute('tabindex', '0');
             row.setAttribute('role', 'button');
-            row.setAttribute('aria-expanded', 'false');
+            row.setAttribute('aria-expanded', String(wasExpanded));
             row.setAttribute('aria-describedby', 'expand-hint');
+            row.classList.toggle('expanded', wasExpanded);
         }
     });
     
