@@ -960,6 +960,7 @@ function toggleExpandableRow(row) {
 }
 
 function handleOutboundLinkClick(event) {
+    if (typeof event.target?.closest !== 'function') return;
     const link = event.target.closest('a[data-telemetry-destination]');
     if (!link) return;
     trackTelemetry('trackOutboundLink', link.dataset.telemetryDestination);

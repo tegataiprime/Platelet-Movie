@@ -225,3 +225,11 @@ handleOutboundLinkClick({
         ['trackOutboundLink', 'red_cross'],
     ]);
 });
+
+test('outbound link handling ignores non-Element event targets', () => {
+    const { context } = loadApp();
+
+    assert.doesNotThrow(() =>
+        vm.runInContext("handleOutboundLinkClick({ target: {} })", context)
+    );
+});
