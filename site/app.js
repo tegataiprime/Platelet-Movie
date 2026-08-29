@@ -80,14 +80,19 @@ function updateFavouritesButtonText() {
 
 // Theme Management
 function initTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
+    let savedTheme = localStorage.getItem('theme') || 'light';
+    // Migrate legacy 'dark' value to new 'theater' theme name
+    if (savedTheme === 'dark') {
+        savedTheme = 'theater';
+        localStorage.setItem('theme', savedTheme);
+    }
     document.documentElement.dataset.theme = savedTheme;
     updateThemeIcon(savedTheme);
 }
 
 function toggleTheme() {
     const currentTheme = document.documentElement.dataset.theme;
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    const newTheme = currentTheme === 'light' ? 'theater' : 'light';
     document.documentElement.dataset.theme = newTheme;
     localStorage.setItem('theme', newTheme);
     updateThemeIcon(newTheme);
