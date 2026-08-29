@@ -99,14 +99,13 @@ header {
 .header-banner {
     width: 100%;
     line-height: 0;
+    padding-top: 1rem;
 }
 
 .header-banner-img {
     width: 100%;
     height: auto;
     display: block;
-    object-fit: cover;
-    max-height: 300px;
 }
 
 .header-content {
@@ -652,10 +651,6 @@ tbody tr[role="button"]:focus-visible {
         text-align: center;
     }
 
-    .header-banner-img {
-        max-height: 180px;
-    }
-
     section {
         padding: 1.5rem;
     }
@@ -710,10 +705,6 @@ tbody tr[role="button"]:focus-visible {
 
     .subtitle {
         font-size: 0.9rem;
-    }
-
-    .header-banner-img {
-        max-height: 120px;
     }
 
     table {
