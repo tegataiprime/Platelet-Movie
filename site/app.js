@@ -647,7 +647,7 @@ function renderMovies() {
     });
 
     // Web fonts can change line wrapping after the first layout pass.
-    if (document.fonts?.ready) {
+    if ("fonts" in document) {
         document.fonts.ready.then(() => {
             initializeExpandableRows();
         });
