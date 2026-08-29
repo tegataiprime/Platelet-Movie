@@ -663,20 +663,20 @@ tr.expanded .movie-description.truncated::after {
     padding: 2rem;
     color: var(--text-muted);
 }
-}
 
 /* Acknowledgements Section */
 .acknowledgements {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2.5rem;
+    gap: 2rem;
 }
 
 .acknowledgement-item {
-    padding: 1rem;
+    padding: 1.5rem 1.5rem 1.5rem 1.25rem;
     background-color: var(--parchment-100);
     border-radius: 8px;
     border-left: 3px solid var(--accent);
+    box-shadow: var(--shadow-soft);
 }
 
 .acknowledgement-item h3 {
