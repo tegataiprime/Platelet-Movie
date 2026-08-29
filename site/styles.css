@@ -91,9 +91,22 @@ body {
 header {
     background-color: var(--bg-card);
     border-bottom: 2px solid var(--accent);
-    padding: 2rem 0;
+    padding: 0 0 2rem 0;
     margin-bottom: 2rem;
     box-shadow: 0 2px 4px var(--shadow);
+}
+
+.header-banner {
+    width: 100%;
+    line-height: 0;
+}
+
+.header-banner-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    max-height: 300px;
 }
 
 .header-content {
@@ -102,6 +115,7 @@ header {
     align-items: center;
     flex-wrap: wrap;
     gap: 1rem;
+    padding: 1.5rem 0 0 0;
 }
 
 .header-content h1 {
@@ -638,6 +652,10 @@ tbody tr[role="button"]:focus-visible {
         text-align: center;
     }
 
+    .header-banner-img {
+        max-height: 180px;
+    }
+
     section {
         padding: 1.5rem;
     }
@@ -692,6 +710,10 @@ tbody tr[role="button"]:focus-visible {
 
     .subtitle {
         font-size: 0.9rem;
+    }
+
+    .header-banner-img {
+        max-height: 120px;
     }
 
     table {

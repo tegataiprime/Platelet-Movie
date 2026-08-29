@@ -318,6 +318,18 @@ Create the site in Umami Cloud, then configure these GitHub Actions **repository
 
 No Umami API token is needed. `UMAMI_WEBSITE_ID` is intentionally a public browser identifier, not a secret. The free Umami Cloud Hobby tier includes one website, 100K monthly events, six months of data retention, and community support. Review an upgrade or self-hosted deployment if sustained telemetry exceeds 80K events per month or longer retention is needed.
 
+### Social Media Previews
+
+The site includes Open Graph (Facebook/LinkedIn) and Twitter Card meta tags so shared links render rich previews with a banner image, title, and description.
+
+The preview image (`site/preview.png`, 1672×941) is deployed alongside the static site and referenced as:
+
+```
+https://tegataiprime.github.io/Platelet-Movie/preview.png
+```
+
+**After deploying changes to these tags**, use the [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/) to force a re-scrape and clear the cached preview. Enter the site URL and click **Scrape Again**.
+
 ### Manual Deployment
 
 You can manually trigger a deployment from the Actions tab:
