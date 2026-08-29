@@ -1,6 +1,7 @@
 const telemetry = (() => {
     const config = window.TELEMETRY_CONFIG;
     const eventQueue = [];
+    const maxQueueSize = 100;
     const validSortFields = new Set([
         "title",
         "runtime_minutes",
@@ -18,15 +19,22 @@ const telemetry = (() => {
         return "160-plus";
     }
 
+    function isConfigured() {
+        return config?.enabled && config.websiteId && config.scriptUrl?.startsWith("https://");
+    }
+
     function send(eventName, properties) {
-        if (window.umami?.track) {
+        if (!isConfigured()) return;
+        if (typeof window.umami?.track === "function") {
             window.umami.track(eventName, properties);
         } else {
+            if (eventQueue.length >= maxQueueSize) eventQueue.shift();
             eventQueue.push([eventName, properties]);
         }
     }
 
     function flushQueue() {
+        if (typeof window.umami?.track !== "function") return;
         while (eventQueue.length > 0) {
             const [eventName, properties] = eventQueue.shift();
             window.umami.track(eventName, properties);
@@ -35,7 +43,7 @@ const telemetry = (() => {
 
     function loadUmami() {
         if (!config?.enabled) return;
-        if (!config.websiteId || !config.scriptUrl?.startsWith("https://")) {
+        if (!isConfigured()) {
             console.warn("Telemetry is enabled but its Umami configuration is invalid.");
             return;
         }
