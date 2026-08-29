@@ -384,6 +384,8 @@ All common developer tasks are available via [Poe the Poet](https://poethepoet.n
 | Command | Description |
 |---------|-------------|
 | `poe test` | Run the full test suite with coverage (≥ 80% required) |
+| `poe test-ui` | Run Playwright browser UI tests for the static website in `site/` |
+| `poe install-browsers` | Install the Playwright Chromium browser (one-time setup, required before `poe test-ui`) |
 | `poe lint` | Lint source code and tests with Ruff |
 | `poe format` | Auto-format source code and tests with Ruff |
 | `poe run` | Run the CLI (`platelet-movie`) |
@@ -395,6 +397,12 @@ All common developer tasks are available via [Poe the Poet](https://poethepoet.n
 ```bash
 # Run tests with coverage
 poe test
+
+# Install Playwright's Chromium browser (one-time setup)
+poe install-browsers
+
+# Run browser-based UI tests for the website
+poe test-ui
 
 # Lint
 poe lint
@@ -454,8 +462,33 @@ The script generates region-specific data files in the `site/` directory:
 ### Running Tests Manually
 
 ```bash
-pytest tests/ -v --cov=platelet_movie --cov-report=term-missing
+pytest tests/ --ignore=tests/ui -v --cov=platelet_movie --cov-report=term-missing
 ```
+
+**Note:** `tests/ui` is excluded above because it requires Playwright's Chromium browser (`poe install-browsers`) and exercises the static website rather than the `platelet_movie` package. Running `pytest tests/` without `--ignore=tests/ui` will also collect it and can fail if the browser isn't installed. See "UI Browser Tests (Playwright)" below to run it separately with `poe test-ui`.
+
+### UI Browser Tests (Playwright)
+
+The static website in `site/` has a Playwright-based UI test suite in `tests/ui/` that exercises real browser behavior (DOM visibility, CSS cascade effects, and user interactions) rather than just JavaScript logic. This catches regressions that unit tests can't, such as a CSS rule silently overriding a JavaScript-driven visibility toggle.
+
+**One-time setup:**
+```bash
+poe install-browsers   # installs the Playwright Chromium browser
+```
+
+**Running the UI tests:**
+```bash
+poe test-ui
+```
+
+The tests serve `site/` over a local HTTP server and mock the `data-{region}.json` network responses (via Playwright route interception), so they run deterministically without depending on or mutating the real generated site data files. They are excluded from `poe test` / the coverage requirement since they exercise the static website rather than the `platelet_movie` package, and are run as a separate step in CI.
+
+**Coverage includes:**
+- The runtime display toggle ("Show Runtime in Minutes" / "Show Runtime in Hrs & Mins") correctly shows only the matching filter input format (minutes-only vs. hours+minutes) — a regression test for a CSS specificity bug where `.filter-group { display: flex }` silently overrode the `hidden` attribute
+- Runtime value conversion between the two filter input formats
+- Filter validation (maximum runtime must be ≥ minimum runtime)
+- Reset-to-defaults behavior
+- Basic rendering of movies from the data feed
 
 ### Code Coverage
 
@@ -509,10 +542,11 @@ The project uses GitHub Actions to ensure code quality:
 - Runs linting with Ruff (`poe lint`)
 - Executes the full test suite with coverage (`poe test`)
 - Enforces the 80% coverage threshold
+- Installs Playwright's Chromium browser and runs the website UI test suite (`poe test-ui`)
 - Triggers on: PR opened, synchronized, reopened, or marked ready for review
 
 **Main Branch Testing** (`test-main.yml`):
-- Runs linting and full test suite on every push to `main`
+- Runs linting, the full test suite, and the Playwright UI test suite on every push to `main`
 - Validates that merged code maintains quality standards
 - Provides immediate feedback if issues slip through
 
@@ -577,7 +611,10 @@ Platelet-Movie/
 │   ├── test_tmdb_client.py
 │   ├── test_config.py
 │   ├── test_models.py
-│   └── test_lady_whistledown.py
+│   ├── test_lady_whistledown.py
+│   └── ui/                 # Playwright browser UI tests for site/
+│       ├── conftest.py
+│       └── test_runtime_filter_toggle.py
 ├── scripts/
 │   └── lady_whistledown.py  # OpenAI-powered commentary generator
 ├── pyproject.toml        # Poetry + Poe tasks + Ruff config

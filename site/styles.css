@@ -224,6 +224,16 @@ section h2 {
     gap: 0.5rem;
 }
 
+/* Needed because the author rule `.filter-group { display: flex }` above has
+   the same specificity as the browser's default `[hidden] { display: none }`
+   UA-stylesheet rule, and author rules win over UA rules at equal
+   specificity. Without this more-specific override, toggling the `hidden`
+   attribute would have no visual effect and both filter input groups would
+   stay visible at once. */
+.filter-group[hidden] {
+    display: none;
+}
+
 .filter-group label {
     font-weight: 600;
     color: var(--text-secondary);

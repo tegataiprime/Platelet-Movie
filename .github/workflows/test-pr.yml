@@ -26,7 +26,7 @@ jobs:
       - name: Install Poetry
         uses: snok/install-poetry@a783c322200f0519c7926aa6faa857c4e23e9263 # v1
         with:
-          version: '2.0.1'
+          version: '2.4.1'
           virtualenvs-create: true
           virtualenvs-in-project: true
 
@@ -41,8 +41,14 @@ jobs:
       - name: Install dependencies
         run: poetry install --all-extras
 
+      - name: Install Playwright browsers
+        run: poetry run poe install-browsers
+
       - name: Run linter
         run: poetry run poe lint
 
       - name: Run tests with coverage
         run: poetry run poe test
+
+      - name: Run UI browser tests
+        run: poetry run poe test-ui
