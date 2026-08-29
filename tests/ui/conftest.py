@@ -90,4 +90,4 @@ def site_page(page, site_base_url):
     page.route("**/data-*.json*", _fulfill_mock_data)
     page.goto(f"{site_base_url}/index.html")
     page.wait_for_selector("#runtime-format-toggle")
-    yield page
+    return page
