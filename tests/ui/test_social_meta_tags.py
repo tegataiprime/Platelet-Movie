@@ -23,25 +23,29 @@ def test_og_type(site_page):
 def test_og_url(site_page):
     """og:url must be set."""
     value = site_page.get_attribute('meta[property="og:url"]', "content")
-    assert value and len(value) > 0
+    assert value is not None
+    assert len(value) > 0
 
 
 def test_og_title(site_page):
     """og:title must be set."""
     value = site_page.get_attribute('meta[property="og:title"]', "content")
-    assert value and len(value) > 0
+    assert value is not None
+    assert len(value) > 0
 
 
 def test_og_description(site_page):
     """og:description must be set."""
     value = site_page.get_attribute('meta[property="og:description"]', "content")
-    assert value and len(value) > 0
+    assert value is not None
+    assert len(value) > 0
 
 
 def test_og_image(site_page):
     """og:image must point to preview.png."""
     value = site_page.get_attribute('meta[property="og:image"]', "content")
-    assert value and "preview.png" in value
+    assert value is not None
+    assert "preview.png" in value
 
 
 def test_og_image_dimensions(site_page):
@@ -65,19 +69,22 @@ def test_twitter_card(site_page):
 def test_twitter_title(site_page):
     """twitter:title must be set."""
     value = site_page.get_attribute('meta[name="twitter:title"]', "content")
-    assert value and len(value) > 0
+    assert value is not None
+    assert len(value) > 0
 
 
 def test_twitter_description(site_page):
     """twitter:description must be set."""
     value = site_page.get_attribute('meta[name="twitter:description"]', "content")
-    assert value and len(value) > 0
+    assert value is not None
+    assert len(value) > 0
 
 
 def test_twitter_image(site_page):
     """twitter:image must point to preview.png."""
     value = site_page.get_attribute('meta[name="twitter:image"]', "content")
-    assert value and "preview.png" in value
+    assert value is not None
+    assert "preview.png" in value
 
 
 # ---------------------------------------------------------------------------
@@ -93,10 +100,12 @@ def test_header_banner_image_is_visible(site_page):
 def test_header_banner_image_src(site_page):
     """The banner image src must reference preview.png."""
     src = site_page.get_attribute(".header-banner-img", "src")
-    assert src and "preview.png" in src
+    assert src is not None
+    assert "preview.png" in src
 
 
 def test_header_banner_image_has_alt(site_page):
     """The banner image must have a non-empty alt attribute."""
     alt = site_page.get_attribute(".header-banner-img", "alt")
-    assert alt and len(alt) > 0
+    assert alt is not None
+    assert len(alt) > 0
