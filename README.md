@@ -33,6 +33,7 @@ TMDB provides reliable watch provider data (including Netflix availability) that
 - 🌍 Supports different Netflix regions (US, GB, CA, etc.)
 - 🌙 **GitHub Pages site** with light/dark mode, runtime filter with persistence, sortable columns, movie poster thumbnails, and Lady Whistledown commentary
 - 📈 **Optional anonymous analytics** via Umami Cloud, tracking aggregate pageviews and filter, sort, and favourite interactions
+- ⏰ **Runtime filter format follows the display toggle**: switching the website's runtime display between "minutes" and "hours & minutes" also switches the minimum/maximum runtime filter inputs to match, with validation to ensure the maximum is never less than the minimum
 - 🌏 **Multi-region support on website**: Switch between US 🇺🇸, UK 🇬🇧, and India 🇮🇳 Netflix catalogs with preference persistence
 - 💧 **Favourites feature**: Mark movies you want to watch with a platelet yellow drip icon (persisted in browser's local storage), toggle to show only your favourites, and clear all favourites
 - 🇬🇧🇺🇸 **Localised interface**: British English spelling for UK & India regions, American English for US region (favourites/favorites, films/movies)

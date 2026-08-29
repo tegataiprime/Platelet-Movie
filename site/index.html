@@ -49,13 +49,35 @@
             <section class="filters-section">
                 <h2>🎯 Filter Movies</h2>
                 <div class="filters">
-                    <div class="filter-group">
+                    <div class="filter-group" id="min-runtime-group" hidden>
                         <label for="min-runtime">Minimum Runtime (minutes):</label>
                         <input type="number" id="min-runtime" value="90" min="0" max="500">
                     </div>
-                    <div class="filter-group">
+                    <div class="filter-group" id="max-runtime-group" hidden>
                         <label for="max-runtime">Maximum Runtime (minutes):</label>
                         <input type="number" id="max-runtime" value="160" min="0" max="500">
+                    </div>
+                    <div class="filter-group" id="min-runtime-hm-group">
+                        <span class="filter-group-legend" id="min-runtime-hm-legend">Minimum Runtime:</span>
+                        <div class="hm-inputs" role="group" aria-labelledby="min-runtime-hm-legend">
+                            <label for="min-runtime-hours" class="visually-hidden">Hours</label>
+                            <input type="number" id="min-runtime-hours" value="1" min="0" max="20" aria-label="Minimum runtime hours">
+                            <span class="hm-unit">h</span>
+                            <label for="min-runtime-minutes" class="visually-hidden">Minutes</label>
+                            <input type="number" id="min-runtime-minutes" value="30" min="0" max="59" aria-label="Minimum runtime minutes">
+                            <span class="hm-unit">m</span>
+                        </div>
+                    </div>
+                    <div class="filter-group" id="max-runtime-hm-group">
+                        <span class="filter-group-legend" id="max-runtime-hm-legend">Maximum Runtime:</span>
+                        <div class="hm-inputs" role="group" aria-labelledby="max-runtime-hm-legend">
+                            <label for="max-runtime-hours" class="visually-hidden">Hours</label>
+                            <input type="number" id="max-runtime-hours" value="2" min="0" max="20" aria-label="Maximum runtime hours">
+                            <span class="hm-unit">h</span>
+                            <label for="max-runtime-minutes" class="visually-hidden">Minutes</label>
+                            <input type="number" id="max-runtime-minutes" value="40" min="0" max="59" aria-label="Maximum runtime minutes">
+                            <span class="hm-unit">m</span>
+                        </div>
                     </div>
                     <button id="apply-filters" class="btn-primary">Apply Filters</button>
                     <button id="reset-filters" class="btn-secondary">Reset</button>
