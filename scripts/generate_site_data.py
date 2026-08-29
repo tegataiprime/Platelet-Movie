@@ -21,6 +21,8 @@ def prepare_telemetry_config(
         return {"enabled": False}
     if not website_id:
         raise ValueError("UMAMI_WEBSITE_ID must be set when ENABLE_TELEMETRY is true")
+    if not script_url.startswith("https://"):
+        raise ValueError("UMAMI_SCRIPT_URL must use HTTPS when ENABLE_TELEMETRY is true")
 
     return {
         "enabled": True,

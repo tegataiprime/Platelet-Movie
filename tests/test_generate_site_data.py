@@ -81,6 +81,15 @@ class TestPrepareTelemetryConfig:
         with pytest.raises(ValueError, match="UMAMI_WEBSITE_ID"):
             prepare_telemetry_config(enabled=True)
 
+    def test_enabled_config_requires_https_script_url(self):
+        """Enabled telemetry rejects script URLs that the browser client cannot load."""
+        with pytest.raises(ValueError, match="UMAMI_SCRIPT_URL"):
+            prepare_telemetry_config(
+                enabled=True,
+                website_id="website-id",
+                script_url="http://example.com/script.js",
+            )
+
 
 class TestGetMovieData:
     """Tests for get_movie_data function."""

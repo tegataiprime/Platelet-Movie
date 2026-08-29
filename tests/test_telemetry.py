@@ -1,8 +1,13 @@
 """Behavior tests for the browser telemetry client."""
 
 import json
+import shutil
 import subprocess
 from pathlib import Path
+
+import pytest
+
+pytestmark = pytest.mark.skipif(shutil.which("node") is None, reason="Node.js is not installed")
 
 PROJECT_ROOT = Path(__file__).parent.parent
 TELEMETRY_SCRIPT = PROJECT_ROOT / "site" / "telemetry.js"
@@ -84,8 +89,8 @@ loadHandler();
     assert len(tracked) == 100
 
 
-def test_flush_waits_until_umami_track_is_available():
-    """A script load without a usable tracker does not throw or discard events."""
+def test_send_flushes_queue_when_umami_track_becomes_available():
+    """The next event flushes queued events after late tracker initialization."""
     tracked = run_telemetry(
         {
             "enabled": True,
@@ -97,8 +102,11 @@ vm.runInContext('telemetry.trackFavoriteToggled("on")', context);
 window.umami = {};
 loadHandler();
 window.umami.track = (...args) => tracked.push(args);
-loadHandler();
+vm.runInContext('telemetry.trackFavoriteToggled("off")', context);
 """,
     )
 
-    assert len(tracked) == 1
+    assert tracked == [
+        ["favorite_toggled", {"state": "on"}],
+        ["favorite_toggled", {"state": "off"}],
+    ]

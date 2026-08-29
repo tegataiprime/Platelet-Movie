@@ -26,6 +26,7 @@ const telemetry = (() => {
     function send(eventName, properties) {
         if (!isConfigured()) return;
         if (typeof window.umami?.track === "function") {
+            flushQueue();
             window.umami.track(eventName, properties);
         } else {
             if (eventQueue.length >= maxQueueSize) eventQueue.shift();
