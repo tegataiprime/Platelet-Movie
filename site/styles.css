@@ -248,7 +248,6 @@ header {
     color: var(--text);
     cursor: pointer;
     transition: all 0.3s ease;
-    font-family: inherit;
 }
 
 .region-select:hover {
